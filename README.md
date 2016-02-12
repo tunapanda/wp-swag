@@ -1,0 +1,2 @@
+# wp-swag
+Swag plugin
