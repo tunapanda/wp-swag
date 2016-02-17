@@ -6,17 +6,5 @@ Plugin URL: https://github.com/tunapanda/wp-swag
 Version: 0.0.1 
 */
 
-function swag_admin_menu(){
-	add_menu_page(
-		"Swag", 
-		"Swag",
-		"manage_options",
-		"swag",
-		"swag_settings_page"
-	);
-}
-
-function swag_settings_page(){
-	require_once(__DIR__."/settings.php");
-}
-add_action("admin_menu", "swag_admin_menu");
+require_once __DIR__."/wp-swag-admin.php";
+add_action("init", array("WP_Swag_admin", "init_hooks"));

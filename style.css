@@ -1,0 +1,379 @@
+/**** Track and listing. ****/
+/*
+.listing {
+    position: relative;
+    background: #ffffff;
+    border-radius: 10px;
+    width: 300px;
+    height: 200px;
+    box-shadow: 0px 0px 10px #808080;
+    margin-bottom: 20px;
+    margin-right: 20px;
+    display: inline-block;
+}
+
+.listing .header {
+    position: absolute;
+    width: 300px;
+    background: #009900;
+    border-radius: 10px 10px 0 0;
+    height: 40px;
+}
+
+.listing .title {
+    position: absolute;
+    left: 20px;
+    font-size: 20px;
+    font-weight: bold;
+    top: 10px;
+}
+
+.listing a{
+    position: absolute;
+    left: 20px;
+    bottom: 20px;
+    background: #009900;
+    padding: 10px;
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 5px;
+}
+
+.listing .description {
+    position: absolute;
+    left: 20px;
+    right: 20px;
+    top: 60px;
+}
+
+.course.listing a, .course.listing .header {
+    background: #ace600;
+}
+*/
+
+img.course-completed {
+    position: absolute;
+    right: 10px;
+    top: 60px;
+}
+
+.after-info {
+    background: #e0e0e0;
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    color: #404040;
+    height: 100px;
+    text-align: center;
+    padding-top: 50px;
+}
+
+.after-info a {
+    color: #404040;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.after.listing {
+    background: #e0e0e0;
+}
+
+.course-info {
+    background: #fff0a0;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #808000;
+    border-radius: 5px;
+    vertical-align: center;
+    height: 100%;
+}
+
+.course-info a {
+    font-weight: bold;
+    color: #008000;
+    text-decoration: none;
+}
+
+.masonry-loop{
+    
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    
+    -webkit-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
+ 
+    -webkit-flex-wrap: wrap;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    padding: 5px;
+    
+}
+    .listing{            
+        position: relative;
+        display: -webkit-box;
+        display: -moz-box;
+        display: -ms-flexbox;
+        display: -webkit-flex;
+        display: flex;
+        
+        -webkit-align-content: stretch;
+        -ms-flex-line-pack: stretch;
+        align-content: stretch;
+        -webkit-box-align: stretch;
+        -moz-box-align: stretch;
+        -webkit-align-items: stretch;
+        -ms-flex-align: stretch;
+        align-items: stretch;
+        
+        width: 30.333333%;
+        margin: 1.5%;
+        float: left;
+        box-shadow: 0px 0px 5px rgba(0,0,0,0.3);
+        margin-bottom: 25px;
+        
+        /* -moz-border: 5px 5px 0px 0px; 
+        -webkit-border-radius: 5px 5px 0px 0px; */
+        border-radius: 6px;
+    }
+    
+    .listing-info{
+        width: 100%;
+        
+        background-color: white;
+        
+        border: 1px solid #009900;
+        
+        -moz-border: 5px; 
+        -webkit-border-radius: 5px; 
+        border-radius: 6px;
+        
+        display: -webkit-box;
+        display: -moz-box;
+        display: -ms-flexbox;
+        display: -webkit-flex;
+        display: flex;
+            
+        -webkit-box-direction: normal;
+        -moz-box-direction: normal;
+        -webkit-box-orient: vertical;
+        -moz-box-orient: vertical;
+        -webkit-flex-direction: column;
+        -ms-flex-direction: column;
+        flex-direction: column;
+        
+        -webkit-align-content: stretch;
+        -ms-flex-line-pack: stretch;
+        align-content: stretch;
+        -webkit-box-align: stretch;
+        -moz-box-align: stretch;
+        -webkit-align-items: stretch;
+        -ms-flex-align: stretch;
+        align-items: stretch;
+    }
+    .listing-info .header{
+        width: 100%;
+        height: auto;
+        -moz-border: 5px 5px 0px 0px; 
+        -webkit-border-radius: 5px 5px 0px 0px; 
+        border-radius: 5px 5px 0px 0px;
+    }
+
+    .listing-info .title{
+        top: 0;
+        padding: 15px 0px;
+        color: white;
+        background-color: #009900;
+        display: block;
+        width: 100%;
+        left: 0;
+        font-size: 18px;
+        text-indent: 7px;
+        text-align: center;
+        text-transform: capitalize;
+        
+        -moz-border: 5px 5px 0px 0px; 
+        -webkit-border-radius: 5px 5px 0px 0px; 
+        border-radius: 5px 5px 0px 0px;
+        
+    }
+
+    .listing-info .description, 
+    .listing-info .header{
+        
+        display: -webkit-box;
+        display: -moz-box;
+        display: -ms-flexbox;
+        display: -webkit-flex;
+        display: flex;
+        
+        -webkit-box-direction: normal;
+        -moz-box-direction: normal;
+        -webkit-box-orient: vertical;
+        -moz-box-orient: vertical;
+        -webkit-flex-direction: column;
+        -ms-flex-direction: column;
+        flex-direction: column;
+    }
+    
+    .listing-info .description{
+        
+        padding: 15px;
+        
+    }
+    
+    .listing-info .footer{
+        display: -webkit-box;
+        display: -moz-box;
+        display: -ms-flexbox;
+        display: -webkit-flex;
+        display: box;
+        padding: 15px;
+        
+        -webkit-box-flex: 1;
+        -moz-box-flex: 1;
+        -webkit-flex: 1 0 auto;
+        -ms-flex: 1 0 auto;
+        flex: 1 0 auto;
+        
+        -webkit-align-self: auto;
+        -ms-flex-item-align: auto;
+        align-self: auto;
+        
+        
+        display: -webkit-box;
+        display: -moz-box;
+        display: box;
+    
+        -webkit-box-orient: vertical;
+        -moz-box-orient: vertical;
+        box-orient: vertical;
+    
+        -webkit-box-pack: end;
+        -moz-box-pack: end;
+        box-pack: end;
+    
+        -webkit-box-direction: normal;
+        -moz-box-direction: normal;
+        box-direction: normal;
+    
+        -webkit-box-align: center;
+        -moz-box-align: center;
+        box-align: center;
+        
+        align-content: center;
+            
+        text-align: center;
+    }
+    
+    .listing-info .footer a,
+    .listing-info .footer a:visited{
+        border: 1px solid #C36E4D;
+        background: white;
+        padding: 10px 15px;
+        color: #C36E4D;
+        text-decoration: none;
+        text-align: center;
+        font-size: 12px;
+        text-transform: uppercase;
+        border-radius: 1000px;
+    }
+    
+    .listing-info .footer a:focus,
+    .listing-info .footer a:hover{
+        border: 1px solid #C36E4D;
+        background: #C36E4D;
+        color: white;   
+    }
+    
+    .listing-info .footer a:active{
+        background: #714126;
+        color: #a77354; 
+        box-shadow: 0px 0px 10px rgba(0,0,0,0.7) inset;
+    }
+    
+    .course .listing-info .title{
+        background-color: #88C83C;
+    }
+    
+    .course .listing-info{
+        border-color: #88C83C;
+    }
+    
+
+    .listing-info .list-count,
+    .listing-info .list-link{        
+        display: -webkit-box;
+        display: -moz-box;
+        display: -ms-flexbox;
+        display: -webkit-flex;
+        display: flex;
+        
+        -webkit-box-direction: normal;
+        -moz-box-direction: normal;
+        -webkit-box-orient: vertical;
+        -moz-box-orient: vertical;
+        -webkit-flex-direction: column;
+        -ms-flex-direction: column;
+        flex-direction: column;
+        
+        -webkit-box-ordinal-group: 1;
+        -moz-box-ordinal-group: 1;
+        box-ordinal-group: 1;
+    
+        -webkit-box-flex: 0;
+        -moz-box-flex: 0;
+        box-flex: 0;
+        
+        -webkit-box-align: center;
+        -moz-box-align: center;
+        box-align: center;
+
+    }
+    
+    .listing-info .list-count{
+        padding: 10px;
+        font-weight: bold;
+    }
+
+
+@media only screen and ( max-width: 480px ) /* mobile */{
+    .listing{
+        display: -webkit-box;
+        display: -moz-box;
+        display: -ms-flexbox;
+        display: -webkit-flex;
+        display: flex;
+        
+        width: 100%;
+        float: left;
+        box-shadow: 0px 0px 5px rgba(0,0,0,0.3);
+        margin-bottom: 25px;
+    }
+
+}
+
+@media only screen and ( min-width: 481px ) and ( max-width: 767px ) /* tablet */{
+    .listing{
+        display: -webkit-box;
+        display: -moz-box;
+        display: -ms-flexbox;
+        display: -webkit-flex;
+        display: flex;
+        
+        width: 48%;
+        margin: 1%;
+        float: left;
+        box-shadow: 0px 0px 5px rgba(0,0,0,0.3);
+        margin-bottom: 25px;
+    }
+
+}
+
+.course.listing.unprepared {
+    display: none;
+}
