@@ -16,7 +16,11 @@ require_once __DIR__."/src/utils/ShortcodeUtil.php";
 
 
 class WP_Swag_admin{
+	static $plugins_uri;
+
 	public function init_hooks(){
+		self::$plugins_uri = plugins_url()."/wp-swag";
+
 		// initialise the the admin settings
 		add_action('admin_init',array(get_called_class(),'ti_admin_init'));
 		add_action('admin_menu',array(get_called_class(),'ti_admin_menu'));
@@ -147,8 +151,8 @@ class WP_Swag_admin{
 		wp_register_style("wp_swag",plugins_url( "/style.css", __FILE__)); //?v=x added to refresh browser cache when stylesheet is updated. 
 		wp_enqueue_style("wp_swag");
 
-		wp_register_script("d3",get_template_directory_uri()."/d3.v3.min.js");
-		wp_register_script("ti-main",get_template_directory_uri()."/main.js");
+		wp_register_script("d3",plugins_url("/d3.v3.min.js", __FILE__));
+		wp_register_script("ti-main",plugins_url("/main.js", __FILE__));
 
 		wp_enqueue_script("ti-main");
 		
@@ -196,9 +200,13 @@ class WP_Swag_admin{
 	 * Render swagmap.
 	 */
 	public function ti_swagmap() {
+		$plugins_uri = self::$plugins_uri;
 		return "<div id='swagmapcontainer'>
 		<div id='swag_description_container'>A swagmap is gamified display of performance. The green hollow nodes indicate the swagpath is not completed or attempted while non-hollow green nodes indicate the swagpaths is completed and questions answered.
 		</div>
+		<script>
+		var MY_CONSTANT = '$plugins_uri';
+		</script>
 		</div>";
 	}
 	
@@ -210,12 +218,23 @@ class WP_Swag_admin{
 
 		if ($statement["verb"]["id"]!="http://adlnet.gov/expapi/verbs/completed")
 			return;
-		error_log("***********************************************************");
-		
+	
 
-		$postPermalink=NULL;
+		//$postPermalink=NULL;
 
-		if (isset($statement["context"]["contextActivities"]["grouping"][0]["id"]))
+		foreach ($statement["context"]["contextActivities"]["grouping"] as $groupingActivity) {
+			$id=url_to_postid($groupingActivity["id"]);
+      if ($id)
+        $postId=$id;
+		}
+
+		foreach ($statement["context"]["contextActivities"]["category"] as $categoryActivity) {
+			$id=url_to_postid($categoryActivity["id"]);
+      if ($id)
+        $postId=$id;
+		}
+
+		/*if (isset($statement["context"]["contextActivities"]["grouping"][0]["id"]))
 			$postPermalink=$statement["context"]["contextActivities"]["grouping"][0]["id"];
 
 		if (isset($statement["context"]["contextActivities"]["category"][0]["id"]))
@@ -224,14 +243,17 @@ class WP_Swag_admin{
 		if (!$postPermalink)
 			return;
 
-		$postId=url_to_postid($postPermalink);
+		$postId=url_to_postid($postPermalink);*/
+
+		if (!$postId)
+			return;
+
 		$post=get_post($postId);
 
 		if (!$post)
 			return;
 
 		$swagUser=SwagUser::getByEmail($statement["actor"]["mbox"]);
-		error_log(print_R($swagUser,TRUE));
 
 		$swagPost=new SwagPost($post);
 		if ($swagPost->isAllSwagPostItemsCompleted($swagUser))
@@ -255,6 +277,4 @@ class WP_Swag_admin{
 
 		return $out;
 	}
-
-
 }

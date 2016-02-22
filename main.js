@@ -57,7 +57,9 @@ jQuery(function($) {
 			force.size([width, height]).resume();
 		});
 
-		var dataurl = THEME_URI + "/swagmapdata.php";
+		console.log(MY_CONSTANT);
+
+		var dataurl = MY_CONSTANT + "/swagmapdata.php";
 		console.log("loading swagmap data from: " + dataurl);
 
 		d3.json(dataurl, function(error, json) {

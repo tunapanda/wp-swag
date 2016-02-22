@@ -7,4 +7,7 @@ Version: 0.0.1
 */
 
 require_once __DIR__."/wp-swag-admin.php";
+
+///$plugin=new WP_Swag_admin();
+
 add_action("init", array("WP_Swag_admin", "init_hooks"));
