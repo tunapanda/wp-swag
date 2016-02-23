@@ -7,9 +7,14 @@
 		<?php echo $uncollectedSwagpaths; ?>
 	</div>
 <?php } ?>
-
+<?php 
+	$plugins_uri = WP_Swag_admin::$plugins_uri;
+ ?>
 <div class='content-tab-wrapper'>
 	<ul class='content-tab-list'>
+		<script>
+		var PLUGIN_URI = '<?php echo $plugins_uri; ?>';
+		</script>
 		<?php foreach ($swagPost->getSwagPostItems() as $swagPostItem) { ?>
 			<li
 				<?php if ($swagPostItem->isSelected()) echo "class='selected'"; ?>
@@ -18,12 +23,12 @@
 					<?php if ($swagPostItem->isCompleted($swagUser)) { ?>
 						<img 
 							class='coursepresentation'
-							src="<?php echo get_template_directory_uri(); ?>/img/completed-logo.png"
+							src="<?php echo $plugins_uri;?>/img/completed-logo.png"
 						/>
-					<?php } else { ?>
+					<?php } else {?>
 						<img 
 							class='coursepresentation'
-							src="<?php echo get_template_directory_uri(); ?>/img/coursepresentation-logo.png"
+							src="<?php echo $plugins_uri; ?>/img/coursepresentation-logo.png"
 						/>
 					<?php } ?>
 				</a>

@@ -1,3 +1,6 @@
+<?php 
+    $plugins_uri = WP_Swag_admin::$plugins_uri;
+ ?>
 <div class="course listing <?php if (!$prepared) echo "unprepared"; ?>">
     <div class="listing-info">
     	<div class="header">
@@ -5,7 +8,7 @@
     			<?php echo $page->post_title; ?>
 
                 <?php if ($completed) { ?>
-                    <img class="course-completed" src="<?php echo get_template_directory_uri(); ?>/img/completed-logo.png"/>
+                    <img class="course-completed" src="<?php echo $plugins_uri; ?>/img/completed-logo.png"/>
                 <?php } ?>
     		</div>
     	</div>

@@ -20,7 +20,7 @@ jQuery(function($) {
 
 				var verbId = event.data.statement.verb.id;
 				if (verbId == "http://adlnet.gov/expapi/verbs/completed") {
-					var imgUri = THEME_URI + "/img/completed-logo.png";
+					var imgUri = PLUGIN_URI + "/img/completed-logo.png";
 					$("ul.content-tab-list li.selected a img.coursepresentation").attr("src", imgUri);
 				}
 			});
@@ -57,9 +57,9 @@ jQuery(function($) {
 			force.size([width, height]).resume();
 		});
 
-		console.log(MY_CONSTANT);
 
-		var dataurl = MY_CONSTANT + "/swagmapdata.php";
+		var dataurl = PLUGIN_URI + "/swagmapdata.php";
+		console.log("**********************************");
 		console.log("loading swagmap data from: " + dataurl);
 
 		d3.json(dataurl, function(error, json) {

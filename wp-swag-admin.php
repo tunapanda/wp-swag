@@ -205,7 +205,7 @@ class WP_Swag_admin{
 		<div id='swag_description_container'>A swagmap is gamified display of performance. The green hollow nodes indicate the swagpath is not completed or attempted while non-hollow green nodes indicate the swagpaths is completed and questions answered.
 		</div>
 		<script>
-		var MY_CONSTANT = '$plugins_uri';
+		var PLUGIN_URI = '$plugins_uri';
 		</script>
 		</div>";
 	}
@@ -261,16 +261,15 @@ class WP_Swag_admin{
 	}
 
 	public function ti_my_swag() {
+		$plugins_uri = self::$plugins_uri;
 		$swagUser=new SwagUser(wp_get_current_user());
 		$completedSwag=$swagUser->getCompletedSwag();
-
-		$baseuri=get_template_directory_uri();
 
 		$out="";
 
 		foreach ($completedSwag as $swag) {
 			$out.="<div class='swag-badge-container'>\n";
-			$out.="<img class='swag-badge-image' src='$baseuri/img/badge.png'>\n";
+			$out.="<img class='swag-badge-image' src='$plugins_uri/img/badge.png'>\n";
 			$out.="<div class='swag-badge-label'>$swag</div>\n";
 			$out.="</div>\n";
 		}
