@@ -166,8 +166,15 @@ class WP_Swag_admin{
 	 * Handle the course shortcode.
 	 */
 	function ti_course($args, $content) {
+		if (!$args)
+			$args=array();
+
 		$swagPost=SwagPost::getCurrent();
 		$swagUser=SwagUser::getCurrent();
+
+		$selectedItem=$swagPost->getSelectedItem();
+		$selectedItem->preShow();
+		//print_r($selectedItem);
 
 		$template=new Template(__DIR__."/tpl/course.php");
 		$template->set("swagUser",$swagUser);
@@ -216,6 +223,7 @@ class WP_Swag_admin{
 
 		return $template->render();
 	}
+
 	/**
 	 * Render swagmap.
 	 */
@@ -242,35 +250,20 @@ class WP_Swag_admin{
 	 * Save xapi statement for swag if applicable.
 	 */
 	public function ti_xapi_post_save($statement) {
-
 		if ($statement["verb"]["id"]!="http://adlnet.gov/expapi/verbs/completed")
 			return;
 
-
-		//$postPermalink=NULL;
-
 		foreach ($statement["context"]["contextActivities"]["grouping"] as $groupingActivity) {
 			$id=url_to_postid($groupingActivity["id"]);
-      if ($id)
-        $postId=$id;
+			if ($id)
+				$postId=$id;
 		}
 
 		foreach ($statement["context"]["contextActivities"]["category"] as $categoryActivity) {
 			$id=url_to_postid($categoryActivity["id"]);
-      if ($id)
-        $postId=$id;
+			if ($id)
+				$postId=$id;
 		}
-
-		/*if (isset($statement["context"]["contextActivities"]["grouping"][0]["id"]))
-			$postPermalink=$statement["context"]["contextActivities"]["grouping"][0]["id"];
-
-		if (isset($statement["context"]["contextActivities"]["category"][0]["id"]))
-			$postPermalink=$statement["context"]["contextActivities"]["category"][0]["id"];
-
-		if (!$postPermalink)
-			return;
-
-		$postId=url_to_postid($postPermalink);*/
 
 		if (!$postId)
 			return;
@@ -281,10 +274,8 @@ class WP_Swag_admin{
 			return;
 
 		$swagUser=SwagUser::getByEmail($statement["actor"]["mbox"]);
-
 		$swagPost=new SwagPost($post);
-		if ($swagPost->isAllSwagPostItemsCompleted($swagUser))
-			$swagPost->saveProvidedSwag($swagUser);
+		$swagPost->saveProvidedSwagIfCompleted($swagUser);
 	}
 
 	public function ti_my_swag() {
