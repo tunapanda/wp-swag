@@ -10,11 +10,20 @@ class SwagUser {
 	 */
 	public function __construct($user) {
 		$this->user=$user;
-		$this->xapi=new Xapi(
-			get_option("ti_xapi_endpoint_url"),
-			get_option("ti_xapi_username"),
-			get_option("ti_xapi_password")
-		);
+
+		$endpointUrl=trim(get_option("ti_xapi_endpoint_url"));
+
+		if ($endpointUrl) {
+			$this->xapi=new Xapi(
+				$endpointUrl,
+				get_option("ti_xapi_username"),
+				get_option("ti_xapi_password")
+			);
+		}
+
+		else {
+			$this->xapi=NULL;
+		}
 
 		$this->completedSwagFetched=NULL;
 		$this->completedSwag=NULL;
@@ -37,12 +46,18 @@ class SwagUser {
 		if ($this->completedSwagFetched)
 			return $this->completedSwag;
 
-		$statements=$this->xapi->getStatements(array(
-			"agentEmail"=>$this->user->user_email,
-			"activity"=>"http://swag.tunapanda.org/",
-			"verb"=>"http://adlnet.gov/expapi/verbs/completed",
-			"related_activities"=>"true"
-		));
+		if ($this->xapi) {
+			$statements=$this->xapi->getStatements(array(
+				"agentEmail"=>$this->user->user_email,
+				"activity"=>"http://swag.tunapanda.org/",
+				"verb"=>"http://adlnet.gov/expapi/verbs/completed",
+				"related_activities"=>"true"
+			));
+		}
+
+		else {
+			$statements=array();
+		}
 
 		$this->completedSwag=array();
 
