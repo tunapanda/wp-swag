@@ -33,9 +33,11 @@ class WP_Swag_admin{
 		add_shortcode("swagmap", array(get_called_class(), "ti_swagmap"));
 		
 		add_action("h5p-xapi-post-save",array(get_called_class(),"ti_xapi_post_save"));
+		add_action("h5p-xapi-pre-save",array(get_called_class(),"ti_xapi_pre_save"));
 		add_action("deliverable-xapi-post-save",array(get_called_class(), "ti_xapi_post_save"));
 		add_shortcode("my-swag",array(get_called_class(), "ti_my_swag"));
-		
+
+		add_filter("h5p-xapi-auth-settings",array(get_called_class(),"ti_xapi_h5p_auth_settings"));
 	}
 
 
@@ -209,7 +211,14 @@ class WP_Swag_admin{
 		</script>
 		</div>";
 	}
-	
+
+	/**
+	 * Here we have the chance to modify the statement before it is saved.
+	 */
+	public function ti_xapi_pre_save($statement) {
+		return $statement;
+	}
+
 	/**
 	 * Act on completed xapi statements.
 	 * Save xapi statement for swag if applicable.
@@ -275,5 +284,16 @@ class WP_Swag_admin{
 		}
 
 		return $out;
+	}
+
+	/**
+	 * Provide settings for wp-h5p-xapi
+	 */
+	public function ti_xapi_h5p_auth_settings($arg) {
+		return array(
+			"endpoint_url"=>get_option("ti_xapi_endpoint_url"),
+			"username"=>get_option("ti_xapi_username"),
+			"password"=>get_option("ti_xapi_password")
+		);
 	}
 }
