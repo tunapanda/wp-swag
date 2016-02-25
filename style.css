@@ -1,4 +1,4 @@
-/**** Track and listing. ****/  
+/**** Track and listing. ****/
 /*
 .listing {
     position: relative;
@@ -96,31 +96,31 @@ img.course-completed {
 }
 
 .masonry-loop{
-    
+
     display: -webkit-box;
     display: -moz-box;
     display: -ms-flexbox;
     display: -webkit-flex;
     display: flex;
-    
+
     -webkit-flex-direction: row;
     -ms-flex-direction: row;
     flex-direction: row;
- 
+
     -webkit-flex-wrap: wrap;
     -ms-flex-wrap: wrap;
     flex-wrap: wrap;
     padding: 5px;
-    
+
 }
-    .listing{            
+    .listing{
         position: relative;
         display: -webkit-box;
         display: -moz-box;
         display: -ms-flexbox;
         display: -webkit-flex;
         display: flex;
-        
+
         -webkit-align-content: stretch;
         -ms-flex-line-pack: stretch;
         align-content: stretch;
@@ -129,35 +129,35 @@ img.course-completed {
         -webkit-align-items: stretch;
         -ms-flex-align: stretch;
         align-items: stretch;
-        
+
         width: 30.333333%;
         margin: 1.5%;
         float: left;
         box-shadow: 0px 0px 5px rgba(0,0,0,0.3);
         margin-bottom: 25px;
-        
-        /* -moz-border: 5px 5px 0px 0px; 
+
+        /* -moz-border: 5px 5px 0px 0px;
         -webkit-border-radius: 5px 5px 0px 0px; */
         border-radius: 6px;
     }
-    
+
     .listing-info{
         width: 100%;
-        
+
         background-color: white;
-        
+
         border: 1px solid #009900;
-        
-        -moz-border: 5px; 
-        -webkit-border-radius: 5px; 
+
+        -moz-border: 5px;
+        -webkit-border-radius: 5px;
         border-radius: 6px;
-        
+
         display: -webkit-box;
         display: -moz-box;
         display: -ms-flexbox;
         display: -webkit-flex;
         display: flex;
-            
+
         -webkit-box-direction: normal;
         -moz-box-direction: normal;
         -webkit-box-orient: vertical;
@@ -165,7 +165,7 @@ img.course-completed {
         -webkit-flex-direction: column;
         -ms-flex-direction: column;
         flex-direction: column;
-        
+
         -webkit-align-content: stretch;
         -ms-flex-line-pack: stretch;
         align-content: stretch;
@@ -178,8 +178,8 @@ img.course-completed {
     .listing-info .header{
         width: 100%;
         height: auto;
-        -moz-border: 5px 5px 0px 0px; 
-        -webkit-border-radius: 5px 5px 0px 0px; 
+        -moz-border: 5px 5px 0px 0px;
+        -webkit-border-radius: 5px 5px 0px 0px;
         border-radius: 5px 5px 0px 0px;
     }
 
@@ -195,22 +195,22 @@ img.course-completed {
         text-indent: 7px;
         text-align: center;
         text-transform: capitalize;
-        
-        -moz-border: 5px 5px 0px 0px; 
-        -webkit-border-radius: 5px 5px 0px 0px; 
+
+        -moz-border: 5px 5px 0px 0px;
+        -webkit-border-radius: 5px 5px 0px 0px;
         border-radius: 5px 5px 0px 0px;
-        
+
     }
 
-    .listing-info .description, 
+    .listing-info .description,
     .listing-info .header{
-        
+
         display: -webkit-box;
         display: -moz-box;
         display: -ms-flexbox;
         display: -webkit-flex;
         display: flex;
-        
+
         -webkit-box-direction: normal;
         -moz-box-direction: normal;
         -webkit-box-orient: vertical;
@@ -219,13 +219,13 @@ img.course-completed {
         -ms-flex-direction: column;
         flex-direction: column;
     }
-    
+
     .listing-info .description{
-        
+
         padding: 15px;
-        
+
     }
-    
+
     .listing-info .footer{
         display: -webkit-box;
         display: -moz-box;
@@ -233,43 +233,43 @@ img.course-completed {
         display: -webkit-flex;
         display: box;
         padding: 15px;
-        
+
         -webkit-box-flex: 1;
         -moz-box-flex: 1;
         -webkit-flex: 1 0 auto;
         -ms-flex: 1 0 auto;
         flex: 1 0 auto;
-        
+
         -webkit-align-self: auto;
         -ms-flex-item-align: auto;
         align-self: auto;
-        
-        
+
+
         display: -webkit-box;
         display: -moz-box;
         display: box;
-    
+
         -webkit-box-orient: vertical;
         -moz-box-orient: vertical;
         box-orient: vertical;
-    
+
         -webkit-box-pack: end;
         -moz-box-pack: end;
         box-pack: end;
-    
+
         -webkit-box-direction: normal;
         -moz-box-direction: normal;
         box-direction: normal;
-    
+
         -webkit-box-align: center;
         -moz-box-align: center;
         box-align: center;
-        
+
         align-content: center;
-            
+
         text-align: center;
     }
-    
+
     .listing-info .footer a,
     .listing-info .footer a:visited{
         border: 1px solid #C36E4D;
@@ -282,37 +282,37 @@ img.course-completed {
         text-transform: uppercase;
         border-radius: 1000px;
     }
-    
+
     .listing-info .footer a:focus,
     .listing-info .footer a:hover{
         border: 1px solid #C36E4D;
         background: #C36E4D;
-        color: white;   
+        color: white;
     }
-    
+
     .listing-info .footer a:active{
         background: #714126;
-        color: #a77354; 
+        color: #a77354;
         box-shadow: 0px 0px 10px rgba(0,0,0,0.7) inset;
     }
-    
+
     .course .listing-info .title{
         background-color: #88C83C;
     }
-    
+
     .course .listing-info{
         border-color: #88C83C;
     }
-    
+
 
     .listing-info .list-count,
-    .listing-info .list-link{        
+    .listing-info .list-link{
         display: -webkit-box;
         display: -moz-box;
         display: -ms-flexbox;
         display: -webkit-flex;
         display: flex;
-        
+
         -webkit-box-direction: normal;
         -moz-box-direction: normal;
         -webkit-box-orient: vertical;
@@ -320,21 +320,21 @@ img.course-completed {
         -webkit-flex-direction: column;
         -ms-flex-direction: column;
         flex-direction: column;
-        
+
         -webkit-box-ordinal-group: 1;
         -moz-box-ordinal-group: 1;
         box-ordinal-group: 1;
-    
+
         -webkit-box-flex: 0;
         -moz-box-flex: 0;
         box-flex: 0;
-        
+
         -webkit-box-align: center;
         -moz-box-align: center;
         box-align: center;
 
     }
-    
+
     .listing-info .list-count{
         padding: 10px;
         font-weight: bold;
@@ -348,7 +348,7 @@ img.course-completed {
         display: -ms-flexbox;
         display: -webkit-flex;
         display: flex;
-        
+
         width: 100%;
         float: left;
         box-shadow: 0px 0px 5px rgba(0,0,0,0.3);
@@ -364,7 +364,7 @@ img.course-completed {
         display: -ms-flexbox;
         display: -webkit-flex;
         display: flex;
-        
+
         width: 48%;
         margin: 1%;
         float: left;
@@ -533,4 +533,29 @@ img.coursepresentation {
 /*  stroke: #000000;
     font-weight: bold;*/
     text-shadow: 0 1px 0 #000, 1px 0 0 #000, 0 -1px 0 #000, -1px 0 0 #000;
+}
+
+/** Lesson Plan Buttons **/
+
+.button-lessonplan {
+	color: white;
+	background-color: #0A6C39;
+	border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+		cursor: pointer;
+}
+
+.button-lessonplan:enabled:hover {
+	background-color: #88C83C
+}
+
+.disabled {
+	opacity: 0.6;
+	cursor: not-allowed;
 }

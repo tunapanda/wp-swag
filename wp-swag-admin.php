@@ -1,4 +1,4 @@
-<?php 
+<?php
 /*
 	wp-swag plugin admin functionalities and hooks
 */
@@ -28,10 +28,10 @@ class WP_Swag_admin{
 
 		add_shortcode("track-listing",array(get_called_class(), "ti_track_listing"));
 		add_shortcode("course-listing",array(get_called_class(),"ti_course_listing"));
-		add_action('wp_enqueue_scripts',array(get_called_class(), "ti_enqueue_scripts"));	
+		add_action('wp_enqueue_scripts',array(get_called_class(), "ti_enqueue_scripts"));
 
 		add_shortcode("swagmap", array(get_called_class(), "ti_swagmap"));
-		
+
 		add_action("h5p-xapi-post-save",array(get_called_class(),"ti_xapi_post_save"));
 		add_action("h5p-xapi-pre-save",array(get_called_class(),"ti_xapi_pre_save"));
 		add_action("deliverable-xapi-post-save",array(get_called_class(), "ti_xapi_post_save"));
@@ -71,13 +71,13 @@ class WP_Swag_admin{
 		require __DIR__."/settings.php";
 	}
 
-	
+
 	/**
 	 * Handle the track-listing short_code.
 	 */
 	public function ti_track_listing() {
 		$parentId=get_the_ID();
-		$pages=get_pages(array( 
+		$pages=get_pages(array(
 			"parent"=>$parentId
 		));
 
@@ -150,14 +150,14 @@ class WP_Swag_admin{
 	 * Scripts and styles in the plugin
 	 */
 	public function ti_enqueue_scripts() {
-		wp_register_style("wp_swag",plugins_url( "/style.css", __FILE__)); //?v=x added to refresh browser cache when stylesheet is updated. 
+		wp_register_style("wp_swag",plugins_url( "/style.css", __FILE__)); //?v=x added to refresh browser cache when stylesheet is updated.
 		wp_enqueue_style("wp_swag");
 
 		wp_register_script("d3",plugins_url("/d3.v3.min.js", __FILE__));
 		wp_register_script("ti-main",plugins_url("/main.js", __FILE__));
 
 		wp_enqueue_script("ti-main");
-		
+
 		wp_enqueue_script("d3");
 
 	}
@@ -172,6 +172,24 @@ class WP_Swag_admin{
 		$template=new Template(__DIR__."/tpl/course.php");
 		$template->set("swagUser",$swagUser);
 		$template->set("swagPost",$swagPost);
+
+		/** Leson Plan Functionality */
+
+		$template->set("showLessonPlan",FALSE);
+		if (array_key_exists("lessonplan",$args)) {
+		$template->set("lessonPlan",get_home_url().'/wp-content/uploads'.$args["lessonplan"]);
+		$template->set("showLessonPlan",TRUE);}
+
+		if ($swagUser->isSwagCompleted($swagPost->getProvidedSwag())) {
+			$template->set("lessonplanAvailable",TRUE);
+		}
+		else if  (current_user_can('edit_others_pages') || get_the_author_id() == get_current_user_id()) {
+			$template->set("lessonplanAvailable",TRUE);
+		}
+		else {
+			$template->set("lessonplanAvailable",FALSE);
+		}
+
 
 		$template->set("showHintInfo",FALSE);
 		if (!$swagUser->isSwagCompleted($swagPost->getRequiredSwag())) {
@@ -227,7 +245,7 @@ class WP_Swag_admin{
 
 		if ($statement["verb"]["id"]!="http://adlnet.gov/expapi/verbs/completed")
 			return;
-	
+
 
 		//$postPermalink=NULL;
 

@@ -7,7 +7,7 @@
 		<?php echo $uncollectedSwagpaths; ?>
 	</div>
 <?php } ?>
-<?php 
+<?php
 	$plugins_uri = WP_Swag_admin::$plugins_uri;
  ?>
 <div class='content-tab-wrapper'>
@@ -21,12 +21,12 @@
 			>
 				<a href="<?php echo $swagPostItem->getUrl(); ?>">
 					<?php if ($swagPostItem->isCompleted($swagUser)) { ?>
-						<img 
+						<img
 							class='coursepresentation'
 							src="<?php echo $plugins_uri;?>/img/completed-logo.png"
 						/>
 					<?php } else {?>
-						<img 
+						<img
 							class='coursepresentation'
 							src="<?php echo $plugins_uri; ?>/img/coursepresentation-logo.png"
 						/>
@@ -37,6 +37,11 @@
 	</ul>
 	<div class='content-tab-content'>
 		<h1><?php echo $swagPost->getSelectedItem()->getTitle(); ?></h1>
+		<?php if($showLessonPlan and $lessonplanAvailable) : ?>
+		<a href="<?php echo $lessonPlan; ?>" class="button-lessonplan" style="text-align:right;float:right">Download Lesson Plan</a>
+	<?php elseif ($showLessonPlan and !$lessonplanAvailable) : ?>
+		<button style="text-align:right;float:right" title="Please complete swag to download the lesson plan" class="button-lessonplan disabled" disabled>Download Lesson Plan</button>
+		<?php endif; ?>
 		<?php echo $swagPost->getSelectedItem()->getContent(); ?>
 	</div>
 </div>
