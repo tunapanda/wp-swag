@@ -6,13 +6,22 @@
 class H5pUtil {
 
 	/**
-	 * Get H5p title.
+	 * Get H5P by Id.
 	 */
-	public static function getH5pTitleById($id) {
+	public static function getH5pById($id, $fields=array()) {
 		global $wpdb;
 
+		if (!$fields)
+			$fields=array("*");
+
+		else
+			if (!in_array("id",$fields))
+				$fields[]="id";
+
+		$fieldsString=join(",",$fields);
+
 		$q=$wpdb->prepare(
-			"SELECT title ".
+			"SELECT $fieldsString ".
 			"FROM   {$wpdb->prefix}h5p_contents ".
 			"WHERE  id=%s",
 			$id
@@ -21,7 +30,15 @@ class H5pUtil {
 		if ($wpdb->last_error)
 			throw new Exception($wpdb->last_error);
 
-		return $wpdb->get_var($q);
+		return $wpdb->get_row($q,ARRAY_A);
+	}
+
+	/**
+	 * Get H5p title.
+	 */
+	public static function getH5pTitleById($id) {
+		$h5p=H5pUtil::getH5pById($id,array("title"));
+		return $h5p["title"];
 	}
 
 	/**

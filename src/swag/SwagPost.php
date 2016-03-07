@@ -141,6 +141,15 @@ class SwagPost {
 	}
 
 	/**
+	 * Save provided swag if the user has completed all
+	 * swagifacts for the swagpath.
+	 */
+	public function saveProvidedSwagIfCompleted($swagUser) {
+		if ($this->isAllSwagPostItemsCompleted($swagUser))
+			$this->saveProvidedSwag($swagUser);
+	}
+
+	/**
 	 * Get selected item based on $_REQUEST["tab"]
 	 */
 	public function getSelectedItem() {

@@ -4,7 +4,7 @@ Plugin Name: Swag
 Plugin URI: https://github.com/tunapanda/wp-swag
 GitHub Plugin URI: https://github.com/tunapanda/wp-swag
 Description: It privides the following functionality; Allowing creation of tracklisting, swagpaths and swagmaps as well as allowing xAPI communication.
-Version: 0.0.3
+Version: 0.0.4
 */
 
 require_once __DIR__."/wp-swag-admin.php";

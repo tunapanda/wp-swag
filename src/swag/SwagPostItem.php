@@ -21,6 +21,75 @@ class SwagPostItem {
 	}
 
 	/**
+	 * Notification that this item is about to be shown.
+	 */
+	public function preShow() {
+		switch ($this->type) {
+			case 'h5p':
+				$id=H5pUtil::getH5pIdByShortcodeArgs($this->parameters);
+				$h5p=H5pUtil::getH5pById($id,array("parameters"));
+				$h5pParameters=json_decode($h5p["parameters"],TRUE);
+				if ($h5pParameters["timeline"]) {
+					$this->saveCompletedStatement(SwagUser::getCurrent());
+					$this->swagPost->saveProvidedSwagIfCompleted(SwagUser::getCurrent());
+				}
+				break;
+			
+			default:
+				break;
+		}
+	}
+
+	/**
+	 * Save a completed statement to xapi.
+	 * This is normally done by other components, but sometimes
+	 * it can be useful to override this...
+	 */
+	public function saveCompletedStatement($swagUser) {
+		$xapi=Swag::instance()->getXapi();
+		if (!$xapi)
+			return array();
+
+		$user=$swagUser->getUser();
+		if (!$user || !$user->ID)
+			return;
+
+		$pageUrl=get_permalink($this->swagPost->getPost()->ID);
+
+		$statement=array(
+			"actor"=>array(
+				"mbox"=>"mailto:".$user->user_email,
+				"name"=>$user->display_name
+			),
+
+			"object"=>array(
+				"objectType"=>"Activity",
+				"id"=>$this->getObjectUrl()
+			),
+
+			"verb"=>array(
+				"id"=>"http://adlnet.gov/expapi/verbs/completed"
+			),
+
+			"context"=>array(
+				"contextActivities"=>array(
+					"grouping"=>array(
+						array(
+							"objectType"=>"Activity",
+							"id"=>$pageUrl,
+							"definition"=>array(
+								"type"=>"http://activitystrea.ms/schema/1.0/page"
+							)
+						)
+					)
+				)
+			),
+		);
+
+		$xapi->putStatement($statement);
+	}
+
+	/**
 	 * Set index.
 	 */
 	public function setSwagPost($swagPost) {
