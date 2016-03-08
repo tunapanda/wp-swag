@@ -9,11 +9,7 @@ require_once __DIR__."/src/utils/Xapi.php";
 require_once __DIR__."/src/swag/SwagPost.php";
 require_once __DIR__."/src/utils/Template.php";
 require_once __DIR__."/src/utils/ShortcodeUtil.php";
-
-
-
-
-
+require_once __DIR__."/src/controller/SettingsPageController.php";
 
 class WP_Swag_admin{
 	static $plugins_uri;
@@ -29,6 +25,7 @@ class WP_Swag_admin{
 		add_shortcode("track-listing",array(get_called_class(), "ti_track_listing"));
 		add_shortcode("course-listing",array(get_called_class(),"ti_course_listing"));
 		add_action('wp_enqueue_scripts',array(get_called_class(), "ti_enqueue_scripts"));
+		add_action('admin_enqueue_scripts',array(get_called_class(), "ti_enqueue_scripts"));
 
 		add_shortcode("swagmap", array(get_called_class(), "ti_swagmap"));
 
@@ -47,8 +44,8 @@ class WP_Swag_admin{
 	 */
 	public function ti_admin_menu() {
 		add_options_page(
-			'Tunapanda Learning',
-			'Tunapanda Learning',
+			'Tunapanda Swag',
+			'Tunapanda Swag',
 			'manage_options',
 			'ti_settings',
 			array(get_called_class(), 'ti_create_settings_page')
@@ -68,9 +65,9 @@ class WP_Swag_admin{
 	 * Create settings page.
 	 */
 	public function ti_create_settings_page() {
-		require __DIR__."/settings.php";
+		$settingsPageController=new SettingsPageController();
+		$settingsPageController->process();
 	}
-
 
 	/**
 	 * Handle the track-listing short_code.

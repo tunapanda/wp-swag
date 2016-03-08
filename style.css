@@ -559,3 +559,41 @@ img.coursepresentation {
 	opacity: 0.6;
 	cursor: not-allowed;
 }
+
+/** Admin. **/
+.swag-admin-dependency-row {
+    background: #ffffff;
+    box-shadow: 0px 0px 5px #c0c0c0;
+    min-height: 40px;
+    padding: 10px;
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.swag-admin-dependency-row a {
+    color: #000000;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.swag-admin-dependency-description {
+    margin-left: 200px;
+}
+
+.swag-admin-dependency-status {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+}
+
+.swag-admin-dependency-status a:hover, .swag-admin-dependency-status a:active {
+    text-decoration: underline;
+}
+
+.swag-admin-dependency-missing {
+    color: #c00000;
+}
+
+.swag-admin-dependency-ok {
+    color: #00c000;
+}
