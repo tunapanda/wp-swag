@@ -180,7 +180,7 @@ class WP_Swag_admin{
 		/** Leson Plan Functionality */
 
 		$template->set("showLessonPlan",FALSE);
-		if (array_key_exists("lessonplan",$args)) {
+		if (array_key_exists("lessonplan",$args) AND is_user_logged_in()) {
 		$template->set("lessonPlan",get_home_url().'/wp-content/uploads'.$args["lessonplan"]);
 		$template->set("showLessonPlan",TRUE);}
 
