@@ -5,7 +5,7 @@ require __DIR__."/../utils/Xapi.php";
 /**
  * Common base functions.
  */
-class Swag {
+class SwagPlugin {
 
 	private static $instance;
 
@@ -34,9 +34,9 @@ class Swag {
 	 * Get sinleton instance.
 	 */
 	public static function instance() {
-		if (!Swag::$instance)
-			Swag::$instance=new Swag();
+		if (!SwagPlugin::$instance)
+			SwagPlugin::$instance=new SwagPlugin();
 
-		return Swag::$instance;
+		return SwagPlugin::$instance;
 	}
 }

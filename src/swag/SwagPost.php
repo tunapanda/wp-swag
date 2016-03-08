@@ -1,7 +1,7 @@
 <?php
 
 require_once __DIR__."/SwagPostItem.php";
-require_once __DIR__."/Swag.php";
+require_once __DIR__."/../plugin/SwagPlugin.php";
 
 /**
  * Per post related swag operations.
@@ -114,7 +114,7 @@ class SwagPost {
 		if (array_key_exists($email,$this->relatedStatementsByEmail))
 			return $this->relatedStatementsByEmail[$email];
 
-		$xapi=Swag::instance()->getXapi();
+		$xapi=SwagPlugin::instance()->getXapi();
 		if (!$xapi)
 			return array();
 
@@ -175,7 +175,7 @@ class SwagPost {
 	 * Save xapi statements for provided swag for current user.
 	 */
 	public function saveProvidedSwag($swagUser) {
-		$xapi=Swag::instance()->getXapi();
+		$xapi=SwagPlugin::instance()->getXapi();
 		if (!$xapi)
 			return array();
 

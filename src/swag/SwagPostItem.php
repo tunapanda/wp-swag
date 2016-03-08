@@ -46,7 +46,7 @@ class SwagPostItem {
 	 * it can be useful to override this...
 	 */
 	public function saveCompletedStatement($swagUser) {
-		$xapi=Swag::instance()->getXapi();
+		$xapi=SwagPlugin::instance()->getXapi();
 		if (!$xapi)
 			return array();
 
