@@ -4,9 +4,9 @@
 */
 
 require_once __DIR__."/utils.php";
-require_once __DIR__."/src/swag/SwagUser.php";
+require_once __DIR__."/src/model/SwagUser.php";
 require_once __DIR__."/src/utils/Xapi.php";
-require_once __DIR__."/src/swag/SwagPost.php";
+require_once __DIR__."/src/model/SwagPost.php";
 require_once __DIR__."/src/utils/Template.php";
 require_once __DIR__."/src/utils/ShortcodeUtil.php";
 require_once __DIR__."/src/controller/SettingsPageController.php";
