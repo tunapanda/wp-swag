@@ -14,7 +14,7 @@ require_once __DIR__."/src/controller/SettingsPageController.php";
 class WP_Swag_admin{
 	static $plugins_uri;
 
-	public function init_hooks(){
+	public static function init_hooks(){
 		self::$plugins_uri = plugins_url()."/wp-swag";
 
 		// initialise the the admin settings
