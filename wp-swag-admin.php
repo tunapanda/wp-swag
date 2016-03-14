@@ -10,6 +10,7 @@ require_once __DIR__."/src/model/SwagPost.php";
 require_once __DIR__."/src/utils/Template.php";
 require_once __DIR__."/src/utils/ShortcodeUtil.php";
 require_once __DIR__."/src/controller/SettingsPageController.php";
+require_once __DIR__."/src/controller/SwagPageController.php";
 
 class WP_Swag_admin{
 	static $plugins_uri;
@@ -28,6 +29,7 @@ class WP_Swag_admin{
 		add_action('admin_enqueue_scripts',array(get_called_class(), "ti_enqueue_scripts"));
 
 		add_shortcode("swagmap", array(get_called_class(), "ti_swagmap"));
+		add_shortcode("swagtoc", array(get_called_class(), "ti_swagtoc"));
 
 		add_action("h5p-xapi-post-save",array(get_called_class(),"ti_xapi_post_save"));
 		add_action("h5p-xapi-pre-save",array(get_called_class(),"ti_xapi_pre_save"));
@@ -203,7 +205,7 @@ class WP_Swag_admin{
 			$uncollectedFormatted=array();
 
 			foreach ($uncollected as $swag)
-				$uncollectedFormatted[]="<b>$swag</b>";
+				$uncollectedFormatted[]="<b>{$swag->getString()}</b>";
 
 			$swagpaths=SwagPost::getPostsProvidingSwag($uncollected);
 			$swagpathsFormatted=array();
@@ -219,6 +221,14 @@ class WP_Swag_admin{
 		}
 
 		return $template->render();
+	}
+
+	/**
+	 * Table of contents.
+	 */
+	public function ti_swagtoc($args) {
+		$swagPageController=new SwagPageController();
+		return $swagPageController->toc($args);
 	}
 
 	/**
@@ -285,7 +295,7 @@ class WP_Swag_admin{
 		foreach ($completedSwag as $swag) {
 			$out.="<div class='swag-badge-container'>\n";
 			$out.="<img class='swag-badge-image' src='$plugins_uri/img/badge.png'>\n";
-			$out.="<div class='swag-badge-label'>$swag</div>\n";
+			$out.="<div class='swag-badge-label'>{$swag->getString()}</div>\n";
 			$out.="</div>\n";
 		}
 

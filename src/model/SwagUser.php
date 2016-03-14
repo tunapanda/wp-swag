@@ -60,10 +60,8 @@ class SwagUser {
 		}
 
 		$this->completedSwag=array();
-
 		foreach ($statements as $statement) {
-			$objectId=$statement["object"]["id"];
-			$swag=str_replace("http://swag.tunapanda.org/","",$objectId);
+			$swag=Swag::findByString($statement["object"]["id"]);
 
 			if (!in_array($swag,$this->completedSwag))
 				$this->completedSwag[]=$swag;

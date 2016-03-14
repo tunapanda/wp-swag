@@ -5,26 +5,44 @@
  */
 class Swag {
 
-	private static $allSwagByPath;
+	private static $allSwagByString;
 	private static $cacheInitialized=FALSE;
 
-	private $path;
+	private $string;
 	private $parent;
 	private $children;
 
 	/**
 	 * Constructor.
 	 */
-	private function __construct($path=NULL) {
-		$this->path=$path;
+	private function __construct($string=NULL) {
+		$this->string=$string;
 		$this->children=array();
 	}
 
 	/**
-	 * Get path.
+	 * Get swagpaths providing this swag.
 	 */
-	public function getPath() {
-		return $this->path;
+	public function getProvidingSwagPosts() {
+		if (!$this->string)
+			return array();
+
+		return SwagPost::getSwagPostsProvidingSwag($this);
+	}
+
+	/**
+	 * Get title
+	 */
+	public function getTitle() {
+		$parts=explode("/",$this->string);
+		return ucfirst($parts[sizeof($parts)-1]);
+	}
+
+	/**
+	 * Get string representation of this swag.
+	 */
+	public function getString() {
+		return $this->string;
 	}
 
 	/**
@@ -39,12 +57,6 @@ class Swag {
 	 */
 	public function getChildren() {
 		return $this->children;
-	}
-
-	/**
-	 * Get swag posts providing this swag.
-	 */
-	public function getProvidingSwagPosts() {
 	}
 
 	/**
@@ -81,19 +93,22 @@ class Swag {
 	public static function findAll() {
 		Swag::initializeCache();
 
-		return array_values(Swag::$allSwagByPath);
+		return array_values(Swag::$allSwagByString);
 	}
 
 	/**
 	 * Find a swag by path.
 	 */
-	public static function findByPath($path="") {
+	public static function findByString($path="") {
 		Swag::initializeCache();
 
+		$path=str_replace("http://swag.tunapanda.org/","",$path);
 		$path=join("/",Swag::splitPath($path));
 
-		if (isset(Swag::$allSwagByPath[$path]))
-			return Swag::$allSwagByPath[$path];
+		if (isset(Swag::$allSwagByString[$path]))
+			return Swag::$allSwagByString[$path];
+
+		//echo "not found: ".$path;
 
 		return NULL;
 	}
@@ -110,41 +125,63 @@ class Swag {
 		$q=new WP_Query(array(
 			"post_type"=>"any",
 			"post_status"=>"any",
-			"metakey"=>"provides"
+			"metakey"=>"provides",
+			"nopaging"=>TRUE
 		));
 
 		foreach ($q->get_posts() as $post) {
 			$provides=get_post_meta($post->ID,"provides");
 
 			foreach ($provides as $provide)
-				Swag::getOrCreateByPath($provide);
+				Swag::getOrCreateByString($provide);
 		}
+
+		$q=new WP_Query(array(
+			"post_type"=>"any",
+			"post_status"=>"any",
+			"metakey"=>"requires",
+			"nopaging"=>TRUE
+		));
+
+		foreach ($q->get_posts() as $post) {
+			$requires=get_post_meta($post->ID,"requires");
+
+			foreach ($requires as $require)
+				Swag::getOrCreateByString($require);
+		}
+	}
+
+	/**
+	 * Has the current user completed this swag?
+	 */
+	public function isCompletedByCurrentUser() {
+		return SwagUser::getCurrent()->isSwagCompleted($this);
 	}
 
 	/**
 	 * If it doesn't exist it will be implicitly created.
 	 */
-	private static function getOrCreateByPath($path="") {
+	private static function getOrCreateByString($string="") {
 		Swag::initializeCache();
 
-		$path=join("/",Swag::splitPath($path));
+		$string=join("/",Swag::splitPath($string));
 
-		if (!Swag::$allSwagByPath)
-			Swag::$allSwagByPath=array();
+		if (!Swag::$allSwagByString)
+			Swag::$allSwagByString=array();
 
-		if (!isset(Swag::$allSwagByPath[$path])) {
-			$parts=Swag::splitPath($path);
-			$swag=new Swag($path);
+		if (!isset(Swag::$allSwagByString[$string])) {
+			$parts=Swag::splitPath($string);
+			$swag=new Swag($string);
 
-			if ($path) {
-				$parent=Swag::getOrCreateByPath(join("/",array_slice($parts,0,sizeof($parts)-1)));
+			if ($string) {
+				$parent=Swag::getOrCreateByString(join("/",array_slice($parts,0,sizeof($parts)-1)));
 				$swag->parent=$parent;
 				$parent->addChild($swag);
 			}
 
-			Swag::$allSwagByPath[$path]=$swag;
+			Swag::$allSwagByString[$string]=$swag;
 		}
 
-		return Swag::$allSwagByPath[$path];
+		return Swag::$allSwagByString[$string];
 	}
 }

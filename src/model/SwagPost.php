@@ -24,14 +24,29 @@ class SwagPost {
 	 * Get required swag.
 	 */
 	public function getRequiredSwag() {
-		return get_post_meta($this->post->ID,"requires");
+		$required=array();
+		$metas=get_post_meta($this->post->ID,"requires");
+
+		/*echo "metas: ";
+		print_r($metas);*/
+
+		foreach ($metas as $meta)
+			$required[]=Swag::findByString($meta);
+
+		return $required;
 	}
 
 	/**
 	 * Get required swag.
 	 */
 	public function getProvidedSwag() {
-		return get_post_meta($this->post->ID,"provides");
+		$provided=array();
+		$metas=get_post_meta($this->post->ID,"provides");
+
+		foreach ($metas as $meta)
+			$provided[]=Swag::findByString($meta);
+
+		return $provided;
 	}
 
 	/**
@@ -42,9 +57,25 @@ class SwagPost {
 	}
 
 	/**
+	 * Get swag posts providing this swag.
+	 */
+	public static function getSwagPostsProvidingSwag($swag) {
+		$wpPosts=SwagPost::getPostsProvidingSwag($swag);
+		$swagPosts=array();
+
+		foreach ($wpPosts as $wpPost)
+			$swagPosts[]=new SwagPost($wpPost);
+
+		return $swagPosts;
+	}
+
+	/**
 	 * Get the ids for the swagpaths that provides the swag.
 	 */
-	public function getPostsProvidingSwag($swags) {
+	public static function getPostsProvidingSwag($swags) {
+		if (!is_array($swags))
+			$swags=array($swags);
+
 		$posts=array();
 		$postIds=array();
 
@@ -52,7 +83,7 @@ class SwagPost {
 			$q=new WP_Query(array(
 				"post_type"=>"any",
 				"meta_key"=>"provides",
-				"meta_value"=>$swag
+				"meta_value"=>$swag->getString()
 			));
 
 			foreach ($q->get_posts() as $post) {
@@ -67,7 +98,7 @@ class SwagPost {
 	}
 
 	/**
-	 * Get swag post items.
+	 * Get all swag post items.
 	 */
 	public function getSwagPostItems() {
 		if (!is_array($this->swagPostItems)) {
@@ -184,6 +215,8 @@ class SwagPost {
 			return;
 
 		foreach ($this->getProvidedSwag() as $provided) {
+			$providedString=$provided->getString();
+
 			$statement=array(
 				"actor"=>array(
 					"mbox"=>"mailto:".$user->user_email,
@@ -192,10 +225,10 @@ class SwagPost {
 
 				"object"=>array(
 					"objectType"=>"Activity",
-					"id"=>"http://swag.tunapanda.org/".$provided,
+					"id"=>"http://swag.tunapanda.org/".$providedString,
 					"definition"=>array(
 						"name"=>array(
-							"en-US"=>$provided
+							"en-US"=>$providedString
 						)
 					)
 				),
@@ -218,5 +251,22 @@ class SwagPost {
 
 			$xapi->putStatement($statement);
 		}		
+	}
+
+	/**
+	 * Find all swag posts.
+	 */
+	public function findAll() {
+		$all=array();
+
+		$q=new WP_Query(array(
+			"post_type"=>"any",
+			"meta_key"=>"provides"
+		));
+
+		foreach ($q->get_posts() as $post)
+			$all[]=new SwagPost($post);
+
+		return $all;
 	}
 }
