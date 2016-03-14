@@ -9,20 +9,10 @@
 		    	</div>
 		    
 		    	<div class="description">
-		    		<?php echo $page->post_excerpt; ?>
+		    		<?php echo "desc..."; ?>
 		    	</div>
 		        
 		        <div class="footer">
-		            <span class="list-count">
-		            <?php 
-		                echo $page->swagpaths; 
-		                if( $page->swagpaths == 1 ){
-		                    echo " Swagpath";
-		                } else {
-		                    echo " Swagpaths";
-		                }
-		            ?>
-		            </span>
 		    	    <span class="list-link"><a href="<?php echo $track["url"]; ?>">Visit Track</a></span>
 		        </div>
 		    </div>
