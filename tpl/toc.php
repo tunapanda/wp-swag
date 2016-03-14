@@ -20,7 +20,7 @@
 	<?php } ?>
 
 	<?php foreach ($swagpaths as $swagpath) { ?>
-		<div class="course listing <?php /*if (!$prepared) echo "unprepared"; */?>">
+		<div class="course listing <?php if (!$swagpath["prepared"]) echo "unprepared"; ?>">
 		    <div class="listing-info">
 		    	<div class="header">
 		    		<div class="title">
@@ -49,6 +49,16 @@
 		        <div class="footer">
 		            <a href="<?php echo $swagpath["url"]; ?>">Follow Swagpath</a>
 		        </div>
+		    </div>
+		</div>
+	<?php } ?>
+
+	<?php if ($unprepared) { ?>
+		<div class="after listing">
+		    <div class="after-info">
+		        This track contains <?php echo $unprepared; ?> more swagpath(s) beyond your current level.
+		        <br/><br/>
+		        <a href="#" class="view-unprepared">Click to view</a>
 		    </div>
 		</div>
 	<?php } ?>

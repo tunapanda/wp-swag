@@ -134,6 +134,16 @@ class SwagPost {
 	}
 
 	/**
+	 * Does the current user have all prerequisites?
+	 */
+	public function isCurrentUserPrepared() {
+		//return true;
+
+		$swagUser=SwagUser::getCurrent();
+		return $swagUser->isSwagCompleted($this->getRequiredSwag());
+	}
+
+	/**
 	 * Get related statements for current user.
 	 */
 	public function getRelatedStatements($swagUser) {
