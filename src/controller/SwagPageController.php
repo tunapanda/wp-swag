@@ -20,7 +20,6 @@ class SwagPageController {
 		$tracks=array();
 		$swagpaths=array();
 		$url=get_permalink();
-
 		$unprepared=0;
 
 		foreach ($parent->getChildren() as $child) {
@@ -43,15 +42,27 @@ class SwagPageController {
 					"prepared"=>$provider->isCurrentUserPrepared(),
 					"swag"=>$provider->getProvidedSwag()
 				);
-
-
 			}
 		}
+
+		$trail=array();
+		foreach ($parent->getTrail() as $swag) {
+			$item=array();
+			$item["url"]=$url."?track=".$swag->getString();
+			$item["title"]=$swag->getTitle();
+
+			$trail[]=$item;
+		}
+
+		$trail[0]["title"]="Tracks";
+		if (sizeof($trail)<2)
+			$trail=array();
 
 		$template=new Template(__DIR__."/../../tpl/toc.php");
 		$template->set("tracks",$tracks);
 		$template->set("swagpaths",$swagpaths);
 		$template->set("unprepared",$unprepared);
+		$template->set("trail",$trail);
 
 		return $template->render();
 	}

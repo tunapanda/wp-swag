@@ -1,3 +1,10 @@
+<div id="breadcrumbs">
+	<ul id="breadcrumb">
+		<?php foreach ($trail as $item) { ?>
+			<li><a href="<?php echo $item["url"]; ?>"><?php echo $item["title"]; ?></a></li>
+		<?php } ?>
+	</ul>
+</div>
 <?php if ($showHintInfo) { ?>
 	<div class='course-info'>
 		In order to get the most out of this swagpath, it is recommended that you

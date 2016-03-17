@@ -220,6 +220,42 @@ class WP_Swag_admin{
 			$template->set("uncollectedSwagpaths",join(", ",$swagpathsFormatted));
 		}
 
+		$swag=$swagPost->getProvidedSwag()[0];
+
+		if (!$swag) {
+			$trail=array(
+				array(
+					"url"=>home_url( '/toc/' ),
+					"title"=>"Tracks"
+				),
+
+				array(
+					"url"=>get_permalink(),
+					"title"=>get_the_title()
+				)
+			);
+		}
+
+		else {
+			$trail=array();
+			foreach ($swagPost->getProvidedSwag()[0]->getTrail() as $swag) {
+				$item=array();
+				$item["url"]=home_url( '/toc/' )."?track=".$swag->getString();
+				$item["title"]=$swag->getTitle();
+
+				$trail[]=$item;
+			}
+
+			array_pop($trail);
+			$trail[]=array(
+				"url"=>get_permalink(),
+				"title"=>get_the_title()
+			);
+			$trail[0]["title"]="Tracks";
+		}
+
+		$template->set("trail",$trail);
+
 		return $template->render();
 	}
 

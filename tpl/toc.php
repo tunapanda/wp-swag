@@ -1,3 +1,10 @@
+<div id="breadcrumbs">
+	<ul id="breadcrumb">
+		<?php foreach ($trail as $item) { ?>
+			<li><a href="<?php echo $item["url"]; ?>"><?php echo $item["title"]; ?></a></li>
+		<?php } ?>
+	</ul>
+</div>
 <div class="masonry-loop">
 	<?php foreach ($tracks as $track) { ?>
 		<div class="track listing">

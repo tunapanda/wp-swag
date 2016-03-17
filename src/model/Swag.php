@@ -97,6 +97,16 @@ class Swag {
 	}
 
 	/**
+	 * Get trail from root for this swag.
+	 */
+	public function getTrail() {
+		if (!$this->parent)
+			return array($this);
+
+		return array_merge($this->parent->getTrail(),array($this));
+	}
+
+	/**
 	 * Find a swag by path.
 	 */
 	public static function findByString($path="") {
