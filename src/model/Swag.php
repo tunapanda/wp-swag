@@ -90,7 +90,7 @@ class Swag {
 	/**
 	 * Find all swag
 	 */
-	public static function findAll() {
+	public static function findAllImplied() {
 		Swag::initializeCache();
 
 		return array_values(Swag::$allSwagByString);
