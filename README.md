@@ -21,8 +21,10 @@ Under History of Astronomy you might want to create a Swagifact called Ancient A
 [/course]</br>
 ```
 This should look like this
-![swagpath]()	
+![swagpath](https://github.com/tunapanda/wp-swag/blob/master/img/swagpath.png)	
 
-Note: We use [H5P]() to create the content itself. Then we enclose the [h5p-course-item slug="ancient-astronomy"] to reference a given H5P item by its slug. Native H5P uses IDs to reference H5P items though. Using slug is an extended functionality from the main H5P plugin.
+Note: We use [H5P](https://h5p.org/) to create the content itself. Then we enclose the [h5p-course-item slug="ancient-astronomy"] to reference a given H5P item by its slug. Native H5P uses IDs to reference H5P items though. Using slug is an extended functionality from the main H5P plugin.
 
 ##Hacking !!
+Feel free to dive in and help improove what we have so far :)
+
