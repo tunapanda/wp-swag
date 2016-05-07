@@ -16,9 +16,9 @@ Now if you want to create a Swagpath under Astronomy, example History of Astrono
 Under History of Astronomy you might want to create a Swagifact called Ancient Astromomy. To do so just put the following shortcodes in the editing area under the page History of Astronomy. 
 
 ```
-[course]</br>
-[h5p-course-item slug="ancient-astronomy"]</br>
-[/course]</br>
+[course]
+[h5p-course-item slug="ancient-astronomy"]
+[/course]
 ```
 This should look like this
 ![swagpath](https://github.com/tunapanda/wp-swag/blob/master/img/swagpath.png)	
