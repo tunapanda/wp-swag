@@ -26,5 +26,5 @@ This should look like this
 Note: We use [H5P](https://h5p.org/) to create the content itself. Then we enclose the [h5p-course-item slug="ancient-astronomy"] to reference a given H5P item by its slug. Native H5P uses IDs to reference H5P items though. Using slug is an extended functionality from the main H5P plugin.
 
 ##Hacking !!
-Feel free to dive in and help improove what we have so far :)
+Feel free to dive in and help improve what we have so far :)
 
