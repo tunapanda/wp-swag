@@ -54,7 +54,7 @@ abstract class WpCrud extends WP_List_Table {
 			"enableDelete"=>TRUE,
 		);
 
-		$this->defaultBox=new WpCrudBox($this->typeId);
+		$this->defaultBox=new WpCrudBox();
 		$this->defaultBox->setWpCrud($this);
 
 		$this->init();

@@ -14,7 +14,7 @@ class WpCrudBox {
 	/**
 	 * Constructor.
 	 */
-	public function __construct($title) {
+	public function __construct($title=NULL) {
 		$this->title=$title;
 	}
 
@@ -22,6 +22,9 @@ class WpCrudBox {
 	 * Get title.
 	 */
 	public function getTitle() {
+		if (!$this->title)
+			throw new Exception("This box doesn't have any title, why do you ask?");
+
 		return $this->title;
 	}
 

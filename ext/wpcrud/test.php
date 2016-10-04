@@ -38,14 +38,9 @@ class WpCrudTest extends WpCrud {
 
 //		$this->setListFields(array("text","sel","im2"));
 //		$this->setParentMenuSlug("h5p");
-	}
 
-	function getLiteral($literal) {
-		switch ($literal) {
-			case "description":
-				return "hello world bla";
-				break;
-		}
+		$this->setConfig("description","Hello World!");
+		$this->setConfig("typeName","Hello World");
 	}
 
 	function getItem($id) {
