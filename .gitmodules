@@ -1,0 +1,3 @@
+[submodule "submodule/wpcrud"]
+	path = submodule/wpcrud
+	url = https://github.com/limikael/wpcrud

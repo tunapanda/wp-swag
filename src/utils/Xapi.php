@@ -21,7 +21,7 @@ if (!class_exists("Xapi")) {
 		 *
 		 * Spec for params:
 		 *
-		 * https://github.com/adlnet/xAPI-Spec/blob/master/xAPI.md#stmtapiget
+		 * https://github.com/adlnet/xAPI-Spec/blob/master/xAPI-Communication.md#213-get-statements
 		 */
 		public function getStatements($params) {
 			$url=$this->endpoint;
@@ -43,6 +43,8 @@ if (!class_exists("Xapi")) {
 			exit;*/
 
 			$url.="?".$query;
+
+			//error_log("url: ".$url);
 
 			$headers=array(
 				"Content-Type: application/json",
@@ -67,7 +69,13 @@ if (!class_exists("Xapi")) {
 
 			$decoded=json_decode($res,TRUE);
 
-			if (!$decoded || !array_key_exists("statements",$decoded))
+			if (!$decoded)
+				throw new Exception("Bad response from xapi endpoint.");
+
+			if (isset($params["statementId"]) || isset($params["voidedStatementId"]))
+				return array($decoded);
+
+			if (!array_key_exists("statements",$decoded))
 				throw new Exception("Bad response from xapi endpoint.");
 
 			return $decoded["statements"];
@@ -103,8 +111,15 @@ if (!class_exists("Xapi")) {
 			$decoded=json_decode($res,TRUE);
 			$code=curl_getinfo($curl,CURLINFO_HTTP_CODE);
 
+			//print_r($decoded);
+
 			if ($code!=200 || sizeof($decoded)!=1 || strlen($decoded[0])!=36) {
 				//throw new Exception($res);
+
+				if (in_array("message",$decoded) && 
+						$decoded["message"] && 
+						is_array($decoded["message"]))
+					throw new Exception(join(", ", $decoded["message"]));
 
 				if (in_array("message",$decoded) && $decoded["message"])
 					throw new Exception($decoded["message"]);
@@ -114,6 +129,8 @@ if (!class_exists("Xapi")) {
 
 				throw new Exception("Unknown error");
 			}
+
+			return $decoded[0];
 		}
 	}
 }

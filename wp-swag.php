@@ -8,7 +8,10 @@ Version: 0.0.4
 */
 
 require_once __DIR__."/wp-swag-admin.php";
+require_once __DIR__."/src/controller/SwagController.php";
 
 ///$plugin=new WP_Swag_admin();
 
 add_action("init", array("WP_Swag_admin", "init_hooks"));
+
+SwagController::setup();

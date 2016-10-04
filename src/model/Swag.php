@@ -11,6 +11,8 @@ class Swag {
 	private $string;
 	private $parent;
 	private $children;
+	private $color;
+	private $description;
 
 	/**
 	 * Constructor.
@@ -18,6 +20,20 @@ class Swag {
 	private function __construct($string=NULL) {
 		$this->string=$string;
 		$this->children=array();
+	}
+
+	/**
+	 * Get description.
+	 */
+	public function getDescription() {
+		return $this->description;
+	}
+
+	/**
+	 * Get defined color.
+	 */
+	public function getDefinedColor() {
+		return $this->color;
 	}
 
 	/**
