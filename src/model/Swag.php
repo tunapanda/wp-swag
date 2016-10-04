@@ -1,11 +1,12 @@
 <?php
 
-//require_once __DIR__."/../../ext/wprecord/WpRecord.php";
-
 /**
  * Represents one swag, collectible as a badge. Organized in a hierarchy.
+ * These items are created implicitly, and they do not necessarily correspond
+ * to anything stored in the database. For each Swag, there may be a connected
+ * SwagData item.
  */
-class Swag /*extends WpRecord*/ {
+class Swag {
 
 	private static $allSwagByString;
 	private static $cacheInitialized=FALSE;
@@ -13,8 +14,7 @@ class Swag /*extends WpRecord*/ {
 	private $string;
 	private $parent;
 	private $children;
-	private $color;
-	private $description;
+	private $swagData;
 
 	/**
 	 * Constructor.
@@ -22,20 +22,37 @@ class Swag /*extends WpRecord*/ {
 	private function __construct($string=NULL) {
 		$this->string=$string;
 		$this->children=array();
+		$this->swagData=NULL;
+	}
+
+	/**
+	 * Get swag data.
+	 */
+	public function getSwagData() {
+		if (!$this->swagData) {
+			$this->swagData=SwagData::findOneBy("string",$this->string);
+
+			if (!$this->swagData) {
+				$this->swagData=new SwagData();
+				$this->swagData->string=$this->string;
+			}
+		}
+
+		return $this->swagData;
 	}
 
 	/**
 	 * Get description.
 	 */
 	public function getDescription() {
-		return $this->description;
+		return $this->getSwagData()->description;
 	}
 
 	/**
 	 * Get defined color.
 	 */
 	public function getDefinedColor() {
-		return $this->color;
+		return $this->getSwagData()->color;
 	}
 
 	/**

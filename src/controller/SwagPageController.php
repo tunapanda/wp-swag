@@ -26,6 +26,7 @@ class SwagPageController {
 			if ($child->getChildren()) {
 				$tracks[]=array(
 					"title"=>$child->getTitle(),
+					"description"=>$child->getDescription(),
 					"url"=>$url."?track=".$child->getString()
 				);
 			}

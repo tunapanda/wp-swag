@@ -16,7 +16,7 @@
 		    	</div>
 		    
 		    	<div class="description">
-		    		<?php echo "desc..."; ?>
+		    		<?php echo $track["description"]; ?>
 		    	</div>
 		        
 		        <div class="footer">

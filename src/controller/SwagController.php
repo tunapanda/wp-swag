@@ -20,7 +20,10 @@ class SwagController extends WpCrud {
         $this->setConfig("enableDelete",FALSE);
         $this->setConfig("typeName","Swag Badges");
         $this->setConfig("description",
-            "Use this page to set colors and decription for swag categories.");
+            "Use this page to set colors and decription for the swag categories.<br/><br/> ".
+            "You don't need to use this page to actually <i>create</i> anything, ".
+            "the items listed here are created implicitly as you set the <tt>provides</tt> ".
+            "tag of a swagpath.");
 
         $this->setConfig("parentMenuSlug","__unused__");
 	}
@@ -34,11 +37,11 @@ class SwagController extends WpCrud {
     }
 
     function deleteItem($item) {
-
+        throw new Exception("That's not how it works.");
     }
 
     function saveItem($item) {
-
+        $item->getSwagData()->save();
     }
 
     function getAllItems() {
@@ -79,7 +82,18 @@ class SwagController extends WpCrud {
     function setFieldValue(&$item, $field, $value) {
         switch ($field) {
             case "title":
-                break;
+                if ($value!=$item->getString()) {
+                    throw new Exception("That's not supposed to change, new=".$value);
+                }
+                return;
+
+            case "color":
+                $item->getSwagData()->color=$value;
+                return;
+
+            case "description":
+                $item->getSwagData()->description=$value;
+                return;
 
             default:
                 throw new Exception("Can't set field: ".$field);
