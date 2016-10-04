@@ -3,5 +3,5 @@ copy-deps:
 	rsync -r --exclude .git submodule/wpcrud/ ext/wpcrud
 
 link-deps:
-	rm -f ext/wpcrud
+	rm -rf ext/wpcrud
 	cd ext; ln -s ../submodule/wpcrud wpcrud

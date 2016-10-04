@@ -1,0 +1,25 @@
+.wpcrud-media-image {
+	border: 1px solid black;
+	padding: 2px;
+	height: 75px;
+	cursor: pointer;
+}
+
+.wpcrud-media-image-holder {
+	position: relative;
+	display: inline-block;
+}
+
+.wpcrud-media-image-delete-button {
+	position: absolute;
+	width: 20px;
+	height: 20px;
+	top: 5px;
+	left: 5px;
+	cursor: pointer;
+}
+
+.wpcrud-list-media-image {
+	max-width: 50px;
+	max-height: 50px;
+}
