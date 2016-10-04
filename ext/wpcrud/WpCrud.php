@@ -31,7 +31,6 @@ abstract class WpCrud extends WP_List_Table {
 
 	private $defaultBox;
 	private $listFields;
-	private $parentMenuSlug;
 	private $typeId;
 	private $boxes=array();
 	private $config;
@@ -48,6 +47,7 @@ abstract class WpCrud extends WP_List_Table {
 		));
 
 		$this->config=array(
+			"parentMenuSlug"=>"",
 			"typeName"=>get_called_class(),
 			"description"=>"",
 			"enableCreate"=>TRUE,
@@ -76,13 +76,6 @@ abstract class WpCrud extends WP_List_Table {
 	 * Override in subclass.
 	 */
 	protected function init() {}
-
-	/**
-	 * Set parent menu slug.
-	 */
-	protected function setParentMenuSlug($slug) {
-		$this->parentMenuSlug=$slug;
-	}
 
 	/**
 	 * Add a field to be managed. This function returns a
@@ -284,7 +277,7 @@ abstract class WpCrud extends WP_List_Table {
 	 */
 	public function setConfig($config, $value) {
 		if (!isset($this->config[$config]))
-			throw new Exception("Unknown literal: ".$config);
+			throw new Exception("Unknown config: ".$config);
 
 		$this->config[$config]=$value;
 	}
@@ -526,11 +519,11 @@ abstract class WpCrud extends WP_List_Table {
 	public static function admin_menu() {
 		$instance=new static();
 
-		if ($instance->parentMenuSlug)
+		if ($instance->getConfig("parentMenuSlug"))
 			$screenId=add_submenu_page(
-				$instance->parentMenuSlug,
-				"Manage ".$instance->getConfig("typeName"),
-				"Manage ".$instance->getConfig("typeName"),
+				$instance->getConfig("parentMenuSlug"),
+				$instance->getConfig("typeName"),
+				$instance->getConfig("typeName"),
 				"manage_options",
 				$instance->typeId,
 				array($instance,"list_handler")

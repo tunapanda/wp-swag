@@ -16,8 +16,15 @@ class SwagController extends WpCrud {
 
 		$this->setListFields(array("title","color"));
 
+        $this->setConfig("parentMenuSlug","options-general.php");
         $this->setConfig("enableCreate",FALSE);
         $this->setConfig("typeName","Swag Badges");
+        $this->setConfig("description",
+            "Use this page to set colors and decription for swag categories.");
+
+
+
+//        $this->setParentMenuSlug("options-general.php");
 	}
 
     function createItem() {
