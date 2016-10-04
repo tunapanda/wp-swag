@@ -173,21 +173,28 @@ abstract class WpCrud extends WP_List_Table {
 	public function column_default($item, $column_name) {
 		$listFields=$this->getListFields();
 
+		$crudParts=parse_url($this->getCrudUrl());
+		$crudQuery=$crudParts["query"];
+
 		if ($column_name==$listFields[0]) {
-			$actions = array(
-				'edit' => 
-					sprintf('<a href="?page=%s_form&id=%s">%s</a>', 
-						$this->typeId, 
-						$this->getFieldValue($item,"id"), 
-						__('Edit', $this->typeId)
-					),
-				'delete' => 
-					sprintf('<a href="?page=%s&action=delete&id=%s" onclick="return confirm(\'Are you sure? This operation cannot be undone!\');">%s</a>',
-						$_REQUEST['page'], 
+			$actions=array();
+
+			$actions["edit"]=
+				sprintf('<a href="?page=%s_form&id=%s&crudUrl=%s">%s</a>', 
+					$this->typeId, 
+					$this->getFieldValue($item,"id"),
+					urlencode($this->getCrudUrl()),
+					__('Edit', $this->typeId)
+				);
+
+			if ($this->getConfig("enableDelete"))
+				$actions["delete"]=
+					sprintf('<a href="?%s&crudUrl=%s&action=delete&id=%s" onclick="return confirm(\'Are you sure? This operation cannot be undone!\');">%s</a>',
+						$crudQuery,
+						urlencode($this->getCrudUrl()),
 						$this->getFieldValue($item,"id"),
 						__('Delete', $this->typeId)
-					),
-			);
+					);
 
 			return sprintf('%s %s',
 				$this->getFieldValue($item,$column_name),
@@ -219,6 +226,17 @@ abstract class WpCrud extends WP_List_Table {
 	}
 
 	/**
+	 * Get url to the page where we are hosted.
+	 */
+	public function getCrudUrl() {
+		if (isset($_GET["crudUrl"]))
+			return $_GET["crudUrl"];
+
+		else
+			return $_SERVER["REQUEST_URI"];
+	}
+
+	/**
 	 * Render the page.
 	 */
 	public function list_handler() {
@@ -228,6 +246,15 @@ abstract class WpCrud extends WP_List_Table {
 		wp_enqueue_style("jquery-datetimepicker");
 
 		$template=new Template(__DIR__."/tpl/itemlist.php");
+		$template->set("crudUrl",$this->getCrudUrl());
+
+		$urlParts=parse_url($this->getCrudUrl());
+		$template->set("formAction",$urlParts["path"]);
+
+		$urlQuery=$urlParts["query"];
+		parse_str($urlQuery,$urlVars);
+		$template->set("crudUrlVars",$urlVars);
+
 		$template->set("enableCreate",$this->config["enableCreate"]);
 
 		if (isset($_REQUEST["action"]) && $_REQUEST["action"]=="delete") {
@@ -365,10 +392,11 @@ abstract class WpCrud extends WP_List_Table {
 
 		$template->set("title",$this->getConfig("typeName"));
 		$template->set("nonce",wp_create_nonce(basename(__FILE__)));
-		$template->set("backlink",get_admin_url(get_current_blog_id(),'admin.php?page='.$this->typeId));
+		$template->set("backlink",$this->getCrudUrl());		
 		$template->set("metaboxPage",$this->typeId);
 		$template->set("metaboxContext","normal_".$this->typeId);
 		$template->set("item",$item);
+		$template->set("itemId",$this->getFieldValue($item,"id"));
 		$template->show();
 	}
 
@@ -385,9 +413,11 @@ abstract class WpCrud extends WP_List_Table {
 	 * Return array of bulk actions if any.
 	 */
 	protected function get_bulk_actions() {
-		$actions = array(
-		    'delete' => 'Delete'
-		);
+		$actions=array();
+
+		if ($this->getConfig("enableDelete"))
+			$actions['delete']='Delete';
+
 		return $actions;
 	}
 

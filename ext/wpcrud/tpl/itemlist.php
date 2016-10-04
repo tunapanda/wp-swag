@@ -19,8 +19,15 @@
 		<div id="message" class="updated"><p><?php echo $message ?></p></div>
 	<?php endif;?>
 
-	<form id="<?php echo $typeId; ?>_form" method="GET">
-		<input type="hidden" name="page" value="<?php echo $_REQUEST["page"]?>">
+	<form id="<?php echo $typeId; ?>_form" method="GET"
+		action="<?php echo $formAction; ?>">
+		<?php foreach ($crudUrlVars as $field=>$value) { ?>
+			<input type="hidden" 
+				name="<?php echo $field; ?>" 
+				value="<?php echo $value; ?>">
+		<?php } ?>
+		<input type="hidden" name="crudUrl" value="<?php echo $crudUrl; ?>"/>
+
 		<?php $listTable->display(); ?>
 	</form>
 </div>

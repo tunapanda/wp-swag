@@ -99,7 +99,8 @@ class SettingsPageController {
 		$template->set("tabs",array(
 			"about"=>"About",
 			"dependencies"=>"Dependencies",
-			"xapi"=>"xAPI Settings"
+			"swag"=>"Swag",
+			"xapi"=>"xAPI Settings",
 		));
 
 		switch ($tab) {
@@ -113,6 +114,15 @@ class SettingsPageController {
 
 			case "dependencies":
 				$template->set("content",$this->dependencies());
+				break;
+
+			case "swag":
+				$template->set("content","");
+				$template->show();
+
+				$instance=new SwagController();
+				$instance->list_handler();
+				return;
 				break;
 
 			default:

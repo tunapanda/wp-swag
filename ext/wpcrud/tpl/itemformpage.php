@@ -16,7 +16,7 @@
 	<form id="form" method="POST">
 		<input type="hidden" name="nonce" value="<?php echo $nonce; ?>"/>
 		<?php /* NOTICE: here we storing id to determine will be item added or updated */ ?>
-		<input type="hidden" name="id" value="<?php echo $item->id ?>"/>
+		<input type="hidden" name="id" value="<?php echo $itemId; ?>"/>
 
 		<div class="metabox-holder" id="poststuff">
 			<div id="post-body">

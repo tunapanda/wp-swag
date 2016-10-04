@@ -16,19 +16,17 @@ class SwagController extends WpCrud {
 
 		$this->setListFields(array("title","color"));
 
-        $this->setConfig("parentMenuSlug","options-general.php");
         $this->setConfig("enableCreate",FALSE);
+        $this->setConfig("enableDelete",FALSE);
         $this->setConfig("typeName","Swag Badges");
         $this->setConfig("description",
             "Use this page to set colors and decription for swag categories.");
 
-
-
-//        $this->setParentMenuSlug("options-general.php");
+        $this->setConfig("parentMenuSlug","__unused__");
 	}
 
     function createItem() {
-        return "new";
+        throw new Exception("That's not how it works.");
     }
 
     function getItem($id) {
@@ -56,9 +54,6 @@ class SwagController extends WpCrud {
     }
 
     function getFieldValue($item, $field) {
-        if ($item=="new")
-            return "bleee";
-
     	switch ($field) {
     		case "title":
     			return $item->getString();
@@ -79,5 +74,15 @@ class SwagController extends WpCrud {
     		default:
     			throw new Exception("Unknown field: ".$field);
     	}
+    }
+
+    function setFieldValue(&$item, $field, $value) {
+        switch ($field) {
+            case "title":
+                break;
+
+            default:
+                throw new Exception("Can't set field: ".$field);
+        }
     }
 }

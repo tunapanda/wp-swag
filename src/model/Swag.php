@@ -1,9 +1,11 @@
 <?php
 
+//require_once __DIR__."/../../ext/wprecord/WpRecord.php";
+
 /**
  * Represents one swag, collectible as a badge. Organized in a hierarchy.
  */
-class Swag {
+class Swag /*extends WpRecord*/ {
 
 	private static $allSwagByString;
 	private static $cacheInitialized=FALSE;
