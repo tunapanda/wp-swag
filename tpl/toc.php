@@ -8,9 +8,9 @@
 <div class="masonry-loop">
 	<?php foreach ($tracks as $track) { ?>
 		<div class="track listing">
-		    <div class="listing-info">
+		    <div class="listing-info" style="border: 1px solid <?php echo $track["color"]; ?>;">
 		    	<div class="header">
-		    		<div class="title">
+		    		<div class="title" style="background-color: <?php echo $track["color"]; ?>;">
 		    			<?php echo $track["title"]; ?>
 		    		</div>
 		    	</div>
@@ -28,9 +28,9 @@
 
 	<?php foreach ($swagpaths as $swagpath) { ?>
 		<div class="course listing <?php if (!$swagpath["prepared"]) echo "unprepared"; ?>">
-		    <div class="listing-info">
+		    <div class="listing-info" style="border: 1px solid <?php echo $swagpath["color"]; ?>;">
 		    	<div class="header">
-		    		<div class="title">
+		    		<div class="title" style="background-color: <?php echo $swagpath["color"]; ?>;">
 		    			<?php echo $swagpath["title"]; ?>
 
 		                <?php if ($completed) { ?>

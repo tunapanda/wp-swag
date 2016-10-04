@@ -24,10 +24,16 @@ class SwagPageController {
 
 		foreach ($parent->getChildren() as $child) {
 			if ($child->getChildren()) {
+				$color=$child->getDisplayColor();
+
+				if (!$color)
+					$color="#009900";
+
 				$tracks[]=array(
 					"title"=>$child->getTitle(),
 					"description"=>$child->getDescription(),
-					"url"=>$url."?track=".$child->getString()
+					"url"=>$url."?track=".$child->getString(),
+					"color"=>$color
 				);
 			}
 			$providing=$child->getProvidingSwagPosts();
@@ -41,7 +47,8 @@ class SwagPageController {
 					"description"=>$post->post_excerpt,
 					"url"=>get_page_link($post->ID),
 					"prepared"=>$provider->isCurrentUserPrepared(),
-					"swag"=>$provider->getProvidedSwag()
+					"swag"=>$provider->getProvidedSwag(),
+					"color"=>$child->getDisplayColor()
 				);
 			}
 		}

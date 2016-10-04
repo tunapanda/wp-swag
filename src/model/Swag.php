@@ -56,6 +56,21 @@ class Swag {
 	}
 
 	/**
+	 * Get color to use. If it is not defined it will be inherited.
+	 */
+	public function getDisplayColor() {
+		$color=$this->getDefinedColor();
+		if ($color)
+			return $color;
+
+		$parent=$this->getParent();
+		if ($parent)
+			return $parent->getDisplayColor();
+
+		return NULL;
+	}
+
+	/**
 	 * Get swagpaths providing this swag.
 	 */
 	public function getProvidingSwagPosts() {
