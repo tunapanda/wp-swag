@@ -459,18 +459,19 @@ img.coursepresentation {
 
 .swagmap-swag-node circle {
     fill-opacity: 0;
-    stroke: #53ad35;
+    /*stroke: #53ad35;*/
     stroke-width: 5px;
 }
 
 .swagmap-swag-node circle.completed {
-    fill: #53ad35;
+    /*fill: #53ad35;*/
     fill-opacity: 1;
 }
 
 .swagmap-swagpath-node circle {
     fill: #000000;
     fill-opacity: 0;
+    stroke-width: 0;
 }
 
 .swagmap-swagpath-node text {

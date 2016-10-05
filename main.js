@@ -92,10 +92,15 @@ jQuery(function($) {
 					return "swagmap-swag-node"
 				})
 				.on("click", function(d) {
-					if (d.url) {
+					var dx = d3.event.x - d.downEvent.x;
+					var dy = d3.event.x - d.downEvent.x;
+
+					if (d.url && Math.sqrt(dx * dx + dy * dy) < 3) {
 						window.open(d.url);
-						//window.location.href = d.url;
 					}
+				})
+				.on("mousedown", function(d) {
+					d.downEvent = d3.event;
 				})
 				.call(force.drag);
 
@@ -104,6 +109,12 @@ jQuery(function($) {
 				.attr("class", function(d) {
 					if (d.completed)
 						return "completed";
+				})
+				.attr("fill", function(d) {
+					return d.color
+				})
+				.attr("stroke", function(d) {
+					return d.color
 				});
 
 			node.append("text")

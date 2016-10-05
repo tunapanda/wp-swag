@@ -15,7 +15,8 @@ foreach (Swag::findAllImplied() as $swag) {
 		$swagData=array(
 			"name"=>$swag->getString(),
 			"type"=>"swag",
-			"completed"=>$swag->isCompletedByCurrentUser()
+			"completed"=>$swag->isCompletedByCurrentUser(),
+			"color"=>$swag->getDisplayColor()
 		);
 
 		$swagNodeIndex[$swag->getString()]=sizeof($data["nodes"]);
