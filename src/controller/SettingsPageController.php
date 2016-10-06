@@ -56,9 +56,9 @@ class SettingsPageController {
 	 * Create a link for installing standard wordpress plugins.
 	 */
 	private function createStandardPluginInstallLink($title, $slug) {
-		$url=admin_url("plugin-install.php?tab=plugin-information&amp;plugin=".$plugin."&amp;TB_iframe=true&amp;width=712&amp;height=500");
+		$url=admin_url("plugin-install.php?tab=plugin-information&amp;plugin=".$slug."&amp;TB_iframe=true");
 
-		return "<a href='$url' class='thickbox' aria-label='More information about $plugin' data-title='$plugin'>$title</a>";
+		return "<a href='$url' class='thickbox' aria-label='More information about $slug' data-title='$slug'>$title</a>";
 	}
 
 	/**
