@@ -171,13 +171,20 @@ img.course-completed {
 
 .listing-info .description .swag{
     color: #808080;
-    margin-bottom: 10px;
     font-size: 13px;
+    height:20px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-.listing-info .description .swag img{
+.listing-info .description .swag img {
     height: 20px;
     vertical-align: middle;
+}
+
+.listing-info .description .excerpt {
+    margin-top: 10px;
 }
 
 .listing-info .description{

@@ -50,7 +50,9 @@
 		    				<?php echo $swag->getString(); ?>
 		    			</div>
 		    		<?php } ?>
-		    		<?php echo $swagpath["description"]; ?>
+		    		<div class="excerpt">
+			    		<?php echo $swagpath["description"]; ?>
+		    		</div>
 		    	</div>
 
 		        <div class="footer">
