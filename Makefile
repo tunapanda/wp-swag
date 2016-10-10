@@ -5,9 +5,15 @@ copy-deps:
 	rm -rf ext/wprecord
 	rsync -r --exclude .git submodule/wprecord/ ext/wprecord
 
+	rm -rf ext/minixapi
+	rsync -r --exclude .git submodule/minixapi/ ext/minixapi
+
 link-deps:
 	rm -rf ext/wpcrud
 	cd ext; ln -s ../submodule/wpcrud wpcrud
 
 	rm -rf ext/wprecord
 	cd ext; ln -s ../submodule/wprecord wprecord
+
+	rm -rf ext/minixapi
+	cd ext; ln -s ../submodule/minixapi minixapi

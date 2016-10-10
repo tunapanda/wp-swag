@@ -4,3 +4,6 @@
 [submodule "submodule/wprecord"]
 	path = submodule/wprecord
 	url = https://github.com/limikael/wprecord
+[submodule "submodule/minixapi"]
+	path = submodule/minixapi
+	url = https://github.com/limikael/minixapi/
