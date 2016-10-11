@@ -84,7 +84,7 @@ class Swag {
 	 * Get title
 	 */
 	public function getTitle() {
-		$parts=explode("/",$this->string);
+		$parts=Swag::splitPath($this->string);
 		return ucfirst($parts[sizeof($parts)-1]);
 	}
 
@@ -120,7 +120,7 @@ class Swag {
 	 * Split path.
 	 */
 	private static function splitPath($s) {
-		$parts=explode("/",$s);
+		$parts=explode(".",$s);
 		$res=array();
 
 		foreach ($parts as $part)
@@ -163,7 +163,7 @@ class Swag {
 		Swag::initializeCache();
 
 		$path=str_replace("http://swag.tunapanda.org/","",$path);
-		$path=join("/",Swag::splitPath($path));
+		$path=join(".",Swag::splitPath($path));
 
 		if (isset(Swag::$allSwagByString[$path]))
 			return Swag::$allSwagByString[$path];
@@ -224,7 +224,7 @@ class Swag {
 	private static function getOrCreateByString($string="") {
 		Swag::initializeCache();
 
-		$string=join("/",Swag::splitPath($string));
+		$string=join(".",Swag::splitPath($string));
 
 		if (!Swag::$allSwagByString)
 			Swag::$allSwagByString=array();
@@ -234,7 +234,7 @@ class Swag {
 			$swag=new Swag($string);
 
 			if ($string) {
-				$parent=Swag::getOrCreateByString(join("/",array_slice($parts,0,sizeof($parts)-1)));
+				$parent=Swag::getOrCreateByString(join(".",array_slice($parts,0,sizeof($parts)-1)));
 				$swag->parent=$parent;
 				$parent->addChild($swag);
 			}
