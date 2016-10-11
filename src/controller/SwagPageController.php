@@ -8,6 +8,19 @@ require_once __DIR__."/../model/Swag.php";
 class SwagPageController {
 
 	/**
+	 * Used when sorting swagpaths, so unprepared comes last.
+	 */
+	private static function cmpSwagpathViewData($a, $b) {
+		if ($a["prepared"] && !$b["prepared"])
+			return -1;
+
+		if (!$a["prepared"] && $b["prepared"])
+			return 1;
+
+		return 0;
+	}
+
+	/**
 	 * Render the table of contents.
 	 */
 	public function toc($args) {
@@ -52,6 +65,8 @@ class SwagPageController {
 				);
 			}
 		}
+
+		usort($swagpaths,"SwagPageController::cmpSwagpathViewData");
 
 		$trail=array();
 		foreach ($parent->getTrail() as $swag) {

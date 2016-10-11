@@ -14,7 +14,7 @@
 		    			<?php echo $track["title"]; ?>
 		    		</div>
 		    	</div>
-		    
+
 		    	<div class="description">
 		    		<?php echo $track["description"]; ?>
 		    	</div>
