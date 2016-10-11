@@ -225,7 +225,7 @@ class WP_Swag_admin{
 		if (!$swag) {
 			$trail=array(
 				array(
-					"url"=>home_url( '/toc/' ),
+					"url"=>home_url(),
 					"title"=>"Tracks"
 				),
 

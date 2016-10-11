@@ -11,7 +11,7 @@ $data["links"]=array();
 $swagNodeIndex=array();
 
 foreach (Swag::findAllImplied() as $swag) {
-	if ($swag->getProvidingSwagPosts() || !$swag->getChildren()) {
+	if ($swag->getProvidingSwagPosts()) {
 		$swagData=array(
 			"name"=>$swag->getString(),
 			"type"=>"swag",
