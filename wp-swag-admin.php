@@ -240,7 +240,7 @@ class WP_Swag_admin{
 			$trail=array();
 			foreach ($swagPost->getProvidedSwag()[0]->getTrail() as $swag) {
 				$item=array();
-				$item["url"]=home_url( '/toc/' )."?track=".$swag->getString();
+				$item["url"]=home_url()."?track=".$swag->getString();
 				$item["title"]=$swag->getTitle();
 
 				$trail[]=$item;
