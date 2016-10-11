@@ -67,7 +67,7 @@ class Swag {
 		if ($parent)
 			return $parent->getDisplayColor();
 
-		return NULL;
+		return "#339933";
 	}
 
 	/**

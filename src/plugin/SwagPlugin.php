@@ -19,15 +19,31 @@ class SwagPlugin {
 	 * Get xapi endpoint, if configured.
 	 */
 	public function getXapi() {
-		$endpoint=get_option("ti_xapi_endpoint_url");
-		$username=get_option("ti_xapi_username");
-		$password=get_option("ti_xapi_password");
+		static $xapi;
 
-		if ($endpoint)
-			return new Xapi($endpoint,$username,$password);
+		if (!$xapi) {
+			if (is_plugin_active("wp-xapi-lrs/wp-xapi-lrs.php")) {
+				$endpoint=site_url()."/wp-content/plugins/wp-xapi-lrs/endpoint.php";
+				$username=get_option("xapilrs_username");
+				$password=get_option("xapilrs_password");
 
-		else
-			return NULL;
+				$xapi=new Xapi($endpoint,$username,$password);
+			}
+
+			else {
+				$endpoint=get_option("ti_xapi_endpoint_url");
+				$username=get_option("ti_xapi_username");
+				$password=get_option("ti_xapi_password");
+
+				if ($endpoint)
+					$xapi=new Xapi($endpoint,$username,$password);
+
+				else
+					$xapi=NULL;
+			}
+		}
+
+		return $xapi;
 	}
 
 	/**

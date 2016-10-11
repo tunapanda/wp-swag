@@ -73,6 +73,13 @@ class SettingsPageController {
 	 */
 	private function xapi() {
 		$t=new Template(__DIR__."/../../tpl/settings_xapi.php");
+
+		if (is_plugin_active("wp-xapi-lrs/wp-xapi-lrs.php"))
+			$t->set("usingInternalLrs",TRUE);
+
+		else
+			$t->set("usingInternalLrs",FALSE);
+
 		return $t->render();
 	}
 

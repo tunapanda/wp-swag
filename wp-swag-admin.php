@@ -342,10 +342,12 @@ class WP_Swag_admin{
 	 * Provide settings for wp-h5p-xapi
 	 */
 	public function ti_xapi_h5p_auth_settings($arg) {
+		$xapi=SwagPlugin::instance()->getXapi();
+
 		return array(
-			"endpoint_url"=>get_option("ti_xapi_endpoint_url"),
-			"username"=>get_option("ti_xapi_username"),
-			"password"=>get_option("ti_xapi_password")
+			"endpoint_url"=>$xapi->endpoint,
+			"username"=>$xapi->username,
+			"password"=>$xapi->password
 		);
 	}
 }

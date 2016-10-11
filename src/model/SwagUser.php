@@ -10,20 +10,7 @@ class SwagUser {
 	 */
 	public function __construct($user) {
 		$this->user=$user;
-
-		$endpointUrl=trim(get_option("ti_xapi_endpoint_url"));
-
-		if ($endpointUrl) {
-			$this->xapi=new Xapi(
-				$endpointUrl,
-				get_option("ti_xapi_username"),
-				get_option("ti_xapi_password")
-			);
-		}
-
-		else {
-			$this->xapi=NULL;
-		}
+		$this->xapi=SwagPlugin::instance()->getXapi();
 
 		$this->completedSwagFetched=NULL;
 		$this->completedSwag=NULL;
