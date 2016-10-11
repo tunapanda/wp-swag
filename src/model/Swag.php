@@ -209,6 +209,8 @@ class Swag {
 			foreach ($requires as $require)
 				Swag::getOrCreateByString($require);
 		}
+
+		Swag::getOrCreateByString("");
 	}
 
 	/**
