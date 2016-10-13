@@ -6,7 +6,7 @@
 require_once __DIR__."/utils.php";
 require_once __DIR__."/src/model/SwagUser.php";
 require_once __DIR__."/src/utils/Xapi.php";
-require_once __DIR__."/src/model/SwagPost.php";
+require_once __DIR__."/src/model/Swagpath.php";
 require_once __DIR__."/src/utils/Template.php";
 require_once __DIR__."/src/utils/ShortcodeUtil.php";
 require_once __DIR__."/src/controller/SettingsPageController.php";
@@ -320,8 +320,10 @@ class WP_Swag_admin{
 			return;
 
 		$swagUser=SwagUser::getByEmail($statement["actor"]["mbox"]);
-		$swagPost=new SwagPost($post);
-		$swagPost->saveProvidedSwagIfCompleted($swagUser);
+		$swagpath=SwagPath::getById($post->ID);
+		$swagpath->saveProvidedSwagIfCompleted($swagUser);
+		/*$swagPost=new SwagPost($post);
+		$swagPost->*/
 	}
 
 	public function ti_my_swag() {

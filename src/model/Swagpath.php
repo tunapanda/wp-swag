@@ -1,6 +1,8 @@
 <?php
 
 require_once __DIR__."/../utils/ArrayUtil.php";
+require_once __DIR__."/../plugin/SwagPlugin.php";
+require_once __DIR__."/../model/SwagPostItem.php";
 
 use swag\ArrayUtil;
 
@@ -246,8 +248,80 @@ class Swagpath {
 		));
 
 		foreach ($q->get_posts() as $post)
-			$all[]=new SwagPost($post);
+			$all[]=new Swagpath($post);
 
 		return $all;
+	}
+
+	/**
+	 * Save xapi statements for provided swag for current user.
+	 */
+	public function saveProvidedSwag($swagUser) {
+		$xapi=SwagPlugin::instance()->getXapi();
+		if (!$xapi)
+			return array();
+
+		$user=$swagUser->getUser();
+		if (!$user || !$user->ID)
+			return;
+
+		foreach ($this->getProvidedSwag() as $provided) {
+			$providedString=$provided->getString();
+
+			$statement=array(
+				"actor"=>array(
+					"mbox"=>"mailto:".$user->user_email,
+					"name"=>$user->display_name
+				),
+
+				"object"=>array(
+					"objectType"=>"Activity",
+					"id"=>"http://swag.tunapanda.org/".$providedString,
+					"definition"=>array(
+						"name"=>array(
+							"en-US"=>$providedString
+						)
+					)
+				),
+
+				"verb"=>array(
+					"id"=>"http://adlnet.gov/expapi/verbs/completed"
+				),
+
+				"context"=>array(
+					"contextActivities"=>array(
+						"category"=>array(
+							array(
+								"objectType"=>"Activity",
+								"id"=>"http://swag.tunapanda.org/"
+							)
+						)
+					)
+				),
+			);
+
+			$xapi->putStatement($statement);
+		}		
+	}
+
+	/**
+	 * Are all the swag post items completed?
+	 */
+	public function isAllSwagPostItemsCompleted($swagUser) {
+		foreach ($this->getSwagPostItems() as $swagPostItem) {
+			if (!$swagPostItem->isCompleted($swagUser))
+				return FALSE;
+		}
+
+		return TRUE;
+	}
+
+	/**
+	 * Save provided swag if the user has completed all
+	 * swagifacts for the swagpath.
+	 */
+	public function saveProvidedSwagIfCompleted($swagUser) {
+		if ($this->isAllSwagPostItemsCompleted($swagUser))
+			$this->saveProvidedSwag($swagUser);
 	}
 }

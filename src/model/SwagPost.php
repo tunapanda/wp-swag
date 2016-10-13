@@ -6,7 +6,7 @@ require_once __DIR__."/../plugin/SwagPlugin.php";
 /**
  * Per post related swag operations.
  */
-class SwagPost {
+class SwagPost_old {
 
 	private $swagPostItems;
 	private $relatedStatementsByEmail;
