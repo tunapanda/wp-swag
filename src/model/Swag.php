@@ -1,5 +1,10 @@
 <?php
 
+require_once __DIR__."/../utils/ArrayUtil.php";
+require_once __DIR__."/../model/Swagpath.php";
+
+use swag\ArrayUtil;
+
 /**
  * Represents one swag, collectible as a badge. Organized in a hierarchy.
  * These items are created implicitly, and they do not necessarily correspond
@@ -77,7 +82,7 @@ class Swag {
 		if (!$this->string)
 			return array();
 
-		return SwagPost::getSwagPostsProvidingSwag($this);
+		return Swagpath::getSwagpathsProvidingSwag($this);
 	}
 
 	/**
@@ -183,28 +188,28 @@ class Swag {
 		Swag::$cacheInitialized=TRUE;
 
 		$q=new WP_Query(array(
-			"post_type"=>"any",
+			"post_type"=>"swagpath",
 			"post_status"=>"any",
 			"metakey"=>"provides",
 			"nopaging"=>TRUE
 		));
 
 		foreach ($q->get_posts() as $post) {
-			$provides=get_post_meta($post->ID,"provides");
+			$provides=ArrayUtil::flattenArray(get_post_meta($post->ID,"provides"));
 
 			foreach ($provides as $provide)
 				Swag::getOrCreateByString($provide);
 		}
 
 		$q=new WP_Query(array(
-			"post_type"=>"any",
+			"post_type"=>"swagpath",
 			"post_status"=>"any",
 			"metakey"=>"requires",
 			"nopaging"=>TRUE
 		));
 
 		foreach ($q->get_posts() as $post) {
-			$requires=get_post_meta($post->ID,"requires");
+			$requires=ArrayUtil::flattenArray(get_post_meta($post->ID,"requires"));
 
 			foreach ($requires as $require)
 				Swag::getOrCreateByString($require);

@@ -2,7 +2,7 @@
 
 require_once __DIR__."/WpUtil.php";
 require_once __DIR__."/src/model/Swag.php";
-require_once __DIR__."/src/model/SwagPost.php";
+require_once __DIR__."/src/model/Swagpath.php";
 require_once WpUtil::getWpLoadPath();
 
 $data=array();
@@ -24,7 +24,7 @@ foreach (Swag::findAllImplied() as $swag) {
 	}
 }
 
-foreach (SwagPost::findAll() as $swagPost) {
+foreach (Swagpath::findAll() as $swagPost) {
 	$swagPostNodeIndex=sizeof($data["nodes"]);
 	$data["nodes"][]=array(
 		"type"=>"swagpath",

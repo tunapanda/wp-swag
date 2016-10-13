@@ -1,3 +1,4 @@
+<h1></h1>
 <div id="breadcrumbs">
 	<ul id="breadcrumb">
 		<?php foreach ($trail as $item) { ?>
@@ -22,7 +23,7 @@
 		<script>
 		var PLUGIN_URI = '<?php echo $plugins_uri; ?>';
 		</script>
-		<?php foreach ($swagPost->getSwagPostItems() as $swagPostItem) { ?>
+		<?php foreach ($swagpath->getSwagPostItems() as $swagPostItem) { ?>
 			<li
 				<?php if ($swagPostItem->isSelected()) echo "class='selected'"; ?>
 			>
@@ -43,12 +44,12 @@
 		<?php } ?>
 	</ul>
 	<div class='content-tab-content'>
-		<h1><?php echo $swagPost->getSelectedItem()->getTitle(); ?></h1>
+		<h1><?php echo $swagpath->getSelectedItem()->getTitle(); ?></h1>
 		<?php if($showLessonPlan and $lessonplanAvailable) : ?>
 		<a href="<?php echo $lessonPlan; ?>" class="button-lessonplan" style="text-align:right;float:right">Download Lesson Plan</a>
 	<?php elseif ($showLessonPlan and !$lessonplanAvailable) : ?>
 		<button style="text-align:right;float:right" title="Please complete swag to download the lesson plan" class="button-lessonplan disabled" disabled>Download Lesson Plan</button>
 		<?php endif; ?>
-		<?php echo $swagPost->getSelectedItem()->getContent(); ?>
+		<?php echo $swagpath->getSelectedItem()->getContent(); ?>
 	</div>
 </div>

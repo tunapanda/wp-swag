@@ -15,8 +15,6 @@ require_once __DIR__."/src/model/SwagData.php";
 define("RWMB_URL",plugins_url()."/wp-swag/ext/meta-box/");
 require_once __DIR__."/ext/meta-box/meta-box.php";
 
-error_log(__DIR__);
-
 add_action("init", array("WP_Swag_admin", "init_hooks"));
 
 function swag_activate() {

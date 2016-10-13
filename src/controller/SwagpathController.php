@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__."/../utils/Singleton.php";
+require_once __DIR__."/../model/Swagpath.php";
 
 use swag\Singleton;
 
@@ -18,15 +19,27 @@ class SwagpathController extends Singleton {
 				"name"=>"Swagpaths",
 				"singular_name"=>"Swagpath",
 				"not_found"=>"No swagpaths found.",
-				"add_new_item"=>"Add new swagpath"
+				"add_new_item"=>"Add new swagpath",
+				"edit_item"=>"Edit Swagpath",
 			),
 			"public"=>true,
 			"has_archive"=>true,
 			"supports"=>array("title","excerpt"),
 		));
 
-		//add_action('add_meta_boxes',array($this,'addMetaBox'));
-		add_filter("rwmb_meta_boxes",array($this,'rwmbMetaBoxes'));
+		add_action("get_template_part_content",array($this,'getTemplatePart'));
+		add_action("save_post",array($this,'savePost'));
+	}
+
+	/**
+	 * After the post is saved. Update meta values.
+	 */
+	public function savePost($postId) {
+		$post=get_post($postId);
+		if ($post->post_type=="swagpath") {
+			$swagpath=Swagpath::getById($postId);
+			$swagpath->updateMetas();
+		}
 	}
 
 	public function rwmbMetaBoxes($metaBoxes) {
@@ -36,7 +49,7 @@ class SwagpathController extends Singleton {
 		$h5ps=$wpdb->get_results("SELECT slug,title FROM {$wpdb->prefix}h5p_contents",ARRAY_A);
 
 		foreach ($h5ps as $h5p) {
-			$options[$h5p["slug"]]="H5P: ".$h5p["title"];
+			$options["h5p:".$h5p["slug"]]="H5P: ".$h5p["title"];
 		}
 
 		$metaBoxes[]=array(
@@ -49,7 +62,6 @@ class SwagpathController extends Singleton {
 	                'name' => "Swagifacts",
 	                "clone"=>true,
 	                "sort_clone"=>true,
-	                "std"=>"hello",
 	                "options"=>$options
 	            ),
 	        ),
@@ -60,7 +72,7 @@ class SwagpathController extends Singleton {
 	        'post_types' => 'swagpath',
 	        'fields'     => array(
 	            array(
-	                'id'   => 'provides',
+	                'id'   => 'providesArray',
 	                'name' => 'Provides',
 	                'type' => 'text',
 	                "size"=>20,
@@ -70,7 +82,7 @@ class SwagpathController extends Singleton {
 	                	"Swags are written on the same form as a newsgroup name, e.g. tech.programming.php"
 	            ),
 	            array(
-	                'id'   => 'requires',
+	                'id'   => 'requiresArray',
 	                'name' => 'Requires',
 	                'type' => 'text',
 	                "clone"=>true,
@@ -96,6 +108,58 @@ class SwagpathController extends Singleton {
 		);
 
 		return $metaBoxes;
+	}
+
+	function getTemplatePart() {
+		if (get_post_type()!="swagpath")
+			return;
+
+		$swagpath=Swagpath::getCurrent();
+		$swagUser=SwagUser::getCurrent();
+
+		$template=new Template(__DIR__."/../../tpl/course.php");
+		$template->set("swagUser",$swagUser);
+		$template->set("swagpath",$swagpath);
+		$template->set("showLessonPlan",FALSE);
+
+		$swag=$swagpath->getProvidedSwag();
+
+		$swag=$swagpath->getProvidedSwag()[0];
+		if (!$swag) {
+			$trail=array(
+				array(
+					"url"=>home_url(),
+					"title"=>"Tracks"
+				),
+
+				array(
+					"url"=>get_permalink(),
+					"title"=>get_the_title()
+				)
+			);
+		}
+
+		else {
+			$trail=array();
+			foreach ($swagpath->getProvidedSwag()[0]->getTrail() as $swag) {
+				$item=array();
+				$item["url"]=home_url()."?track=".$swag->getString();
+				$item["title"]=$swag->getTitle();
+
+				$trail[]=$item;
+			}
+
+			array_pop($trail);
+			$trail[]=array(
+				"url"=>get_permalink(),
+				"title"=>get_the_title()
+			);
+			$trail[0]["title"]="Tracks";
+		}
+
+		$template->set("trail",$trail);
+
+		$template->show();
 	}
 }
 
