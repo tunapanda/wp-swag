@@ -7,3 +7,6 @@
 [submodule "submodule/minixapi"]
 	path = submodule/minixapi
 	url = https://github.com/limikael/minixapi/
+[submodule "submodule/meta-box"]
+	path = submodule/meta-box
+	url = https://github.com/rilwis/meta-box
