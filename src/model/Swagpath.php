@@ -196,7 +196,7 @@ class Swagpath {
 	/**
 	 * Get posts providing this swag.
 	 */
-	public static function getPostsProvidingSwag($swags) {
+	private static function getPostsProvidingSwag($swags) {
 		if (!is_array($swags))
 			$swags=array($swags);
 

@@ -124,6 +124,31 @@ class SwagpathController extends Singleton {
 
 		$swag=$swagpath->getProvidedSwag();
 
+		// Hint
+		$template->set("showHintInfo",FALSE);
+		if (!$swagUser->isSwagCompleted($swagpath->getRequiredSwag())) {
+			$template->set("showHintInfo",TRUE);
+
+			$uncollected=$swagUser->getUncollectedSwag($swagpath->getRequiredSwag());
+			$uncollectedFormatted=array();
+
+			foreach ($uncollected as $swag)
+				$uncollectedFormatted[]="<b>{$swag->getString()}</b>";
+
+			$swagpaths=Swagpath::getSwagpathsProvidingSwag($uncollected);
+			$swagpathsFormatted=array();
+
+			foreach ($swagpaths as $swagpath)
+				$swagpathsFormatted[]=
+					"<a href='".get_post_permalink($swagpath->getPost()->ID)."'>".
+					$swagpath->getPost()->post_title.
+					"</a>";
+
+			$template->set("uncollectedSwag",join(", ",$uncollectedFormatted));
+			$template->set("uncollectedSwagpaths",join(", ",$swagpathsFormatted));
+		}
+
+		// Trail
 		$swag=$swagpath->getProvidedSwag()[0];
 		if (!$swag) {
 			$trail=array(

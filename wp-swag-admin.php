@@ -22,10 +22,10 @@ class WP_Swag_admin{
 		// initialise the the admin settings
 		add_action('admin_init',array(get_called_class(),'ti_admin_init'));
 		add_action('admin_menu',array(get_called_class(),'ti_admin_menu'));
-		add_shortcode("course", array(get_called_class(), "ti_course"));
+		//add_shortcode("course", array(get_called_class(), "ti_course"));
 
-		add_shortcode("track-listing",array(get_called_class(), "ti_track_listing"));
-		add_shortcode("course-listing",array(get_called_class(),"ti_course_listing"));
+		/*add_shortcode("track-listing",array(get_called_class(), "ti_track_listing"));
+		add_shortcode("course-listing",array(get_called_class(),"ti_course_listing"));*/
 		add_action('wp_enqueue_scripts',array(get_called_class(), "ti_enqueue_scripts"));
 		add_action('admin_enqueue_scripts',array(get_called_class(), "ti_enqueue_scripts"));
 
@@ -40,8 +40,6 @@ class WP_Swag_admin{
 		add_filter("h5p-xapi-auth-settings",array(get_called_class(),"ti_xapi_h5p_auth_settings"));
 
 		SwagpathController::instance()->init();
-
-
 	}
 
 	/**
@@ -77,7 +75,7 @@ class WP_Swag_admin{
 	/**
 	 * Handle the track-listing short_code.
 	 */
-	public function ti_track_listing() {
+	/*public function ti_track_listing() {
 		$parentId=get_the_ID();
 		$pages=get_pages(array(
 			"parent"=>$parentId
@@ -95,13 +93,13 @@ class WP_Swag_admin{
 		}
     $out .= '</div>';
     return $out;
-	}
+	}*/
 
 
 	/**
 	 * Handle the course-listing short code.
 	 */
-	public function ti_course_listing() {
+	/*public function ti_course_listing() {
 		$swagUser=new SwagUser(wp_get_current_user());
 		$parentId=get_the_ID();
 
@@ -146,7 +144,7 @@ class WP_Swag_admin{
 		$out .= '</div>';
 
 		return $out;
-	}
+	}*/
 
 	/**
 	 * Scripts and styles in the plugin
@@ -167,7 +165,7 @@ class WP_Swag_admin{
 	/**
 	 * Handle the course shortcode.
 	 */
-	function ti_course($args, $content) {
+	/*function ti_course($args, $content) {
 		if (!$args)
 			$args=array();
 
@@ -182,7 +180,7 @@ class WP_Swag_admin{
 		$template->set("swagUser",$swagUser);
 		$template->set("swagPost",$swagPost);
 
-		/** Leson Plan Functionality */
+		// Leson Plan Functionality
 
 		$template->set("showLessonPlan",FALSE);
 		if (array_key_exists("lessonplan",$args) AND is_user_logged_in()) {
@@ -260,7 +258,7 @@ class WP_Swag_admin{
 		$template->set("trail",$trail);
 
 		return $template->render();
-	}
+	}*/
 
 	/**
 	 * Table of contents.
