@@ -122,7 +122,24 @@ class SwagpathController extends Singleton {
 		$template->set("swagpath",$swagpath);
 		$template->set("showLessonPlan",FALSE);
 
-		$swag=$swagpath->getProvidedSwag();
+		// Lesson plan
+		$template->set("showLessonPlan",FALSE);
+		$lessonPlanUrl=$swagpath->getLessonPlanUrl();
+
+		if ($lessonPlanUrl && is_user_logged_in()) {
+			$template->set("lessonPlan",$swagpath->getLessonPlanUrl());
+			$template->set("showLessonPlan",TRUE);
+		}
+
+		if ($swagUser->isSwagCompleted($swagpath->getProvidedSwag())) {
+			$template->set("lessonplanAvailable",TRUE);
+		}
+		else if  (current_user_can('edit_others_pages') || get_the_author_id() == get_current_user_id()) {
+			$template->set("lessonplanAvailable",TRUE);
+		}
+		else {
+			$template->set("lessonplanAvailable",FALSE);
+		}
 
 		// Hint
 		$template->set("showHintInfo",FALSE);

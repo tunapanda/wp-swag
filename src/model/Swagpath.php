@@ -34,6 +34,24 @@ class Swagpath {
 	}
 
 	/**
+	 * Get lesson plan url, if any.
+	 */
+	public function getLessonPlanUrl() {
+		$lessonPlanPostId=get_post_meta($this->post->ID,"lessonplan",TRUE);
+		if (!$lessonPlanPostId)
+			return NULL;
+
+		return wp_get_attachment_url($lessonPlanPostId);
+
+/*		$post=get_post($lessonPlanPostId);
+		return get_permalink($post);*/
+
+//		return "hello";
+
+		//get_home_url().'/wp-content/uploads'.$args["lessonplan"]);		
+	}
+
+	/**
 	 * Get items.
 	 */
 	public function getSwagPostItems() {
