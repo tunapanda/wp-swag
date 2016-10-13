@@ -11,6 +11,7 @@ require_once __DIR__."/src/utils/Template.php";
 require_once __DIR__."/src/utils/ShortcodeUtil.php";
 require_once __DIR__."/src/controller/SettingsPageController.php";
 require_once __DIR__."/src/controller/SwagPageController.php";
+require_once __DIR__."/src/controller/SwagpathController.php";
 
 class WP_Swag_admin{
 	static $plugins_uri;
@@ -37,9 +38,11 @@ class WP_Swag_admin{
 		add_shortcode("my-swag",array(get_called_class(), "ti_my_swag"));
 
 		add_filter("h5p-xapi-auth-settings",array(get_called_class(),"ti_xapi_h5p_auth_settings"));
+
+		SwagpathController::instance()->init();
+
+
 	}
-
-
 
 	/**
 	 * Create the admin menu.

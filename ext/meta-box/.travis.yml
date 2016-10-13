@@ -1,0 +1,39 @@
+language: php
+
+# Ditch sudo and use containers.
+# http://docs.travis-ci.com/user/migrating-from-legacy/
+sudo: false
+
+php:
+  - hhvm
+  - 7.0
+  - 5.6
+  - 5.5
+  - 5.4
+  - 5.3
+  - 5.2
+
+env:
+  - WP_VERSION=master
+  - WP_VERSION=4.6.1
+  - WP_VERSION=4.5
+  - WP_VERSION=4.4
+
+matrix:
+  allow_failures:
+    - php: 7.0
+    - php: hhvm
+  fast_finish: true
+
+before_script:
+  - git clone -q https://github.com/squizlabs/PHP_CodeSniffer.git phpcs
+  - git clone -q https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards.git wpcs
+  - phpcs/scripts/phpcs --config-set installed_paths wpcs
+
+script:
+  - phpcs/scripts/phpcs --standard=WordPress --extensions=php --ignore=demo,tests .
+
+notifications:
+  email: false
+  slack:
+    secure: E8/2FJroC8dNUfStwCSYtQjJnF0yS91H/lAiviMzegQkail9xPTa3FbtI40NTvuLw20NwQAg9ijRWmYQOMyjpF2xkUBet5MAX7BbZfAIIj23SnRhe1ct4sNbfIwLpPTwC/jWLcJDPL+82KbuobgxHevUdgY8SdLOv1fT7gIJmhs=
