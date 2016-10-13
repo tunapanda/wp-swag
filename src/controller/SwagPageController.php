@@ -58,7 +58,7 @@ class SwagPageController {
 				$swagpaths[]=array(
 					"title"=>$post->post_title,
 					"description"=>$post->post_excerpt,
-					"url"=>get_page_link($post->ID),
+					"url"=>get_permalink($post->ID),
 					"prepared"=>$provider->isCurrentUserPrepared(),
 					"swag"=>$provider->getProvidedSwag(),
 					"color"=>$child->getDisplayColor()

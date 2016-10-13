@@ -216,7 +216,7 @@ class Swagpath {
 
 		foreach ($swags as $swag) {
 			$q=new WP_Query(array(
-				"post_type"=>"any",
+				"post_type"=>"swagpath",
 				"meta_key"=>"provides",
 				"meta_value"=>$swag->getString()
 			));
