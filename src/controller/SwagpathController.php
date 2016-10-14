@@ -46,10 +46,15 @@ class SwagpathController extends Singleton {
 		global $wpdb;
 
 		$options=array();
-		$h5ps=$wpdb->get_results("SELECT slug,title FROM {$wpdb->prefix}h5p_contents",ARRAY_A);
 
+		$h5ps=$wpdb->get_results("SELECT slug,title FROM {$wpdb->prefix}h5p_contents",ARRAY_A);
 		foreach ($h5ps as $h5p) {
 			$options["h5p:".$h5p["slug"]]="H5P: ".$h5p["title"];
+		}
+
+		$deliverables=$wpdb->get_results("SELECT slug,title FROM {$wpdb->prefix}deliverable",ARRAY_A);
+		foreach ($deliverables as $deliverable) {
+			$options["deliverable:".$deliverable["slug"]]="Deliverable: ".$deliverable["title"];
 		}
 
 		$metaBoxes[]=array(

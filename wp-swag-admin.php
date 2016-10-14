@@ -37,7 +37,11 @@ class WP_Swag_admin{
 		add_action("deliverable-xapi-post-save",array(get_called_class(), "ti_xapi_post_save"));
 		add_shortcode("my-swag",array(get_called_class(), "ti_my_swag"));
 
-		add_filter("h5p-xapi-auth-settings",array(get_called_class(),"ti_xapi_h5p_auth_settings"));
+		add_filter("h5p-xapi-auth-settings",
+			array(get_called_class(),"ti_xapi_h5p_auth_settings"));
+
+		add_filter("deliverable-xapi-auth-settings",
+			array(get_called_class(),"ti_deliverable_xapi_auth_settings"));
 
 		SwagpathController::instance()->init();
 	}
@@ -73,80 +77,6 @@ class WP_Swag_admin{
 	}
 
 	/**
-	 * Handle the track-listing short_code.
-	 */
-	/*public function ti_track_listing() {
-		$parentId=get_the_ID();
-		$pages=get_pages(array(
-			"parent"=>$parentId
-		));
-
-		$out = '<div class="masonry-loop">';
-
-		foreach ($pages as $page) {
-			if ($page->ID!=$parentId) {
-    		$page->swagpaths = count(get_pages(array('child_of'=>$page->ID)));
-				$out.=render_tpl(__DIR__."/tpl/tracklisting.php",array(
-					"page"=>$page
-				));
-			}
-		}
-    $out .= '</div>';
-    return $out;
-	}*/
-
-
-	/**
-	 * Handle the course-listing short code.
-	 */
-	/*public function ti_course_listing() {
-		$swagUser=new SwagUser(wp_get_current_user());
-		$parentId=get_the_ID();
-
-		$q=new WP_Query(array(
-			"post_type"=>"any",
-			"post_parent"=>$parentId,
-			"posts_per_page"=>-1
-		));
-
-		$pages=$q->get_posts();
-
-		$out = '<div class="masonry-loop">';
-
-		$unpreparedCount=0;
-		foreach ($pages as $page) {
-			if ($page->ID!=$parentId) {
-				$swagPost=new SwagPost($page);
-				$prepared=$swagUser->isSwagCompleted($swagPost->getRequiredSwag());
-				$completed=$swagUser->isSwagCompleted($swagPost->getProvidedSwag());
-
-				if (!$swagPost->getProvidedSwag())
-					$completed=FALSE;
-
-				if (!$prepared)
-					$unpreparedCount++;
-
-				$out.=render_tpl(__DIR__."/tpl/courselisting.php",array(
-					"page"=>$page,
-					"prepared"=>$prepared,
-					"completed"=>$completed
-				));
-			}
-		}
-
-		if ($unpreparedCount) {
-			$out.=render_tpl(__DIR__."/tpl/afterlisting.php",array(
-				"unprepared"=>$unpreparedCount
-			));
-		}
-
-
-		$out .= '</div>';
-
-		return $out;
-	}*/
-
-	/**
 	 * Scripts and styles in the plugin
 	 */
 	public function ti_enqueue_scripts() {
@@ -161,104 +91,6 @@ class WP_Swag_admin{
 		wp_enqueue_script("d3");
 
 	}
-
-	/**
-	 * Handle the course shortcode.
-	 */
-	/*function ti_course($args, $content) {
-		if (!$args)
-			$args=array();
-
-		$swagPost=SwagPost::getCurrent();
-		$swagUser=SwagUser::getCurrent();
-
-		$selectedItem=$swagPost->getSelectedItem();
-		$selectedItem->preShow();
-		//print_r($selectedItem);
-
-		$template=new Template(__DIR__."/tpl/course.php");
-		$template->set("swagUser",$swagUser);
-		$template->set("swagPost",$swagPost);
-
-		// Leson Plan Functionality
-
-		$template->set("showLessonPlan",FALSE);
-		if (array_key_exists("lessonplan",$args) AND is_user_logged_in()) {
-		$template->set("lessonPlan",get_home_url().'/wp-content/uploads'.$args["lessonplan"]);
-		$template->set("showLessonPlan",TRUE);}
-
-		if ($swagUser->isSwagCompleted($swagPost->getProvidedSwag())) {
-			$template->set("lessonplanAvailable",TRUE);
-		}
-		else if  (current_user_can('edit_others_pages') || get_the_author_id() == get_current_user_id()) {
-			$template->set("lessonplanAvailable",TRUE);
-		}
-		else {
-			$template->set("lessonplanAvailable",FALSE);
-		}
-
-
-		$template->set("showHintInfo",FALSE);
-		if (!$swagUser->isSwagCompleted($swagPost->getRequiredSwag())) {
-			$template->set("showHintInfo",TRUE);
-
-			$uncollected=$swagUser->getUncollectedSwag($swagPost->getRequiredSwag());
-			$uncollectedFormatted=array();
-
-			foreach ($uncollected as $swag)
-				$uncollectedFormatted[]="<b>{$swag->getString()}</b>";
-
-			$swagpaths=SwagPost::getPostsProvidingSwag($uncollected);
-			$swagpathsFormatted=array();
-
-			foreach ($swagpaths as $swagpath)
-				$swagpathsFormatted[]=
-					"<a href='".get_post_permalink($swagpath->ID)."'>".
-					$swagpath->post_title.
-					"</a>";
-
-			$template->set("uncollectedSwag",join(", ",$uncollectedFormatted));
-			$template->set("uncollectedSwagpaths",join(", ",$swagpathsFormatted));
-		}
-
-		$swag=$swagPost->getProvidedSwag()[0];
-
-		if (!$swag) {
-			$trail=array(
-				array(
-					"url"=>home_url(),
-					"title"=>"Tracks"
-				),
-
-				array(
-					"url"=>get_permalink(),
-					"title"=>get_the_title()
-				)
-			);
-		}
-
-		else {
-			$trail=array();
-			foreach ($swagPost->getProvidedSwag()[0]->getTrail() as $swag) {
-				$item=array();
-				$item["url"]=home_url()."?track=".$swag->getString();
-				$item["title"]=$swag->getTitle();
-
-				$trail[]=$item;
-			}
-
-			array_pop($trail);
-			$trail[]=array(
-				"url"=>get_permalink(),
-				"title"=>get_the_title()
-			);
-			$trail[0]["title"]="Tracks";
-		}
-
-		$template->set("trail",$trail);
-
-		return $template->render();
-	}*/
 
 	/**
 	 * Table of contents.
@@ -345,6 +177,19 @@ class WP_Swag_admin{
 	 * Provide settings for wp-h5p-xapi
 	 */
 	public function ti_xapi_h5p_auth_settings($arg) {
+		$xapi=SwagPlugin::instance()->getXapi();
+
+		return array(
+			"endpoint_url"=>$xapi->endpoint,
+			"username"=>$xapi->username,
+			"password"=>$xapi->password
+		);
+	}
+
+	/**
+	 * Provide settings for wp-deliverable
+	 */
+	public function ti_deliverable_xapi_auth_settings($arg) {
 		$xapi=SwagPlugin::instance()->getXapi();
 
 		return array(
