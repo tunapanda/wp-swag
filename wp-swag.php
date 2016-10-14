@@ -10,6 +10,7 @@ Version: 0.0.4
 require_once __DIR__."/wp-swag-admin.php";
 require_once __DIR__."/src/controller/SwagController.php";
 require_once __DIR__."/src/model/SwagData.php";
+require_once __DIR__."/src/syncers/SwagpathSyncer.php";
 
 ///$plugin=new WP_Swag_admin();
 define("RWMB_URL",plugins_url()."/wp-swag/ext/meta-box/");

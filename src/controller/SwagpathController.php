@@ -70,6 +70,7 @@ class SwagpathController extends Singleton {
 		$metaBoxes[]=array(
 	        'title'      => "Swag",
 	        'post_types' => 'swagpath',
+	        'context'=>'side',
 	        'fields'     => array(
 	            array(
 	                'id'   => 'providesArray',
