@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__."/../../ext/wprecord/WpRecord.php";
+
 /**
  * Represents settings about a Swag badge.
  */
