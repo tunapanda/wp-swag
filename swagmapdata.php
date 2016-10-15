@@ -32,11 +32,13 @@ foreach (Swagpath::findAll() as $swagPost) {
 		"url"=>get_permalink($swagPost->getPost()->ID)
 	);
 
-	foreach ($swagPost->getRequiredSwag() as $swag)
-		$data["links"][]=array(
-			"source"=>$swagNodeIndex[$swag->getString()],
-			"target"=>$swagPostNodeIndex
-		);
+	foreach ($swagPost->getRequiredSwag() as $swag) {
+		if ($swagNodeIndex[$swag->getString()])
+			$data["links"][]=array(
+				"source"=>$swagNodeIndex[$swag->getString()],
+				"target"=>$swagPostNodeIndex
+			);
+	}
 
 	foreach ($swagPost->getProvidedSwag() as $swag)
 		$data["links"][]=array(
