@@ -42,6 +42,9 @@ class SwagpathController extends Singleton {
 		}
 	}
 
+	/**
+	 * Do meta boxes, meta-box style.
+	 */
 	public function rwmbMetaBoxes($metaBoxes) {
 		global $wpdb;
 
@@ -52,9 +55,11 @@ class SwagpathController extends Singleton {
 			$options["h5p:".$h5p["slug"]]="H5P: ".$h5p["title"];
 		}
 
-		$deliverables=$wpdb->get_results("SELECT slug,title FROM {$wpdb->prefix}deliverable",ARRAY_A);
-		foreach ($deliverables as $deliverable) {
-			$options["deliverable:".$deliverable["slug"]]="Deliverable: ".$deliverable["title"];
+		if (is_plugin_active("wp-deliverable/wp-deliverable.php")) {
+			$deliverables=$wpdb->get_results("SELECT slug,title FROM {$wpdb->prefix}deliverable",ARRAY_A);
+			foreach ($deliverables as $deliverable) {
+				$options["deliverable:".$deliverable["slug"]]="Deliverable: ".$deliverable["title"];
+			}
 		}
 
 		$metaBoxes[]=array(

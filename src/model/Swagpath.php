@@ -187,13 +187,15 @@ class Swagpath {
 	public function updateMetas() {
 		$providesArray=get_post_meta($this->post->ID,"providesArray",TRUE);
 		delete_post_meta($this->post->ID,"provides");
-		foreach ($providesArray as $provide)
-			add_post_meta($this->post->ID,"provides",$provide);
+		if ($providesArray)
+			foreach ($providesArray as $provide)
+				add_post_meta($this->post->ID,"provides",$provide);
 
 		$requiresArray=get_post_meta($this->post->ID,"requiresArray",TRUE);
 		delete_post_meta($this->post->ID,"requires");
-		foreach ($requiresArray as $require)
-			add_post_meta($this->post->ID,"requires",$require);
+		if ($requiresArray)
+			foreach ($requiresArray as $require)
+				add_post_meta($this->post->ID,"requires",$require);
 	}
 
 	/**
@@ -255,7 +257,8 @@ class Swagpath {
 
 		$q=new WP_Query(array(
 			"post_type"=>"swagpath",
-			"meta_key"=>"provides"
+			"meta_key"=>"provides",
+			"posts_per_page"=>-1
 		));
 
 		foreach ($q->get_posts() as $post)
