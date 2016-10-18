@@ -9,6 +9,7 @@ Version: 0.0.4
 
 require_once __DIR__."/wp-swag-admin.php";
 require_once __DIR__."/src/controller/SwagController.php";
+require_once __DIR__."/src/controller/SwagPageController.php";
 require_once __DIR__."/src/model/SwagData.php";
 require_once __DIR__."/src/syncers/SwagpathSyncer.php";
 require_once __DIR__."/src/syncers/SwagSyncer.php";
@@ -21,6 +22,7 @@ add_action("init", array("WP_Swag_admin", "init_hooks"));
 
 function swag_activate() {
 	SwagData::install();
+	SwagPageController::instance()->install();
 }
 
 register_activation_hook(__FILE__,"swag_activate");

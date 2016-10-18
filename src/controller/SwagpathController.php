@@ -25,6 +25,7 @@ class SwagpathController extends Singleton {
 			"public"=>true,
 			"has_archive"=>true,
 			"supports"=>array("title","excerpt"),
+			"show_in_nav_menus"=>false
 		));
 
 		add_filter("template_include",array($this,"templateInclude"));
@@ -194,7 +195,7 @@ class SwagpathController extends Singleton {
 		if (!$swag) {
 			$trail=array(
 				array(
-					"url"=>home_url(),
+					"url"=>home_url("swag/toc"),
 					"title"=>"Tracks"
 				),
 
@@ -209,7 +210,7 @@ class SwagpathController extends Singleton {
 			$trail=array();
 			foreach ($swagpath->getProvidedSwag()[0]->getTrail() as $swag) {
 				$item=array();
-				$item["url"]=home_url()."?track=".$swag->getString();
+				$item["url"]=home_url("swag/toc")."?track=".$swag->getString();
 				$item["title"]=$swag->getTitle();
 
 				$trail[]=$item;

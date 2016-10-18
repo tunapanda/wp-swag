@@ -44,6 +44,7 @@ class WP_Swag_admin{
 			array(get_called_class(),"ti_deliverable_xapi_auth_settings"));
 
 		SwagpathController::instance()->init();
+		SwagPageController::instance()->init();
 	}
 
 	/**
@@ -96,8 +97,10 @@ class WP_Swag_admin{
 	 * Table of contents.
 	 */
 	public function ti_swagtoc($args) {
-		$swagPageController=new SwagPageController();
-		return $swagPageController->toc($args);
+		return SwagPageController::instance()->toc($args);
+
+/*		$swagPageController=new SwagPageController();
+		return $swagPageController->toc($args);*/
 	}
 
 	/**
