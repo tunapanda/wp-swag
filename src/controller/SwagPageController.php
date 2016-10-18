@@ -32,6 +32,20 @@ class SwagPageController extends Singleton {
 
 		add_action('pre_get_posts', array($this,'enableFrontPage'));
 		add_filter('get_pages',array($this,'addSwagToDropDown'));
+
+		add_shortcode("swagtoc", array($this,"swagtocShortcode"));
+		add_shortcode("swagmap", array($this,"swagmapShortcode"));
+	}
+
+	public function swagmapShortcode($args) {
+		$plugins_uri = plugins_url()."/wp-swag";
+		return "<div id='swagmapcontainer'>
+		<div id='swag_description_container'>A swagmap is gamified display of performance. The green hollow nodes indicate the swagpath is not completed or attempted while non-hollow green nodes indicate the swagpaths is completed and questions answered.
+		</div>
+		<script>
+		var PLUGIN_URI = '$plugins_uri';
+		</script>
+		</div>";		
 	}
 
 	public function addSwagToDropDown($pages) {
@@ -120,7 +134,7 @@ class SwagPageController extends Singleton {
 	/**
 	 * Render the table of contents.
 	 */
-	public function toc($args) {
+	public function swagtocShortcode($args) {
 		$track="";
 
 		if (isset($_REQUEST["track"]))

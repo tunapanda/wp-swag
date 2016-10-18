@@ -14,7 +14,6 @@ require_once __DIR__."/src/model/SwagData.php";
 require_once __DIR__."/src/syncers/SwagpathSyncer.php";
 require_once __DIR__."/src/syncers/SwagSyncer.php";
 
-///$plugin=new WP_Swag_admin();
 define("RWMB_URL",plugins_url()."/wp-swag/ext/meta-box/");
 require_once __DIR__."/ext/meta-box/meta-box.php";
 
@@ -28,10 +27,3 @@ function swag_activate() {
 register_activation_hook(__FILE__,"swag_activate");
 
 SwagController::setup();
-
-/*function mypt($page_template) {
-	error_log("page template");
-	return $page_template;
-}
-
-add_filter("page_template","mypt");*/

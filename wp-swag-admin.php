@@ -26,9 +26,6 @@ class WP_Swag_admin{
 		add_action('wp_enqueue_scripts',array(get_called_class(), "ti_enqueue_scripts"));
 		add_action('admin_enqueue_scripts',array(get_called_class(), "ti_enqueue_scripts"));
 
-		add_shortcode("swagmap", array(get_called_class(), "ti_swagmap"));
-		add_shortcode("swagtoc", array(get_called_class(), "ti_swagtoc"));
-
 		add_action("h5p-xapi-post-save",array(get_called_class(),"ti_xapi_post_save"));
 		add_action("h5p-xapi-pre-save",array(get_called_class(),"ti_xapi_pre_save"));
 		add_action("deliverable-xapi-post-save",array(get_called_class(), "ti_xapi_post_save"));
@@ -87,31 +84,6 @@ class WP_Swag_admin{
 		wp_enqueue_script("ti-main");
 
 		wp_enqueue_script("d3");
-
-	}
-
-	/**
-	 * Table of contents.
-	 */
-	public function ti_swagtoc($args) {
-		return SwagPageController::instance()->toc($args);
-
-/*		$swagPageController=new SwagPageController();
-		return $swagPageController->toc($args);*/
-	}
-
-	/**
-	 * Render swagmap.
-	 */
-	public function ti_swagmap() {
-		$plugins_uri = self::$plugins_uri;
-		return "<div id='swagmapcontainer'>
-		<div id='swag_description_container'>A swagmap is gamified display of performance. The green hollow nodes indicate the swagpath is not completed or attempted while non-hollow green nodes indicate the swagpaths is completed and questions answered.
-		</div>
-		<script>
-		var PLUGIN_URI = '$plugins_uri';
-		</script>
-		</div>";
 	}
 
 	/**
