@@ -160,14 +160,18 @@ class WP_Swag_admin{
 		$plugins_uri = self::$plugins_uri;
 		$swagUser=new SwagUser(wp_get_current_user());
 		$completedSwag=$swagUser->getCompletedSwag();
+		if (!$completedSwag)
+			$completedSwag=array();
 
 		$out="";
 
 		foreach ($completedSwag as $swag) {
-			$out.="<div class='swag-badge-container'>\n";
-			$out.="<img class='swag-badge-image' src='$plugins_uri/img/badge.png'>\n";
-			$out.="<div class='swag-badge-label'>{$swag->getString()}</div>\n";
-			$out.="</div>\n";
+			if ($swag) {
+				$out.="<div class='swag-badge-container'>\n";
+				$out.="<img class='swag-badge-image' src='$plugins_uri/img/badge.png'>\n";
+				$out.="<div class='swag-badge-label'>{$swag->getString()}</div>\n";
+				$out.="</div>\n";
+			}
 		}
 
 		return $out;

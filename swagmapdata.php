@@ -33,7 +33,7 @@ foreach (Swagpath::findAll() as $swagPost) {
 	);
 
 	foreach ($swagPost->getRequiredSwag() as $swag) {
-		if ($swagNodeIndex[$swag->getString()])
+		if (isset($swagNodeIndex[$swag->getString()]))
 			$data["links"][]=array(
 				"source"=>$swagNodeIndex[$swag->getString()],
 				"target"=>$swagPostNodeIndex
@@ -41,10 +41,11 @@ foreach (Swagpath::findAll() as $swagPost) {
 	}
 
 	foreach ($swagPost->getProvidedSwag() as $swag)
-		$data["links"][]=array(
-			"source"=>$swagPostNodeIndex,
-			"target"=>$swagNodeIndex[$swag->getString()]
-		);
+		if (isset($swagNodeIndex[$swag->getString()]))
+			$data["links"][]=array(
+				"source"=>$swagPostNodeIndex,
+				"target"=>$swagNodeIndex[$swag->getString()]
+			);
 }
 
 echo json_encode($data);
