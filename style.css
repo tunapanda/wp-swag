@@ -350,10 +350,11 @@ img.course-completed {
     margin-bottom: 30px;
 }
 
-#content {
+/* let the theme do this instead. */
+/*#content {
     margin-left: 80px;
     margin-right: 80px;
-}
+}*/
 
 @media only screen and ( max-width: 480px ) /* mobile */{
     #content{

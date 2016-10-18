@@ -27,8 +27,21 @@ class SwagpathController extends Singleton {
 			"supports"=>array("title","excerpt"),
 		));
 
-		add_action("get_template_part_content",array($this,'getTemplatePart'));
+		add_filter("template_include",array($this,"templateInclude"));
 		add_action("save_post",array($this,'savePost'));
+	}
+
+	/**
+	 * Template include hook. Always use custome page template for swagpaths.
+	 */
+	public function templateInclude($template) {
+		$post=get_post();
+		if ($post->post_type!="swagpath")
+			return $template;
+
+		$template=__DIR__."/../../tpl/swagpath_page.php";
+
+		return $template;
 	}
 
 	/**
@@ -121,7 +134,7 @@ class SwagpathController extends Singleton {
 		return $metaBoxes;
 	}
 
-	function getTemplatePart() {
+	function showCurrentSwagpath() {
 		if (get_post_type()!="swagpath")
 			return;
 
@@ -211,7 +224,6 @@ class SwagpathController extends Singleton {
 		}
 
 		$template->set("trail",$trail);
-
 		$template->show();
 	}
 }

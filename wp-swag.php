@@ -26,3 +26,10 @@ function swag_activate() {
 register_activation_hook(__FILE__,"swag_activate");
 
 SwagController::setup();
+
+/*function mypt($page_template) {
+	error_log("page template");
+	return $page_template;
+}
+
+add_filter("page_template","mypt");*/
