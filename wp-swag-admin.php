@@ -22,10 +22,7 @@ class WP_Swag_admin{
 		// initialise the the admin settings
 		add_action('admin_init',array(get_called_class(),'ti_admin_init'));
 		add_action('admin_menu',array(get_called_class(),'ti_admin_menu'));
-		//add_shortcode("course", array(get_called_class(), "ti_course"));
 
-		/*add_shortcode("track-listing",array(get_called_class(), "ti_track_listing"));
-		add_shortcode("course-listing",array(get_called_class(),"ti_course_listing"));*/
 		add_action('wp_enqueue_scripts',array(get_called_class(), "ti_enqueue_scripts"));
 		add_action('admin_enqueue_scripts',array(get_called_class(), "ti_enqueue_scripts"));
 

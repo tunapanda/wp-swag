@@ -7,3 +7,6 @@
 [submodule "submodule/meta-box"]
 	path = submodule/meta-box
 	url = https://github.com/rilwis/meta-box
+[submodule "submodule/TGM-Plugin-Activation"]
+	path = submodule/TGM-Plugin-Activation
+	url = https://github.com/TGMPA/TGM-Plugin-Activation
