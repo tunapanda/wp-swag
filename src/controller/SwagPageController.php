@@ -72,8 +72,8 @@ class SwagPageController extends Singleton {
 		$q=$wpdb->prepare(
 			"SELECT ID ".
 			"FROM   {$wpdb->prefix}posts ".
-			"WHERE  post_type=%s ",
-			"AND    post_name=%s ".
+			"WHERE  post_type=%s ".
+			"AND    post_name=%s ",
 			$type,$slug);
 		$id=$wpdb->get_var($q);
 

@@ -1,71 +1,41 @@
 <?php
 
+require_once __DIR__."/../utils/Singleton.php";
+
+use swag\Singleton;
+
 /**
  * Controller for showing the settings page.
  */
-class SettingsPageController {
+class SettingsPageController extends Singleton {
 
-	/**
-	 * Render the dependencies page.
-	 */
-	private function dependencies() {
-		$dependencies=array(
-			array(
-				"title"=>"GitHub Updater",
-				"description"=>"Provides a way to install plugins from GitHub.",
-				"plugin"=>"github-updater/github-updater.php",
-				"link"=>$this->createBlankTargetLink("GitHub Updater","https://github.com/afragen/github-updater")
-			),
-
-			array(
-				"title"=>"H5P",
-				"description"=>"H5P is used for creating and adding rich content to your website. It is used for the presentations in the swagifacts.",
-				"plugin"=>"h5p/h5p.php",
-				"link"=>$this->createStandardPluginInstallLink("H5P","h5p")
-			),
-
-			array(
-				"title"=>"H5P xAPI",
-				"description"=>"H5P xAPI is used for sending achievements for H5P to an xAPI enabled LRS.",
-				"plugin"=>"wp-h5p-xapi/wp-h5p-xapi.php",
-				"link"=>$this->createStandardPluginInstallLink("H5P xAPI","wp-h5p-xapi")
-			),
-
-			array(
-				"title"=>"Deliverable",
-				"description"=>"This plugin lets learners submit deliverables and have coaches review them.\nNeeds te be installed using github-updater",
-				"plugin"=>"wp-deliverable/wp-deliverable.php",
-				"link"=>$this->createBlankTargetLink("Deliverable","https://github.com/tunapanda/wp-deliverable")
-			),
-		);
-
-		foreach ($dependencies as &$dependency) {
-			if (is_plugin_active($dependency["plugin"]))
-				$dependency["status"]="ok";
-
-			else
-				$dependency["status"]="missing";
-		}
-
-		$t=new Template(__DIR__."/../../tpl/settings_dependencies.php");
-		$t->set("dependencies",$dependencies);
-		return $t->render();
+	public function init() {
+		add_action("wp_ajax_install_swagtoc",array($this,"installSwagToc"));
 	}
 
 	/**
-	 * Create a link for installing standard wordpress plugins.
+	 * Install table of contents.
 	 */
-	private function createStandardPluginInstallLink($title, $slug) {
-		$url=admin_url("plugin-install.php?tab=plugin-information&amp;plugin=".$slug."&amp;TB_iframe=true");
+	public function installSwagToc() {
+		global $wpdb;
 
-		return "<a href='$url' class='thickbox' aria-label='More information about $slug' data-title='$slug'>$title</a>";
-	}
+		$q=$wpdb->prepare(
+			"SELECT ID ".
+			"FROM   {$wpdb->prefix}posts ".
+			"WHERE  post_type=%s ".
+			"AND    post_name=%s ",
+			"swag","toc");
+		$id=$wpdb->get_var($q);
 
-	/**
-	 * Create a link for installing standard wordpress plugins.
-	 */
-	private function createBlankTargetLink($title, $url) {
-		return "<a href='$url' target='_blank'>$title</a>";
+		if ($wpdb->last_error)
+			throw new Exception($wpdb->last_error);
+
+		if (!$id)
+			throw new Exception("No swag toc front page available");
+
+		update_option("show_on_front","page");
+		update_option("page_on_front",$id);
+		wp_redirect(admin_url('options-reading.php'));
 	}
 
 	/**
@@ -105,7 +75,6 @@ class SettingsPageController {
 		$template->set("tab",$tab);
 		$template->set("tabs",array(
 			"about"=>"About",
-			"dependencies"=>"Dependencies",
 			"swag"=>"Swag",
 			"xapi"=>"xAPI Settings",
 		));
@@ -117,10 +86,6 @@ class SettingsPageController {
 
 			case "xapi":
 				$template->set("content",$this->xapi());
-				break;
-
-			case "dependencies":
-				$template->set("content",$this->dependencies());
 				break;
 
 			case "swag":

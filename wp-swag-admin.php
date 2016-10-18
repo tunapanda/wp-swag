@@ -39,6 +39,7 @@ class WP_Swag_admin{
 
 		SwagpathController::instance()->init();
 		SwagPageController::instance()->init();
+		SettingsPageController::instance()->init();
 	}
 
 	/**
@@ -67,8 +68,7 @@ class WP_Swag_admin{
 	 * Create settings page.
 	 */
 	public function ti_create_settings_page() {
-		$settingsPageController=new SettingsPageController();
-		$settingsPageController->process();
+		SettingsPageController::instance()->process();
 	}
 
 	/**
