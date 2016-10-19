@@ -2,6 +2,7 @@
 
 require_once __DIR__."/../utils/Singleton.php";
 require_once __DIR__."/../model/Swagpath.php";
+require_once ABSPATH."wp-admin/includes/plugin.php";
 
 use swag\Singleton;
 

@@ -3,8 +3,8 @@
 Plugin Name: Swag
 Plugin URI: https://github.com/tunapanda/wp-swag
 GitHub Plugin URI: https://github.com/tunapanda/wp-swag
-Description: It privides the following functionality; Allowing creation of tracklisting, swagpaths and swagmaps as well as allowing xAPI communication.
-Version: 0.0.4
+Description: The gamified, self-paced, xAPI enabled learning environment from Tunapanda!
+Version: 0.0.6
 */
 
 require_once __DIR__."/wp-swag-admin.php";
@@ -29,3 +29,13 @@ register_activation_hook(__FILE__,"swag_activate");
 
 SwagController::setup();
 SwagTgmpaController::instance()->init();
+
+function swag_add_action_links($links) {
+	$swaglinks=array(
+		'<a href="'.admin_url('options-general.php?page=ti_settings').'">Settings</a>',
+	);
+
+	return array_merge($links,$swaglinks);
+}
+
+add_filter('plugin_action_links_'.plugin_basename(__FILE__),'swag_add_action_links');

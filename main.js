@@ -2,6 +2,46 @@
 
 jQuery(function($) {
 
+	function getUrlParameter(sParam) {
+		var sPageURL = window.location.search.substring(1);
+		var sURLVariables = sPageURL.split('&');
+		for (var i = 0; i < sURLVariables.length; i++)  {
+			var sParameterName = sURLVariables[i].split('=');
+			if (sParameterName[0] == sParam) {
+			    return decodeURIComponent(sParameterName[1]);
+			}
+		}
+	}
+
+	$(document).ready(function() {
+		var linkUrl;
+
+		$(".swag-admin-link").click(function() {
+			linkUrl=$(this).attr("href");
+			var confirmId=$(this).attr("confirm-id");
+			$("#"+confirmId).show();
+			return false;
+		});
+
+		$(".swag-admin-close").click(function() {
+			$(".swag-admin-confirm").hide();
+		});
+
+		$(".swag-admin-ok").click(function() {
+			$(".swag-admin-confirm").hide();
+			location.href=linkUrl;
+		});
+	});
+
+	$(document).ready(function() {
+		var fill_ghu_uri=getUrlParameter("fill_ghu_uri");
+
+		console.log("ghu: "+fill_ghu_uri);
+
+		if (fill_ghu_uri)
+			$('[name="github_updater_repo"]').val(fill_ghu_uri);
+	});
+
 	// Button to show swagpaths that the user is not yet prepared for.
 	$(document).ready(function() {
 		$(".view-unprepared").click(function() {
