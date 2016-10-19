@@ -65,9 +65,11 @@ class SwagpathController extends Singleton {
 
 		$options=array();
 
-		$h5ps=$wpdb->get_results("SELECT slug,title FROM {$wpdb->prefix}h5p_contents",ARRAY_A);
-		foreach ($h5ps as $h5p) {
-			$options["h5p:".$h5p["slug"]]="H5P: ".$h5p["title"];
+		if (is_plugin_active("h5p/h5p.php")) {
+			$h5ps=$wpdb->get_results("SELECT slug,title FROM {$wpdb->prefix}h5p_contents",ARRAY_A);
+			foreach ($h5ps as $h5p) {
+				$options["h5p:".$h5p["slug"]]="H5P: ".$h5p["title"];
+			}
 		}
 
 		if (is_plugin_active("wp-deliverable/wp-deliverable.php")) {
@@ -76,6 +78,9 @@ class SwagpathController extends Singleton {
 				$options["deliverable:".$deliverable["slug"]]="Deliverable: ".$deliverable["title"];
 			}
 		}
+
+		if (!$options)
+			$options=array("_"=>"(No swagifacts available)");
 
 		$metaBoxes[]=array(
 	        'title'      => __( 'Swagifacts', 'textdomain' ),
