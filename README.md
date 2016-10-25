@@ -16,3 +16,8 @@ This is for installing the plugin locally on your machine:
 6. Go to _Settings >> Tunapanda Swag_ and follow the instructions there. This will help you to install required plugins and download course content from the Tunapanda server.
 
 Enjoy!
+
+## Hacking !!
+
+Feel free to dive in and help improve what we have so far :)
+
