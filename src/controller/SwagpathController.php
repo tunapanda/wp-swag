@@ -102,7 +102,7 @@ class SwagpathController extends Singleton {
 	        'post_types' => 'swagpath',
 	        'context'=>'side',
 	        'fields'     => array(
-	            array(
+	            /*array(
 	                'id'   => 'providesArray',
 	                'name' => 'Provides',
 	                'type' => 'text',
@@ -120,6 +120,15 @@ class SwagpathController extends Singleton {
 	                "size"=>20,
 	                "desc"=>
 	                	"The swag that is recommended for the user to complete before attempting this swagpath."
+	            ),*/
+	            array(
+	            	"id"   => "prerequisites",
+	            	"name" => "Prerequisites",
+	            	"type" => "post",
+	                "clone"=>true,
+	                "post_type"=>"swagpath",
+	                "desc"=>
+	                	"The Swagpaths recommended to complete before attempting this swagpath."
 	            ),
 	        ),
 		);

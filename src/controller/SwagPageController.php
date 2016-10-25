@@ -146,49 +146,82 @@ class SwagPageController extends Singleton {
 		$url=get_permalink();
 		$unprepared=0;
 
-		foreach ($parent->getChildren() as $child) {
-			if ($child->getChildren()) {
-				$color=$child->getDisplayColor();
+		$parentTrackId=0;
+		if ($track) {
+			$t=get_terms(array(
+				"taxonomy"=>"swagtrack",
+				"slug"=>$track,
+				"hide_empty"=>FALSE,
+			));
+			$parentTrack=$t[0];
+			//should it be term_taxonomy_id?
+			$parentTrackId=$parentTrack->term_id;
+		}
 
-				if (!$color)
-					$color="#009900";
+		$terms=get_terms(array(
+			"taxonomy"=>"swagtrack",
+			"hide_empty"=>FALSE,
+			"parent"=>$parentTrackId,
+		));
 
-				$tracks[]=array(
-					"title"=>$child->getTitle(),
-					"description"=>$child->getDescription(),
-					"url"=>$url."?track=".$child->getString(),
-					"color"=>$color
-				);
-			}
-			$providing=$child->getProvidingSwagPosts();
-			foreach ($providing as $provider) {
-				if (!$provider->isCurrentUserPrepared())
-					$unprepared++;
+		foreach ($terms as $term) {
+			$tracks[]=array(
+				"title"=>$term->name,
+				"description"=>$term->description,
+				"url"=>$url."?track=".$term->slug,
+				"color"=>"#339966"
+			);
+		}
 
-				$post=$provider->getPost();
-				$swagpaths[]=array(
-					"title"=>$post->post_title,
-					"description"=>$post->post_excerpt,
-					"url"=>get_permalink($post->ID),
-					"prepared"=>$provider->isCurrentUserPrepared(),
-					"swag"=>$provider->getProvidedSwag(),
-					"color"=>$child->getDisplayColor()
-				);
-			}
+		$q=new WP_Query(array(
+			"post_type"=>"swagpath",
+			"tax_query"=>array(
+				array(
+					"taxonomy"=>"swagtrack",
+					"include_children"=>false,
+					"field"=>"term_id",
+					"terms"=>$parentTrackId
+				)
+			),
+			"posts_per_page"=>-1
+		));
+
+		$posts=$q->get_posts();
+		foreach ($posts as $post) {
+			$swagpath=Swagpath::getById($post->ID);
+			$swagpaths[]=array(
+				"title"=>$post->post_title,
+				"description"=>$post->post_excerpt,
+				"url"=>get_permalink($post->ID),
+				"prepared"=>$swagpath->isCurrentUserPrepared(),
+				"swag"=>$swagpath->getProvidedSwag(),
+				"color"=>"#009900"
+			);
 		}
 
 		usort($swagpaths,"SwagPageController::cmpSwagpathViewData");
 
 		$trail=array();
-		foreach ($parent->getTrail() as $swag) {
+		$ancestors=get_ancestors($parentTrackId,"swagtrack","taxonomy");
+		if ($parentTrackId)
+			array_unshift($ancestors,$parentTrackId);
+
+		$ancestors=array_reverse($ancestors);
+
+		$trail[]=array(
+			"title"=>"Tracks",
+			"url"=>$url
+		);
+
+		foreach ($ancestors as $ancestorId) {
+			$ancestor=get_term($ancestorId);
 			$item=array();
-			$item["url"]=$url."?track=".$swag->getString();
-			$item["title"]=$swag->getTitle();
+			$item["url"]=$url."?track=".$ancestor->slug;
+			$item["title"]=$ancestor->name;
 
 			$trail[]=$item;
 		}
 
-		$trail[0]["title"]="Tracks";
 		if (sizeof($trail)<2)
 			$trail=array();
 

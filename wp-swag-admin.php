@@ -12,6 +12,7 @@ require_once __DIR__."/src/utils/ShortcodeUtil.php";
 require_once __DIR__."/src/controller/SettingsPageController.php";
 require_once __DIR__."/src/controller/SwagPageController.php";
 require_once __DIR__."/src/controller/SwagpathController.php";
+require_once __DIR__."/src/controller/SwagTrackController.php";
 
 class WP_Swag_admin{
 	static $plugins_uri;
@@ -40,6 +41,7 @@ class WP_Swag_admin{
 		SwagpathController::instance()->init();
 		SwagPageController::instance()->init();
 		SettingsPageController::instance()->init();
+		SwagTrackController::instance()->init();
 	}
 
 	/**

@@ -3,9 +3,13 @@
 require_once __DIR__."/WpUtil.php";
 require_once __DIR__."/src/model/Swag.php";
 require_once __DIR__."/src/model/Swagpath.php";
+require_once __DIR__."/src/controller/SwagMapController.php";
 require_once WpUtil::getWpLoadPath();
 
-$data=array();
+echo json_encode(SwagMapController::instance()->swagMapData());
+
+
+/*$data=array();
 $data["nodes"]=array();
 $data["links"]=array();
 $swagNodeIndex=array();
@@ -48,4 +52,4 @@ foreach (Swagpath::findAll() as $swagPost) {
 			);
 }
 
-echo json_encode($data);
+echo json_encode($data);*/
