@@ -194,6 +194,7 @@ class SwagPageController extends Singleton {
 				"description"=>$post->post_excerpt,
 				"url"=>get_permalink($post->ID),
 				"prepared"=>$swagpath->isCurrentUserPrepared(),
+				"complete"=>$swagpath->isCompletedByCurrentUser(),
 				"color"=>"#009900",
 
 				// FIXME is this completed?
@@ -230,6 +231,7 @@ class SwagPageController extends Singleton {
 			$trail=array();
 
 		$template=new Template(__DIR__."/../../tpl/toc.php");
+		$template->set("pluginurl",plugins_url()."/wp-swag");
 		$template->set("tracks",$tracks);
 		$template->set("swagpaths",$swagpaths);
 		$template->set("unprepared",$unprepared);

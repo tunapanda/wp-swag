@@ -345,6 +345,13 @@ img.course-completed {
     display: none;
 }
 
+.listing-complete {
+    position: absolute;
+    height: 45px;
+    top: 5px;
+    right: 0;
+}
+
 /**** Content. ****/
 #swagpath-header {
     position: relative;

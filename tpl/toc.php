@@ -41,6 +41,12 @@
 
 		        <div class="footer">
 		            <a href="<?php echo $swagpath["url"]; ?>">Follow Swagpath</a>
+
+		            <?php if ($swagpath["complete"]) { ?>
+			            <img class="listing-complete" src="<?php echo $pluginurl ?>/img/badge.png" />
+			        <?php } else { ?>
+			            <img class="listing-complete" src="<?php echo $pluginurl ?>/img/badge-gray.png" />
+		        	<?php } ?>
 		        </div>
 		    </div>
 		</div>
