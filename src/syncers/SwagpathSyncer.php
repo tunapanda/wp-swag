@@ -89,6 +89,14 @@ class SwagpathSyncer {
 		if (!$post)
 			throw new Exception("No swagpath post, strange");
 
+		$post->post_excerpt=$data["excerpt"];
+		$post->post_title=$data["title"];
+		$post->post_status=$data["status"];
+		wp_update_post($post);
+
+		update_post_meta($id,"swagifact",$data["swagifact"]);
+
+		// Lesson plan
 		if ($data["lessonplan"]) {
 			$q=new WP_Query(array(
 				"post_type"=>"attachment",
@@ -106,8 +114,7 @@ class SwagpathSyncer {
 			update_post_meta($id,"lessonplan","");
 		}
 
-		update_post_meta($id,"swagifact",$data["swagifact"]);
-
+		// Prereqs.
 		$preSlugs=$data["prerequisites"];
 		$preIds=array();
 		foreach ($preSlugs as $preSlug)
@@ -115,11 +122,8 @@ class SwagpathSyncer {
 
 		update_post_meta($id,"prerequisites",$preIds);
 
-		$post->post_excerpt=$data["excerpt"];
-		$post->post_title=$data["title"];
-		$post->post_status=$data["status"];
-
-		wp_update_post($post);
+		// Tracks
+		wp_set_object_terms($id,$data["tracks"],"swagtrack");
 	}
 
 	/**
@@ -143,15 +147,21 @@ class SwagpathSyncer {
 
 		sort($preSlugs);
 
+		$tracks=wp_get_object_terms($id,"swagtrack");
+		$trackSlugs=array();
+		foreach ($tracks as $track)
+			$trackSlugs[]=$track->slug;
+
+		sort($trackSlugs);
+
 		return array(
 			"title"=>$post->post_title,
 			"status"=>$post->post_status,
 			"swagifact"=>get_post_meta($id,"swagifact",TRUE),
 			"lessonplan"=>$lessonplanPost->post_name,
 			"excerpt"=>$post->post_excerpt,
-			"prerequisites"=>$preSlugs
-
-			//continue here, needs swagtracks 
+			"prerequisites"=>$preSlugs,
+			"tracks"=>$trackSlugs
 		);
 	}
 
