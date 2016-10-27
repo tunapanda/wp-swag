@@ -16,9 +16,49 @@ class SwagMapController extends Singleton {
 	}
 
 	/**
-	 * Get swagmap data.
+	 * Get data for rendering swagmap.
 	 */
 	public function swagMapData() {
+		$nodes=array();
+		$links=array();
+		$swagpaths=Swagpath::findAll();
+		$nodeIndexByPostId=array();
+
+		foreach ($swagpaths as $swagpath) {
+			$nodeIndexByPostId[$swagpath->getPost()->ID]=sizeof($nodes);
+			$nodes[]=array(
+				"name"=>$swagpath->getPost()->post_title,
+				"type"=>"swag",
+				"completed"=>$swagpath->isCompletedByCurrentUser(),
+				"color"=>"#009900",
+				"url"=>get_permalink($swagpath->getPost()->ID)
+			);
+		}
+
+		foreach ($swagpaths as $swagpath) {
+			$pres=$swagpath->getPrerequisites();
+			foreach ($pres as $pre) {
+				if ($nodeIndexByPostId[$pre->getPost()->ID]) {
+					$link=array(
+						"source"=>$nodeIndexByPostId[$pre->getPost()->ID],
+						"target"=>$nodeIndexByPostId[$swagpath->getPost()->ID]
+					);
+
+					$links[]=$link;
+				}
+			}
+		}
+
+		return array(
+			"nodes"=>$nodes,
+			"links"=>$links
+		);
+	}
+
+	/**
+	 * Get swagmap data.
+	 */
+/*	public function swagMapData() {
 		$nodes=array();
 		$links=array();
 
@@ -62,5 +102,5 @@ class SwagMapController extends Singleton {
 			"nodes"=>$nodes,
 			"links"=>$links
 		);
-	}
+	}*/
 }

@@ -80,8 +80,6 @@ class Swagpath {
 					$this->swagPostItems[]=$item;
 				}
 			}
-
-			//print_r($shortCodes);
 		}
 
 		return $this->swagPostItems;
@@ -97,31 +95,16 @@ class Swagpath {
 	}
 
 	/**
-	 * Get swag provided by this Swagpath.
-	 * Returns an array of Swag objects.
+	 * Get prerequisite swagpaths.
 	 */
-	public function getProvidedSwag() {
-		$provided=array();
-		$metas=ArrayUtil::flattenArray(get_post_meta($this->post->ID,"provides"));
+	public function getPrerequisites() {
+		$prerequisites=array();
 
-		foreach ($metas as $meta)
-			$provided[]=Swag::findByString($meta);
+		$ids=ArrayUtil::flattenArray(get_post_meta($this->post->ID,"prerequisites"));
+		foreach ($ids as $id)
+			$prerequisites[]=Swagpath::getById($id);
 
-		return $provided;
-	}
-
-	/**
-	 * Get swag required by this Swagpath.
-	 * Returns an array of Swag objects.
-	 */
-	public function getRequiredSwag() {
-		$provided=array();
-		$metas=ArrayUtil::flattenArray(get_post_meta($this->post->ID,"requires"));
-
-		foreach ($metas as $meta)
-			$provided[]=Swag::findByString($meta);
-
-		return $provided;
+		return $prerequisites;
 	}
 
 	/**
@@ -143,7 +126,7 @@ class Swagpath {
 	}
 
 	/**
-	 * Get related statements for current user.
+	 * Get related statements for the given user.
 	 */
 	public function getRelatedStatements($swagUser) {
 		if (!$swagUser->isLoggedIn())
@@ -169,69 +152,35 @@ class Swagpath {
 	}
 
 	/**
-	 * Get swagpaths providing this swag.
+	 * Get object id.
 	 */
-	public static function getSwagpathsProvidingSwag($swag) {
-		$wpPosts=Swagpath::getPostsProvidingSwag($swag);
-		$swagPosts=array();
-
-		foreach ($wpPosts as $wpPost)
-			$swagPosts[]=new Swagpath($wpPost);
-
-		return $swagPosts;
-	}
-
-	/**
-	 * Flatten provides and requires.
-	 */
-	public function updateMetas() {
-		$providesArray=get_post_meta($this->post->ID,"providesArray",TRUE);
-		delete_post_meta($this->post->ID,"provides");
-		if ($providesArray)
-			foreach ($providesArray as $provide)
-				add_post_meta($this->post->ID,"provides",$provide);
-
-		$requiresArray=get_post_meta($this->post->ID,"requiresArray",TRUE);
-		delete_post_meta($this->post->ID,"requires");
-		if ($requiresArray)
-			foreach ($requiresArray as $require)
-				add_post_meta($this->post->ID,"requires",$require);
+	public function getXapiObjectId() {
+		return "http://swag.tunapanda.org/".$this->post->post_name;
 	}
 
 	/**
 	 * Does the current user have all prerequisites?
 	 */
 	public function isCurrentUserPrepared() {
-		$swagUser=SwagUser::getCurrent();
-		return $swagUser->isSwagCompleted($this->getRequiredSwag());
+		foreach ($this->getPrerequisites() as $p)
+			if (!$p->isCompletedByCurrentUser())
+				return FALSE;
+
+		return TRUE;
 	}
 
 	/**
-	 * Get posts providing this swag.
+	 * Is this swagpath completed by the user?
 	 */
-	private static function getPostsProvidingSwag($swags) {
-		if (!is_array($swags))
-			$swags=array($swags);
+	public function isCompletedByUser($swagUser) {
+		return $swagUser->isSwagpathCompleted($this);
+	} 
 
-		$posts=array();
-		$postIds=array();
-
-		foreach ($swags as $swag) {
-			$q=new WP_Query(array(
-				"post_type"=>"swagpath",
-				"meta_key"=>"provides",
-				"meta_value"=>$swag->getString()
-			));
-
-			foreach ($q->get_posts() as $post) {
-				if (!in_array($post->ID,$postIds)) {
-					$posts[]=$post;
-					$postIds[]=$post->ID;
-				}
-			}
-		}
-
-		return $posts;
+	/**
+	 * Is this swagpath completed by the current user?
+	 */
+	public function isCompletedByCurrentUser() {
+		return SwagUser::getCurrent()->isSwagpathCompleted($this);
 	}
 
 	/**
@@ -250,6 +199,23 @@ class Swagpath {
 	}
 
 	/**
+	 * Get Swagpath by slug.
+	 */
+	public static function getBySlug($slug) {
+		$posts=get_posts(array(
+			'name'=>$slug,
+			'post_type'=>'swagpath',
+			'post_status'=>'publish',
+			'numberposts'=>1
+		));
+
+		if ($posts)
+			return new Swagpath($posts[0]);
+
+		return NULL;
+	}
+
+	/**
 	 * Find all swagpaths.
 	 */
 	public static function findAll() {
@@ -257,7 +223,7 @@ class Swagpath {
 
 		$q=new WP_Query(array(
 			"post_type"=>"swagpath",
-			"meta_key"=>"provides",
+			"post_status"=>"publish",
 			"posts_per_page"=>-1
 		));
 
@@ -279,43 +245,39 @@ class Swagpath {
 		if (!$user || !$user->ID)
 			return;
 
-		foreach ($this->getProvidedSwag() as $provided) {
-			$providedString=$provided->getString();
+		$statement=array(
+			"actor"=>array(
+				"mbox"=>"mailto:".$user->user_email,
+				"name"=>$user->display_name
+			),
 
-			$statement=array(
-				"actor"=>array(
-					"mbox"=>"mailto:".$user->user_email,
-					"name"=>$user->display_name
-				),
+			"object"=>array(
+				"objectType"=>"Activity",
+				"id"=>$this->getXapiObjectId(),
+				"definition"=>array(
+					"name"=>array(
+						"en-US"=>$this->post->post_title
+					)
+				)
+			),
 
-				"object"=>array(
-					"objectType"=>"Activity",
-					"id"=>"http://swag.tunapanda.org/".$providedString,
-					"definition"=>array(
-						"name"=>array(
-							"en-US"=>$providedString
+			"verb"=>array(
+				"id"=>"http://adlnet.gov/expapi/verbs/completed"
+			),
+
+			"context"=>array(
+				"contextActivities"=>array(
+					"category"=>array(
+						array(
+							"objectType"=>"Activity",
+							"id"=>"http://swag.tunapanda.org/"
 						)
 					)
-				),
+				)
+			),
+		);
 
-				"verb"=>array(
-					"id"=>"http://adlnet.gov/expapi/verbs/completed"
-				),
-
-				"context"=>array(
-					"contextActivities"=>array(
-						"category"=>array(
-							array(
-								"objectType"=>"Activity",
-								"id"=>"http://swag.tunapanda.org/"
-							)
-						)
-					)
-				),
-			);
-
-			$xapi->putStatement($statement);
-		}		
+		$xapi->putStatement($statement);
 	}
 
 	/**

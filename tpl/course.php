@@ -10,14 +10,14 @@
 	<div class='course-info'>
 		In order to get the most out of this swagpath, it is recommended that you
 		first collect these swag:
-		<?php echo $uncollectedSwag; ?>.<br/>
-		You can collect them by following these swagpaths:
-		<?php echo $uncollectedSwagpaths; ?>
+		<?php foreach ($uncollected as $u) { ?>
+			<a href="<?php echo $u["url"]; ?>"><?php echo $u["title"]; ?></a>
+		<?php } ?>
 	</div>
 <?php } ?>
 <?php
 	$plugins_uri = WP_Swag_admin::$plugins_uri;
- ?>
+?>
 <div class='content-tab-wrapper'>
 	<ul class='content-tab-list'>
 		<script>

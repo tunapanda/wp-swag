@@ -1,6 +1,5 @@
 <?php
 
-require_once __DIR__."/../model/Swag.php";
 require_once __DIR__."/../utils/Singleton.php";
 
 use swag\Singleton;
@@ -140,7 +139,6 @@ class SwagPageController extends Singleton {
 		if (isset($_REQUEST["track"]))
 			$track=$_REQUEST["track"];
 
-		$parent=Swag::findByString($track);
 		$tracks=array();
 		$swagpaths=array();
 		$url=get_permalink();
@@ -187,6 +185,8 @@ class SwagPageController extends Singleton {
 		));
 
 		$posts=$q->get_posts();
+		$unprepared=0;
+
 		foreach ($posts as $post) {
 			$swagpath=Swagpath::getById($post->ID);
 			$swagpaths[]=array(
@@ -194,9 +194,13 @@ class SwagPageController extends Singleton {
 				"description"=>$post->post_excerpt,
 				"url"=>get_permalink($post->ID),
 				"prepared"=>$swagpath->isCurrentUserPrepared(),
-				"swag"=>$swagpath->getProvidedSwag(),
-				"color"=>"#009900"
+				"color"=>"#009900",
+
+				// FIXME is this completed?
 			);
+
+			if (!$swagpath->isCurrentUserPrepared())
+				$unprepared++;
 		}
 
 		usort($swagpaths,"SwagPageController::cmpSwagpathViewData");

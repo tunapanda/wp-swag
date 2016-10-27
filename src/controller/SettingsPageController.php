@@ -75,7 +75,6 @@ class SettingsPageController extends Singleton {
 		$template->set("tab",$tab);
 		$template->set("tabs",array(
 			"about"=>"About",
-			"swag"=>"Swag",
 			"xapi"=>"xAPI Settings",
 		));
 
@@ -86,15 +85,6 @@ class SettingsPageController extends Singleton {
 
 			case "xapi":
 				$template->set("content",$this->xapi());
-				break;
-
-			case "swag":
-				$template->set("content","");
-				$template->show();
-
-				$instance=new SwagController();
-				$instance->list_handler();
-				return;
 				break;
 
 			default:
