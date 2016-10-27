@@ -84,9 +84,9 @@ jQuery(function($) {
 			height = $("#swagmapcontainer").height();
 
 		var force = d3.layout.force()
-			.charge(-120)
+			.charge(-100)
 			.linkDistance(80)
-			.gravity(0.01)
+			.gravity(0.05)
 			.size([width, height]);
 
 		var svg = d3.select("#swagmapcontainer").append("svg")
