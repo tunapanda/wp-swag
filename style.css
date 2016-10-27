@@ -457,9 +457,32 @@ img.coursepresentation {
 }
 
 /**** Swagmap. ****/
+.swagmap-mode-link-container {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.swagmap-mode-link-container a {
+    color: #008000;
+    text-decoration: none;
+}
+
+.swagmap-mode-link-container a:hover {
+    text-decoration: underline;
+}
+
+.swagmap-mode-link-container a.active {
+    color: #000000;
+    font-weight: bold;
+    text-decoration: none;
+    cursor: default;
+}
+
 #swagmapcontainer {
     width: 100%;
     float:left;
+    position: relative;
 }
 #swag_description_container{
     position:bottom;

@@ -37,14 +37,16 @@ class SwagPageController extends Singleton {
 	}
 
 	public function swagmapShortcode($args) {
-		$plugins_uri = plugins_url()."/wp-swag";
-		return "<div id='swagmapcontainer'>
-		<div id='swag_description_container'>A swagmap is gamified display of performance. The green hollow nodes indicate the swagpath is not completed or attempted while non-hollow green nodes indicate the swagpaths is completed and questions answered.
-		</div>
-		<script>
-		var PLUGIN_URI = '$plugins_uri';
-		</script>
-		</div>";		
+		$mode="my";
+		if (isset($_REQUEST["mode"]))
+			$mode=$_REQUEST["mode"];
+
+		$template=new Template(__DIR__."/../../tpl/swagmap.php");
+		$template->set("mode",$mode);
+		$template->set("plugins_uri",plugins_url()."/wp-swag");
+		$template->set("mylink",home_url()."/swag/map/?mode=my");
+		$template->set("fulllink",home_url()."/swag/map/?mode=full");
+		$template->show();
 	}
 
 	public function addSwagToDropDown($pages) {

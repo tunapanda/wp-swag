@@ -18,7 +18,7 @@ class SwagMapController extends Singleton {
 	/**
 	 * Get data for rendering swagmap.
 	 */
-	public function swagMapData() {
+	public function swagMapData($mode) {
 		$nodes=array();
 		$links=array();
 		$swagpaths=Swagpath::findAll();
@@ -27,7 +27,7 @@ class SwagMapController extends Singleton {
 		foreach ($swagpaths as $swagpath) {
 			$nodeData=NULL;
 
-			if ($swagpath->isCurrentUserPrepared()) {
+			if ($swagpath->isCurrentUserPrepared() || $mode=="full") {
 				$nodeData=array(
 					"name"=>$swagpath->getPost()->post_title,
 					"type"=>"swag",
