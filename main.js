@@ -55,13 +55,21 @@ jQuery(function($) {
 	$(document).ready(function() {
 		if (typeof H5P !== 'undefined') {
 			H5P.externalDispatcher.on('xAPI', function(event) {
-				/*console.log("got xapi");
-				console.log(event.data.statement);*/
-
 				var verbId = event.data.statement.verb.id;
 				if (verbId == "http://adlnet.gov/expapi/verbs/completed") {
 					var imgUri = PLUGIN_URI + "/img/completed-logo.png";
 					$("ul.content-tab-list li.selected a img.coursepresentation").attr("src", imgUri);
+				}
+
+				var completed=true;
+				$("img.coursepresentation").each(function(i, el) {
+					if (!($(this).attr("src").includes("completed-logo")))
+						completed=false;
+				});
+
+				if (completed) {
+					var imgUri = PLUGIN_URI + "/img/badge.png";
+					$(".swagpath-badge").attr("src",imgUri);
 				}
 			});
 		}

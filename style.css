@@ -346,15 +346,20 @@ img.course-completed {
 }
 
 /**** Content. ****/
+#swagpath-header {
+    position: relative;
+}
+
+.swagpath-badge {
+    position: absolute;
+    height: 80px;
+    top: -15px;
+    right: 0;
+}
+
 #content p {
     margin-bottom: 30px;
 }
-
-/* let the theme do this instead. */
-/*#content {
-    margin-left: 80px;
-    margin-right: 80px;
-}*/
 
 @media only screen and ( max-width: 480px ) /* mobile */{
     #content{
@@ -509,7 +514,6 @@ img.coursepresentation {
 }
 
 /** Lesson Plan Buttons **/
-
 .button-lessonplan {
 	color: white;
 	background-color: #0A6C39;

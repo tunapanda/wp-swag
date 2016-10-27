@@ -131,6 +131,7 @@ class SwagpathController extends Singleton {
 		$template->set("swagUser",$swagUser);
 		$template->set("swagpath",$swagpath);
 		$template->set("showLessonPlan",FALSE);
+		$template->set("completed",$swagpath->isCompletedByCurrentUser());
 
 		// Lesson plan
 		$template->set("showLessonPlan",FALSE);

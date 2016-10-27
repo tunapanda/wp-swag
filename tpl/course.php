@@ -1,11 +1,20 @@
+<?php $plugins_uri = WP_Swag_admin::$plugins_uri; ?>
 <h1></h1>
-<div id="breadcrumbs">
-	<ul id="breadcrumb">
-		<?php foreach ($trail as $item) { ?>
-			<li><a href="<?php echo $item["url"]; ?>"><?php echo $item["title"]; ?></a></li>
-		<?php } ?>
-	</ul>
+<div id="swagpath-header">
+	<div id="breadcrumbs">
+		<ul id="breadcrumb">
+			<?php foreach ($trail as $item) { ?>
+				<li><a href="<?php echo $item["url"]; ?>"><?php echo $item["title"]; ?></a></li>
+			<?php } ?>
+		</ul>
+	</div>
+	<?php if ($completed) { ?>
+		<img class="swagpath-badge" src="<?php echo $plugins_uri; ?>/img/badge.png"/>
+	<?php } else { ?>
+		<img class="swagpath-badge" src="<?php echo $plugins_uri; ?>/img/badge-gray.png"/>
+	<?php } ?>
 </div>
+
 <?php if ($showHintInfo) { ?>
 	<div class='course-info'>
 		In order to get the most out of this swagpath, it is recommended that you
@@ -15,9 +24,6 @@
 		<?php } ?>
 	</div>
 <?php } ?>
-<?php
-	$plugins_uri = WP_Swag_admin::$plugins_uri;
-?>
 <div class='content-tab-wrapper'>
 	<ul class='content-tab-list'>
 		<script>
