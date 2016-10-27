@@ -173,18 +173,42 @@ class SwagPageController extends Singleton {
 			);
 		}
 
-		$q=new WP_Query(array(
-			"post_type"=>"swagpath",
-			"tax_query"=>array(
-				array(
-					"taxonomy"=>"swagtrack",
-					"include_children"=>false,
-					"field"=>"term_id",
-					"terms"=>$parentTrackId
-				)
-			),
-			"posts_per_page"=>-1
-		));
+		if ($parentTrackId) {
+			$q=new WP_Query(array(
+				"post_type"=>"swagpath",
+				"tax_query"=>array(
+					array(
+						"taxonomy"=>"swagtrack",
+						"include_children"=>false,
+						"field"=>"term_id",
+						"terms"=>$parentTrackId
+					)
+				),
+				"posts_per_page"=>-1
+			));
+		}
+
+		else {
+			$notTerms=get_terms(array(
+				'taxonomy'=>'swagtrack',
+				'hide_empty'=>false,
+				"fields"=>'ids'
+			));
+
+			$q=new WP_Query(array(
+				"post_type"=>"swagpath",
+				"tax_query"=>array(
+					array(
+						"taxonomy"=>"swagtrack",
+						"include_children"=>false,
+						"field"=>"term_id",
+						"terms"=>$notTerms,
+						"operator"=>"NOT IN"
+					)
+				),
+				"posts_per_page"=>-1
+			));
+		}
 
 		$posts=$q->get_posts();
 		$unprepared=0;
