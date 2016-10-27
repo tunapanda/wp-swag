@@ -29,7 +29,6 @@ function swag_activate() {
 			E_USER_ERROR
 		);*/
 
-	SwagData::install();
 	SwagPageController::instance()->install();
 }
 
