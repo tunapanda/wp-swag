@@ -107,17 +107,19 @@ class SwagpathSyncer {
 		}
 
 		update_post_meta($id,"swagifact",$data["swagifact"]);
-		update_post_meta($id,"providesArray",$data["provides"]);
-		update_post_meta($id,"requiresArray",$data["requires"]);
+
+		$preSlugs=$data["prerequisites"];
+		$preIds=array();
+		foreach ($preSlugs as $preSlug)
+			$preIds[]=SwagpathSyncer::getIdBySlug($preSlug);
+
+		update_post_meta($id,"prerequisites",$preIds);
 
 		$post->post_excerpt=$data["excerpt"];
 		$post->post_title=$data["title"];
 		$post->post_status=$data["status"];
 
 		wp_update_post($post);
-
-		$swagpath=Swagpath::getById($id);
-		$swagpath->updateMetas();
 	}
 
 	/**
@@ -134,14 +136,22 @@ class SwagpathSyncer {
 		if (!$post)
 			return NULL;
 
+		$preSlugs=array();
+		$preIds=get_post_meta($id,"prerequisites",TRUE);
+		foreach ($preIds as $preId)
+			$preSlugs[]=SwagpathSyncer::getSlugById($preId);
+
+		sort($preSlugs);
+
 		return array(
 			"title"=>$post->post_title,
 			"status"=>$post->post_status,
 			"swagifact"=>get_post_meta($id,"swagifact",TRUE),
-			"provides"=>get_post_meta($id,"providesArray",TRUE),
-			"requires"=>get_post_meta($id,"requiresArray",TRUE),
 			"lessonplan"=>$lessonplanPost->post_name,
 			"excerpt"=>$post->post_excerpt,
+			"prerequisites"=>$preSlugs
+
+			//continue here, needs swagtracks 
 		);
 	}
 
