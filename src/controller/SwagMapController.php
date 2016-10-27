@@ -25,20 +25,39 @@ class SwagMapController extends Singleton {
 		$nodeIndexByPostId=array();
 
 		foreach ($swagpaths as $swagpath) {
-			$nodeIndexByPostId[$swagpath->getPost()->ID]=sizeof($nodes);
-			$nodes[]=array(
-				"name"=>$swagpath->getPost()->post_title,
-				"type"=>"swag",
-				"completed"=>$swagpath->isCompletedByCurrentUser(),
-				"color"=>"#009900",
-				"url"=>get_permalink($swagpath->getPost()->ID)
-			);
+			$nodeData=NULL;
+
+			if ($swagpath->isCurrentUserPrepared()) {
+				$nodeData=array(
+					"name"=>$swagpath->getPost()->post_title,
+					"type"=>"swag",
+					"completed"=>$swagpath->isCompletedByCurrentUser(),
+					"color"=>"#009900",
+					"url"=>get_permalink($swagpath->getPost()->ID)
+				);
+			}
+
+			else if ($swagpath->isCurrentUserPreparedForPrerequisites()) {
+				$nodeData=array(
+					"name"=>"?",
+					"type"=>"swag",
+					"completed"=>FALSE,
+					"color"=>"#999999",
+					"url"=>NULL
+				);
+			}
+
+			if ($nodeData) {
+				$nodeIndexByPostId[$swagpath->getPost()->ID]=sizeof($nodes);
+				$nodes[]=$nodeData;
+			}
 		}
 
 		foreach ($swagpaths as $swagpath) {
 			$pres=$swagpath->getPrerequisites();
 			foreach ($pres as $pre) {
-				if ($nodeIndexByPostId[$pre->getPost()->ID]) {
+				if (isset($nodeIndexByPostId[$pre->getPost()->ID]) &&
+						isset($nodeIndexByPostId[$swagpath->getPost()->ID])) {
 					$link=array(
 						"source"=>$nodeIndexByPostId[$pre->getPost()->ID],
 						"target"=>$nodeIndexByPostId[$swagpath->getPost()->ID]

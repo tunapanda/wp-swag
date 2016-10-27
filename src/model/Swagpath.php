@@ -164,9 +164,29 @@ class Swagpath {
 	}
 
 	/**
+	 * Is the current user prepared for the prerequisites?
+	 */
+	public function isCurrentUserPreparedForPrerequisites() {
+		if ($this->isCompletedByCurrentUser())
+			return TRUE;
+
+		if ($this->isCurrentUserPrepared())
+			return TRUE;
+
+		foreach ($this->getPrerequisites() as $p)
+			if (!$p->isCurrentUserPrepared())
+				return FALSE;
+
+		return TRUE;
+	}
+
+	/**
 	 * Does the current user have all prerequisites?
 	 */
 	public function isCurrentUserPrepared() {
+		if ($this->isCompletedByCurrentUser())
+			return TRUE;
+
 		foreach ($this->getPrerequisites() as $p)
 			if (!$p->isCompletedByCurrentUser())
 				return FALSE;
