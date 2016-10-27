@@ -16,6 +16,8 @@ class Swagpath {
 	private $swagPostItems;
 	private $relatedStatementsByEmail;
 
+	private static $swagpathById=array();
+	private static $swagpathBySlug=array();
 
 	/**
 	 * Construct.
@@ -24,6 +26,9 @@ class Swagpath {
 		$this->post=$post;
 		$this->relatedStatementsByEmail=array();
 		$this->swagPostItems=NULL;
+
+		Swagpath::$swagpathById[$post->ID]=$this;
+		Swagpath::$swagpathBySlug[$post->post_name]=$this;
 	}
 
 	/**
@@ -187,6 +192,9 @@ class Swagpath {
 	 * Get Swagpath by id.
 	 */
 	public static function getById($postId) {
+		if (isset(Swagpath::$swagpathById[$postId]))
+			return Swagpath::$swagpathById[$postId];
+
 		$post=get_post($postId);
 
 		if (!$post)
@@ -202,6 +210,9 @@ class Swagpath {
 	 * Get Swagpath by slug.
 	 */
 	public static function getBySlug($slug) {
+		if (isset(Swagpath::$swagpathBySlug[$slug]))
+			return Swagpath::$swagpathBySlug[$slug];
+
 		$posts=get_posts(array(
 			'name'=>$slug,
 			'post_type'=>'swagpath',
@@ -209,10 +220,10 @@ class Swagpath {
 			'numberposts'=>1
 		));
 
-		if ($posts)
-			return new Swagpath($posts[0]);
+		if (!$posts)
+			throw new Exception("Post not found");
 
-		return NULL;
+		return new Swagpath($posts[0]);
 	}
 
 	/**
