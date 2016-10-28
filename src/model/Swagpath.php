@@ -298,6 +298,8 @@ class Swagpath {
 
 	/**
 	 * Save xapi statements for provided swag for current user.
+	 * If there is already a matching statement, a new one will
+	 * not be saved.
 	 */
 	public function saveProvidedSwag($swagUser) {
 		$xapi=SwagPlugin::instance()->getXapi();
@@ -306,6 +308,15 @@ class Swagpath {
 
 		$user=$swagUser->getUser();
 		if (!$user || !$user->ID)
+			return;
+
+		$current=$xapi->getStatements(array(
+			"agentEmail"=>$swagUser->getEmail(),
+			"activity"=>$this->getXapiObjectId(),
+			"verb"=>"http://adlnet.gov/expapi/verbs/completed",
+		));
+
+		if ($current)
 			return;
 
 		$statement=array(

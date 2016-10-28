@@ -128,10 +128,12 @@ class SwagpathController extends Singleton {
 		$swagUser=SwagUser::getCurrent();
 
 		$template=new Template(__DIR__."/../../tpl/course.php");
+		$template->set("homeUrl",home_url());
 		$template->set("swagUser",$swagUser);
 		$template->set("swagpath",$swagpath);
 		$template->set("showLessonPlan",FALSE);
 		$template->set("completed",$swagpath->isCompletedByCurrentUser());
+		$template->set("pluginUrl",plugins_url()."/wp-swag/");
 
 		// Lesson plan
 		$template->set("showLessonPlan",FALSE);
@@ -177,7 +179,7 @@ class SwagpathController extends Singleton {
 		}
 
 		// Trail
-		$url=home_url();
+		$url=home_url()."/swag/toc/";
 		$trail=array();
 		$trail[]=array(
 			"title"=>"Tracks",
@@ -186,6 +188,7 @@ class SwagpathController extends Singleton {
 
 		$terms=wp_get_post_terms($swagpath->getPost()->ID,"swagtrack");
 		$termId=$terms[0]->term_id;
+		$trackSlug=$terms[0]->slug;
 		$ancestors=get_ancestors($termId,"swagtrack","taxonomy");
 		$ancestors=array_reverse($ancestors);
 		$ancestors[]=$termId;
@@ -203,6 +206,7 @@ class SwagpathController extends Singleton {
 			"title"=>$swagpath->getPost()->post_title
 		);
 
+		$template->set("trackSlug",$trackSlug);
 		$template->set("trail",$trail);
 		$template->show();
 	}

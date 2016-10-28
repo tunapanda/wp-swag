@@ -1,5 +1,3 @@
-//console.log("main...");
-
 jQuery(function($) {
 
 	function getUrlParameter(sParam) {
@@ -51,6 +49,8 @@ jQuery(function($) {
 
 	// Update tickmark image on completed swagifact.
 	$(document).ready(function() {
+		var shownCompletedScreen;
+
 		if (typeof H5P !== 'undefined') {
 			H5P.externalDispatcher.on('xAPI', function(event) {
 				var verbId = event.data.statement.verb.id;
@@ -68,9 +68,34 @@ jQuery(function($) {
 				if (completed) {
 					var imgUri = PLUGIN_URI + "/img/badge.png";
 					$(".swagpath-badge").attr("src", imgUri);
+
+					if (!shownCompletedScreen) {
+						shownCompletedScreen = true;
+						$(".swagpath-completed").fadeIn();
+					}
 				}
 			});
 		}
+
+		$(".swagpath-action-close").click(function() {
+			$(".swagpath-completed").hide();
+			return false;
+		});
+
+		$(".swagpath-action-swagmap").click(function() {
+			location.href = HOME_URL + "/swag/map";
+			return false;
+		});
+
+		$(".swagpath-action-tracks").click(function() {
+			location.href = HOME_URL + "/swag/toc?track=" + TRACK_SLUG;
+			return false;
+		});
+
+		$(".swagpath-action-badges").click(function() {
+			location.href = HOME_URL + "/my-account/";
+			return false;
+		});
 	});
 
 	// Initialize swagmap.

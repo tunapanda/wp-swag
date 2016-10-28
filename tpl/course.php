@@ -1,5 +1,10 @@
+<script>
+	var PLUGIN_URI = '<?php echo $pluginUrl; ?>';
+	var HOME_URL = '<?php echo $homeUrl; ?>';
+	var TRACK_SLUG = '<?php echo $trackSlug; ?>';
+</script>
+
 <?php $plugins_uri = WP_Swag_admin::$plugins_uri; ?>
-<h1></h1>
 <div id="swagpath-header">
 	<div id="breadcrumbs">
 		<ul id="breadcrumb">
@@ -26,9 +31,6 @@
 <?php } ?>
 <div class='content-tab-wrapper'>
 	<ul class='content-tab-list'>
-		<script>
-		var PLUGIN_URI = '<?php echo $plugins_uri; ?>';
-		</script>
 		<?php foreach ($swagpath->getSwagPostItems() as $swagPostItem) { ?>
 			<li
 				<?php if ($swagPostItem->isSelected()) echo "class='selected'"; ?>
@@ -57,5 +59,18 @@
 		<button style="text-align:right;float:right" title="Please complete swag to download the lesson plan" class="button-lessonplan disabled" disabled>Download Lesson Plan</button>
 		<?php endif; ?>
 		<?php echo $swagpath->getSelectedItem()->getContent(); ?>
+	</div>
+</div>
+<div class="swagpath-completed" style="display: none">
+	<div class="background"></div>
+	<h1>New swag achieved!</h1>
+	<img class="badge" src="<?php echo $plugins_uri; ?>/img/badge.png"/>
+	<h2><?php echo $swagpath->getPost()->post_title; ?></h2>
+
+	<div class="call-to-action">
+		<a href="#" class="swagpath-action-swagmap">Show my swagmap</a>
+		<a href="#" class="swagpath-action-tracks">Show tracks</a>
+		<a href="#" class="swagpath-action-badges">Show my badges</a>
+		<a href="#" class="swagpath-action-close">Close</a>
 	</div>
 </div>
