@@ -24,6 +24,21 @@ class SwagUser {
 	}
 
 	/**
+	 * Get completed for top level track.
+	 */
+	public function getCompletedByTopLevelTrack($trackSlug) {
+		$swagpaths=$this->getCompletedSwagpaths();
+		$res=array();
+
+		foreach ($swagpaths as $swagpath) {
+			if ($swagpath->getTopLevelTrack()==$trackSlug)
+				$res[]=$swagpath;
+		}
+
+		return $res;
+	}
+
+	/**
 	 * Get collected swag.
 	 */
 	public function getCompletedSwagpaths() {

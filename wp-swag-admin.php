@@ -30,7 +30,6 @@ class WP_Swag_admin{
 		add_action("h5p-xapi-post-save",array(get_called_class(),"ti_xapi_post_save"));
 		add_action("h5p-xapi-pre-save",array(get_called_class(),"ti_xapi_pre_save"));
 		add_action("deliverable-xapi-post-save",array(get_called_class(), "ti_xapi_post_save"));
-		add_shortcode("my-swag",array(get_called_class(), "ti_my_swag"));
 
 		add_filter("h5p-xapi-auth-settings",
 			array(get_called_class(),"ti_xapi_h5p_auth_settings"));

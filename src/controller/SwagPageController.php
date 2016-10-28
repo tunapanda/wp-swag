@@ -34,6 +34,103 @@ class SwagPageController extends Singleton {
 
 		add_shortcode("swagtoc", array($this,"swagtocShortcode"));
 		add_shortcode("swagmap", array($this,"swagmapShortcode"));
+		add_shortcode("my-swag",array($this,"mySwagShortcode"));
+
+		add_shortcode("swag-view-test",array($this,"swagViewTestShortcode"));
+	}
+
+	/**
+	 * View test.
+	 */
+	public function swagViewTestShortcode($args) {
+		$template=new Template(__DIR__."/../../tpl/myswag.php");
+		$template->set("pluginUrl",plugins_url()."/wp-swag/");
+
+		$tracks=array(
+			array(
+				"name"=>"",
+				"badges"=>array(
+					array(
+						"name"=>"What is Swag?",
+					),
+				)
+			),
+			array(
+				"name"=>"Technology",
+				"score"=>"2 / 10",
+				"badges"=>array(
+					array(
+						"name"=>"Programming",
+					),
+					array(
+						"name"=>"Something else with a long name"
+					)
+				)
+			),
+			array(
+				"name"=>"Design",
+				"score"=>"3 / 15",
+				"badges"=>array(
+					array(
+						"name"=>"GIMP",
+					),
+					array(
+						"name"=>"Inkspace"
+					),
+					array(
+						"name"=>"Photography"
+					)
+				)
+			)
+		);
+
+		$template->set("tracks",$tracks);
+
+		return $template->render();
+	}
+
+	/**
+	 * My Swag.
+	 */
+	public function mySwagShortcode($args) {
+		$swagUser=SwagUser::getCurrent();
+
+		$topLevelTracks=get_terms(array(
+			'taxonomy'=>'swagtrack',
+			'parent'=>0
+		));
+
+		$dummyTrack=new stdClass;
+		$dummyTrack->name=NULL;
+		$dummyTrack->slug=NULL;
+		array_unshift($topLevelTracks,$dummyTrack);
+
+		$tracks=array();
+		foreach ($topLevelTracks as $topLevelTrack) {
+			$trackData=array(
+				"name"=>$topLevelTrack->name,
+				"badges"=>array(),
+				"score"=>"",
+			);
+
+			$swagpaths=$swagUser->getCompletedByTopLevelTrack($topLevelTrack->slug);
+			foreach ($swagpaths as $swagpath) {
+				$trackData["badges"][]=array(
+					"name"=>$swagpath->getPost()->post_title
+				);
+			}
+
+			$allForTrack=Swagpath::findAllForTopLevelTrack($topLevelTrack->slug);
+
+			$trackData["score"]=sizeof($swagpaths)." / ".sizeof($allForTrack);
+			$tracks[]=$trackData;
+		}
+
+		$template=new Template(__DIR__."/../../tpl/myswag.php");
+		$template->set("pluginUrl",plugins_url()."/wp-swag/");
+		$template->set("tracks",$tracks);
+
+		return $template->render();
 	}
 
 	public function swagmapShortcode($args) {

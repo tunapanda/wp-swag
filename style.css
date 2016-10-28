@@ -352,7 +352,7 @@ img.course-completed {
     right: 0;
 }
 
-/**** Content. ****/
+/**** Content, i.e. swagpath page. ****/
 #swagpath-header {
     position: relative;
 }
@@ -431,29 +431,51 @@ img.coursepresentation {
 }
 
 /**** Swag. ****/
-.swag-badge-container {
+.swag-page h2 {
+    padding-bottom: 0;
+    margin-bottom: 0;
+    margin-top: 60px;
+    color: #080;
+}
+
+.swag-page hr {
+    background: #080;
+    height: 1px;
+    border: 0;
+}
+
+.badge-header {
+    position: relative;
+    width: 100%;
+}
+
+.badge-score {
+    position: absolute;
+    top: 8px;
+    right: 0;
+}
+
+.swag-badge {
     display: inline-block;
     position: relative;
-    width: 200px;
-    height: 200px;
-    text-align: center;
+    width: 160px;
+    height: 100px;
 }
 
-.swag-badge-image {
-    width: 200px;
-}
-
-.swag-badge-label {
-    top: 100px;
-    margin-left: 45px;
-    width: 100px;
+.swag-badge img {
     position: absolute;
-    font-size: 20px;
+    left: 30px;
+    width: 100px;
+}
+
+.swag-badge-title {
+    position: absolute;
+    top: 85px;
+    width: 100%;
+    text-align: center;
+    text-shadow: 0px 0px 5px #fff;
+    color: #020;
     font-weight: bold;
-    background: #ff8040;
-    border-radius: 5px;
-    padding-left: 5px;
-    padding-right: 5px;
 }
 
 /**** Swagmap. ****/
@@ -663,4 +685,8 @@ img.coursepresentation {
  }
 #breadcrumb li a:active:after {
     border-left-color: #000000;
+}
+
+.nocomments {
+  display: none;
 }

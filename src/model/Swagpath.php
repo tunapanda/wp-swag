@@ -18,6 +18,7 @@ class Swagpath {
 
 	private static $swagpathById=array();
 	private static $swagpathBySlug=array();
+	private static $all=array();
 
 	/**
 	 * Construct.
@@ -29,6 +30,21 @@ class Swagpath {
 
 		Swagpath::$swagpathById[$post->ID]=$this;
 		Swagpath::$swagpathBySlug[$post->post_name]=$this;
+	}
+
+	/**
+	 * Get slug for top level track.
+	 */
+	public function getTopLevelTrack() {
+		$tracks=wp_get_object_terms($this->post->ID,"swagtrack");
+		if (!$tracks)
+			return NULL;
+
+		$track=$tracks[0];
+		while ($track->parent)
+			$track=get_term($track->parent);
+
+		return $track->slug;
 	}
 
 	/**
@@ -247,10 +263,25 @@ class Swagpath {
 	}
 
 	/**
+	 * Find all for a certain top level track.
+	 */
+	public static function findAllForTopLevelTrack($slug) {
+		$all=Swagpath::findAll();
+
+		$res=array();
+		foreach ($all as $swagpath)
+			if ($swagpath->getTopLevelTrack()==$slug)
+				$res[]=$swagpath;
+
+		return $res;
+	}
+
+	/**
 	 * Find all swagpaths.
 	 */
 	public static function findAll() {
-		$all=array();
+		if (Swagpath::$all)
+			return Swagpath::$all;
 
 		$q=new WP_Query(array(
 			"post_type"=>"swagpath",
@@ -258,10 +289,11 @@ class Swagpath {
 			"posts_per_page"=>-1
 		));
 
+		Swagpath::$all=array();
 		foreach ($q->get_posts() as $post)
-			$all[]=new Swagpath($post);
+			Swagpath::$all[]=new Swagpath($post);
 
-		return $all;
+		return Swagpath::$all;
 	}
 
 	/**
