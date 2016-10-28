@@ -142,7 +142,8 @@ jQuery(function($) {
 					var dy = d3.event.x - d.downEvent.x;
 
 					if (d.url && Math.sqrt(dx * dx + dy * dy) < 3) {
-						window.open(d.url);
+						location.href = d.url;
+						//window.open(d.url);
 					}
 				})
 				.on("mousedown", function(d) {
