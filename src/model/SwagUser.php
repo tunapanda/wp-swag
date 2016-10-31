@@ -24,9 +24,24 @@ class SwagUser {
 	}
 
 	/**
+	 * Get completed for top level track.
+	 */
+	public function getCompletedByTopLevelTrack($trackSlug) {
+		$swagpaths=$this->getCompletedSwagpaths();
+		$res=array();
+
+		foreach ($swagpaths as $swagpath) {
+			if ($swagpath->getTopLevelTrack()==$trackSlug)
+				$res[]=$swagpath;
+		}
+
+		return $res;
+	}
+
+	/**
 	 * Get collected swag.
 	 */
-	public function getCompletedSwag() {
+	public function getCompletedSwagpaths() {
 		if (!$this->user || !$this->user->user_email)
 			return array();
 
@@ -48,10 +63,11 @@ class SwagUser {
 
 		$this->completedSwag=array();
 		foreach ($statements as $statement) {
-			$swag=Swag::findByString($statement["object"]["id"]);
+			$slug=str_replace("http://swag.tunapanda.org/","",$statement["object"]["id"]);
+			$swagpath=Swagpath::getBySlug($slug);
 
-			if (!in_array($swag,$this->completedSwag))
-				$this->completedSwag[]=$swag;
+			if ($swagpath)
+				$this->completedSwag[]=$swagpath;
 		}
 
 		$this->completedSwagFetched=TRUE;
@@ -62,33 +78,13 @@ class SwagUser {
 	/**
 	 * Is this swag completed by the user?
 	 */
-	public function isSwagCompleted($swags) {
-		if (!is_array($swags))
-			$swags=array($swags);
+	public function isSwagpathCompleted($swagpath) {
+		$completed=$this->getCompletedSwagpaths();
+		foreach ($completed as $c)
+			if ($c->getXapiObjectId()==$swagpath->getXapiObjectId())
+				return TRUE;
 
-		$completedSwag=$this->getCompletedSwag();
-
-		foreach ($swags as $swag)
-			if (!in_array($swag,$completedSwag))
-				return FALSE;
-
-		return TRUE;
-	}
-
-	/**
-	 * Get which swag has not yet been collected,
-	 * out of a set of swag.
-	 */
-	public function getUncollectedSwag($swags) {
-		$completedSwag=$this->getCompletedSwag();
-
-		$uncollected=array();
-
-		foreach ($swags as $swag)
-			if (!in_array($swag,$completedSwag))
-				$uncollected[]=$swag;
-
-		return $uncollected;
+		return FALSE;
 	}
 
 	/**

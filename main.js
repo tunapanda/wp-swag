@@ -1,14 +1,12 @@
-//console.log("main...");
-
 jQuery(function($) {
 
 	function getUrlParameter(sParam) {
 		var sPageURL = window.location.search.substring(1);
 		var sURLVariables = sPageURL.split('&');
-		for (var i = 0; i < sURLVariables.length; i++)  {
+		for (var i = 0; i < sURLVariables.length; i++) {
 			var sParameterName = sURLVariables[i].split('=');
 			if (sParameterName[0] == sParam) {
-			    return decodeURIComponent(sParameterName[1]);
+				return decodeURIComponent(sParameterName[1]);
 			}
 		}
 	}
@@ -17,9 +15,9 @@ jQuery(function($) {
 		var linkUrl;
 
 		$(".swag-admin-link").click(function() {
-			linkUrl=$(this).attr("href");
-			var confirmId=$(this).attr("confirm-id");
-			$("#"+confirmId).show();
+			linkUrl = $(this).attr("href");
+			var confirmId = $(this).attr("confirm-id");
+			$("#" + confirmId).show();
 			return false;
 		});
 
@@ -29,14 +27,12 @@ jQuery(function($) {
 
 		$(".swag-admin-ok").click(function() {
 			$(".swag-admin-confirm").hide();
-			location.href=linkUrl;
+			location.href = linkUrl;
 		});
 	});
 
 	$(document).ready(function() {
-		var fill_ghu_uri=getUrlParameter("fill_ghu_uri");
-
-		console.log("ghu: "+fill_ghu_uri);
+		var fill_ghu_uri = getUrlParameter("fill_ghu_uri");
 
 		if (fill_ghu_uri)
 			$('[name="github_updater_repo"]').val(fill_ghu_uri);
@@ -53,18 +49,53 @@ jQuery(function($) {
 
 	// Update tickmark image on completed swagifact.
 	$(document).ready(function() {
+		var shownCompletedScreen;
+
 		if (typeof H5P !== 'undefined') {
 			H5P.externalDispatcher.on('xAPI', function(event) {
-				/*console.log("got xapi");
-				console.log(event.data.statement);*/
-
 				var verbId = event.data.statement.verb.id;
 				if (verbId == "http://adlnet.gov/expapi/verbs/completed") {
 					var imgUri = PLUGIN_URI + "/img/completed-logo.png";
 					$("ul.content-tab-list li.selected a img.coursepresentation").attr("src", imgUri);
 				}
+
+				var completed = true;
+				$("img.coursepresentation").each(function(i, el) {
+					if (!($(this).attr("src").includes("completed-logo")))
+						completed = false;
+				});
+
+				if (completed) {
+					var imgUri = PLUGIN_URI + "/img/badge.png";
+					$(".swagpath-badge").attr("src", imgUri);
+
+					if (!shownCompletedScreen) {
+						shownCompletedScreen = true;
+						$(".swagpath-completed").fadeIn();
+					}
+				}
 			});
 		}
+
+		$(".swagpath-action-close").click(function() {
+			$(".swagpath-completed").hide();
+			return false;
+		});
+
+		$(".swagpath-action-swagmap").click(function() {
+			location.href = HOME_URL + "/swag/map";
+			return false;
+		});
+
+		$(".swagpath-action-tracks").click(function() {
+			location.href = HOME_URL + "/swag/toc?track=" + TRACK_SLUG;
+			return false;
+		});
+
+		$(".swagpath-action-badges").click(function() {
+			location.href = HOME_URL + "/my-account/";
+			return false;
+		});
 	});
 
 	// Initialize swagmap.
@@ -78,9 +109,9 @@ jQuery(function($) {
 			height = $("#swagmapcontainer").height();
 
 		var force = d3.layout.force()
-			.charge(-120)
+			.charge(-100)
 			.linkDistance(80)
-			.gravity(0.01)
+			.gravity(0.05)
 			.size([width, height]);
 
 		var svg = d3.select("#swagmapcontainer").append("svg")
@@ -98,7 +129,7 @@ jQuery(function($) {
 		});
 
 
-		var dataurl = PLUGIN_URI + "/swagmapdata.php";
+		var dataurl = PLUGIN_URI + "/swagmapdata.php?mode=" + SWAGMAP_MODE;
 		console.log("**********************************");
 		console.log("loading swagmap data from: " + dataurl);
 
@@ -136,7 +167,8 @@ jQuery(function($) {
 					var dy = d3.event.x - d.downEvent.x;
 
 					if (d.url && Math.sqrt(dx * dx + dy * dy) < 3) {
-						window.open(d.url);
+						location.href = d.url;
+						//window.open(d.url);
 					}
 				})
 				.on("mousedown", function(d) {

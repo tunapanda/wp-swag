@@ -345,16 +345,100 @@ img.course-completed {
     display: none;
 }
 
-/**** Content. ****/
+.listing-complete {
+    position: absolute;
+    height: 45px;
+    top: 5px;
+    right: 0;
+}
+
+/**** Content, i.e. swagpath page. ****/
+.swagpath-completed {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.swagpath-completed .background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    opacity: .9;
+}
+
+.swagpath-completed h1 {
+    position: fixed;
+    color: #fff;
+    width: 100%;
+    text-align: center;
+    top: 50%;
+    text-shadow: 0px 0px 50px #ff8;
+    margin-top: -140px;
+}
+
+.swagpath-completed img.badge {
+    position: fixed;
+    left: 50%;
+    width: 200px;
+    margin-left: -100px;
+    top: 50%;
+    margin-top: -110px;
+}
+
+.swagpath-completed h2 {
+    position: fixed;
+    color: #ff8;
+    width: 100%;
+    text-align: center;
+    top: 50%;
+    margin-top: 70px;
+}
+
+.swagpath-completed .call-to-action {
+    position: fixed;
+    color: #fff;
+    width: 100%;
+    text-align: center;
+    top: 50%;
+    margin-top: 150px;
+}
+
+.swagpath-completed a {
+    border-radius: 10px;
+    border: 1px solid white;
+    padding: 10px;
+    color: #fff;
+    text-decoration: none;
+    margin-right: 10px;
+    margin-left: 10px;
+}
+
+.swagpath-completed a:hover {
+    color: #000;
+    text-decoration: underline;
+    background: #fff;
+}
+
+#swagpath-header {
+    position: relative;
+    margin-top: 5px;
+}
+
+.swagpath-badge {
+    position: absolute;
+    height: 80px;
+    top: -5px;
+    right: 0;
+}
+
 #content p {
     margin-bottom: 30px;
 }
-
-/* let the theme do this instead. */
-/*#content {
-    margin-left: 80px;
-    margin-right: 80px;
-}*/
 
 @media only screen and ( max-width: 480px ) /* mobile */{
     #content{
@@ -419,36 +503,80 @@ img.coursepresentation {
 }
 
 /**** Swag. ****/
-.swag-badge-container {
+.swag-page h2 {
+    padding-bottom: 0;
+    margin-bottom: 0;
+    margin-top: 60px;
+    color: #080;
+}
+
+.swag-page hr {
+    background: #080;
+    height: 1px;
+    border: 0;
+}
+
+.badge-header {
+    position: relative;
+    width: 100%;
+}
+
+.badge-score {
+    position: absolute;
+    top: 8px;
+    right: 0;
+}
+
+.swag-badge {
     display: inline-block;
     position: relative;
-    width: 200px;
-    height: 200px;
-    text-align: center;
+    width: 160px;
+    height: 100px;
 }
 
-.swag-badge-image {
-    width: 200px;
-}
-
-.swag-badge-label {
-    top: 100px;
-    margin-left: 45px;
-    width: 100px;
+.swag-badge img {
     position: absolute;
-    font-size: 20px;
+    left: 30px;
+    width: 100px;
+}
+
+.swag-badge-title {
+    position: absolute;
+    top: 85px;
+    width: 100%;
+    text-align: center;
+    text-shadow: 0px 0px 5px #fff;
+    color: #020;
     font-weight: bold;
-    background: #ff8040;
-    border-radius: 5px;
-    padding-left: 5px;
-    padding-right: 5px;
 }
 
 /**** Swagmap. ****/
+.swagmap-mode-link-container {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.swagmap-mode-link-container a {
+    color: #008000;
+    text-decoration: none;
+}
+
+.swagmap-mode-link-container a:hover {
+    text-decoration: underline;
+}
+
+.swagmap-mode-link-container a.active {
+    color: #000000;
+    font-weight: bold;
+    text-decoration: none;
+    cursor: default;
+}
+
 #swagmapcontainer {
     width: 100%;
     float:left;
-    background: #D3D3D3;
+    position: relative;
 }
 #swag_description_container{
     position:bottom;
@@ -483,7 +611,7 @@ img.coursepresentation {
 }
 
 .swagmap-swagpath-node text {
-    cursor: pointer;
+    /*cursor: pointer;*/
     font: 10px sans-serif;
     text-anchor: middle;
     fill: #000000;
@@ -495,7 +623,7 @@ img.coursepresentation {
 }
 
 .swagmap-swag-node text {
-    cursor: default;
+    cursor: pointer;
     font: 12px sans-serif;
     text-anchor: middle;
     fill: #ffffff;
@@ -504,8 +632,11 @@ img.coursepresentation {
     text-shadow: 0 1px 0 #000, 1px 0 0 #000, 0 -1px 0 #000, -1px 0 0 #000;
 }
 
-/** Lesson Plan Buttons **/
+.swagmap-swag-node text:hover {
+    fill: #40ff40;
+}
 
+/** Lesson Plan Buttons **/
 .button-lessonplan {
 	color: white;
 	background-color: #0A6C39;
@@ -626,4 +757,8 @@ img.coursepresentation {
  }
 #breadcrumb li a:active:after {
     border-left-color: #000000;
+}
+
+.nocomments {
+  display: none;
 }

@@ -2,6 +2,7 @@
 
 require_once __DIR__."/../utils/Singleton.php";
 require_once __DIR__."/../model/Swagpath.php";
+require_once __DIR__."/../controller/SwagTrackController.php";
 require_once ABSPATH."wp-admin/includes/plugin.php";
 
 use swag\Singleton;
@@ -30,7 +31,6 @@ class SwagpathController extends Singleton {
 		));
 
 		add_filter("template_include",array($this,"templateInclude"));
-		add_action("save_post",array($this,'savePost'));
 	}
 
 	/**
@@ -44,17 +44,6 @@ class SwagpathController extends Singleton {
 		$template=__DIR__."/../../tpl/swagpath_page.php";
 
 		return $template;
-	}
-
-	/**
-	 * After the post is saved. Update meta values.
-	 */
-	public function savePost($postId) {
-		$post=get_post($postId);
-		if ($post->post_type=="swagpath") {
-			$swagpath=Swagpath::getById($postId);
-			$swagpath->updateMetas();
-		}
 	}
 
 	/**
@@ -103,23 +92,13 @@ class SwagpathController extends Singleton {
 	        'context'=>'side',
 	        'fields'     => array(
 	            array(
-	                'id'   => 'providesArray',
-	                'name' => 'Provides',
-	                'type' => 'text',
-	                "size"=>20,
+	            	"id"   => "prerequisites",
+	            	"name" => "Prerequisites",
+	            	"type" => "post",
 	                "clone"=>true,
+	                "post_type"=>"swagpath",
 	                "desc"=>
-	                	"The swag badges the user will receive upon completing the swagpath. ".
-	                	"Swags are written on the same form as a newsgroup name, e.g. tech.programming.php"
-	            ),
-	            array(
-	                'id'   => 'requiresArray',
-	                'name' => 'Requires',
-	                'type' => 'text',
-	                "clone"=>true,
-	                "size"=>20,
-	                "desc"=>
-	                	"The swag that is recommended for the user to complete before attempting this swagpath."
+	                	"The Swagpaths recommended to complete before attempting this swagpath."
 	            ),
 	        ),
 		);
@@ -149,9 +128,12 @@ class SwagpathController extends Singleton {
 		$swagUser=SwagUser::getCurrent();
 
 		$template=new Template(__DIR__."/../../tpl/course.php");
+		$template->set("homeUrl",home_url());
 		$template->set("swagUser",$swagUser);
 		$template->set("swagpath",$swagpath);
 		$template->set("showLessonPlan",FALSE);
+		$template->set("completed",$swagpath->isCompletedByCurrentUser());
+		$template->set("pluginUrl",plugins_url()."/wp-swag/");
 
 		// Lesson plan
 		$template->set("showLessonPlan",FALSE);
@@ -162,7 +144,7 @@ class SwagpathController extends Singleton {
 			$template->set("showLessonPlan",TRUE);
 		}
 
-		if ($swagUser->isSwagCompleted($swagpath->getProvidedSwag())) {
+		if ($swagUser->isSwagpathCompleted($swagpath)) {
 			$template->set("lessonplanAvailable",TRUE);
 		}
 		else if  (current_user_can('edit_others_pages') || get_the_author_id() == get_current_user_id()) {
@@ -174,62 +156,57 @@ class SwagpathController extends Singleton {
 
 		// Hint
 		$template->set("showHintInfo",FALSE);
-		if (!$swagUser->isSwagCompleted($swagpath->getRequiredSwag())) {
-			$template->set("showHintInfo",TRUE);
+		if (!$swagUser->isSwagpathCompleted($swagpath)) {
+			$uncollected=array();
+			$pres=$swagpath->getPrerequisites();
+			foreach ($pres as $pre)
+				if (!$pre->isCompletedByCurrentUser())
+					$uncollected[]=$pre;
 
-			$uncollected=$swagUser->getUncollectedSwag($swagpath->getRequiredSwag());
-			$uncollectedFormatted=array();
+			if ($uncollected) {
+				$template->set("showHintInfo",TRUE);
+				$uncollectedView=array();
 
-			foreach ($uncollected as $swag)
-				$uncollectedFormatted[]="<b>{$swag->getString()}</b>";
+				foreach ($uncollected as $u) {
+					$uncollectedView[]=array(
+						"title"=>$u->getPost()->post_title,
+						"url"=>get_permalink($u->getPost())
+					);
+				}
 
-			$swagpaths=Swagpath::getSwagpathsProvidingSwag($uncollected);
-			$swagpathsFormatted=array();
-
-			foreach ($swagpaths as $swagpath)
-				$swagpathsFormatted[]=
-					"<a href='".get_post_permalink($swagpath->getPost()->ID)."'>".
-					$swagpath->getPost()->post_title.
-					"</a>";
-
-			$template->set("uncollectedSwag",join(", ",$uncollectedFormatted));
-			$template->set("uncollectedSwagpaths",join(", ",$swagpathsFormatted));
+				$template->set("uncollected",$uncollectedView);
+			}
 		}
 
 		// Trail
-		$swag=$swagpath->getProvidedSwag()[0];
-		if (!$swag) {
-			$trail=array(
-				array(
-					"url"=>home_url("swag/toc"),
-					"title"=>"Tracks"
-				),
+		$url=home_url()."/swag/toc/";
+		$trail=array();
+		$trail[]=array(
+			"title"=>"Tracks",
+			"url"=>$url
+		);
 
-				array(
-					"url"=>get_permalink(),
-					"title"=>get_the_title()
-				)
-			);
-		}
+		$terms=wp_get_post_terms($swagpath->getPost()->ID,"swagtrack");
+		$termId=$terms[0]->term_id;
+		$trackSlug=$terms[0]->slug;
+		$ancestors=get_ancestors($termId,"swagtrack","taxonomy");
+		$ancestors=array_reverse($ancestors);
+		$ancestors[]=$termId;
 
-		else {
-			$trail=array();
-			foreach ($swagpath->getProvidedSwag()[0]->getTrail() as $swag) {
-				$item=array();
-				$item["url"]=home_url("swag/toc")."?track=".$swag->getString();
-				$item["title"]=$swag->getTitle();
-
-				$trail[]=$item;
-			}
-
-			array_pop($trail);
+		foreach ($ancestors as $ancestorId) {
+			$ancestor=get_term($ancestorId);
 			$trail[]=array(
-				"url"=>get_permalink(),
-				"title"=>get_the_title()
+				"url"=>$url."?track=".$ancestor->slug,
+				"title"=>$ancestor->name,
 			);
-			$trail[0]["title"]="Tracks";
 		}
 
+		$trail[]=array(
+			"url"=>get_permalink($swagpath->getPost()->ID),
+			"title"=>$swagpath->getPost()->post_title
+		);
+
+		$template->set("trackSlug",$trackSlug);
 		$template->set("trail",$trail);
 		$template->show();
 	}

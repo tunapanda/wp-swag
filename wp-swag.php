@@ -8,11 +8,8 @@ Version: 0.0.10
 */
 
 require_once __DIR__."/wp-swag-admin.php";
-require_once __DIR__."/src/controller/SwagController.php";
 require_once __DIR__."/src/controller/SwagPageController.php";
-require_once __DIR__."/src/model/SwagData.php";
 require_once __DIR__."/src/syncers/SwagpathSyncer.php";
-require_once __DIR__."/src/syncers/SwagSyncer.php";
 require_once __DIR__."/src/controller/SwagTgmpaController.php";
 
 define("RWMB_URL",plugins_url()."/wp-swag/ext/meta-box/");
@@ -25,20 +22,18 @@ function swag_activate() {
 		trigger_error("wp-swag requires the cURL module",E_USER_ERROR);
 
 	$basename=basename(__DIR__);
-	if ($basename!="wp-swag")
+/*	if ($basename!="wp-swag")
 		trigger_error(
 			"wp-swag needs to be installed in a plugin directory called wp-swag. ".
 			"If you installed it via a .zip file, please rename the zip file to wp-swag.zip",
 			E_USER_ERROR
-		);
+		);*/
 
-	SwagData::install();
 	SwagPageController::instance()->install();
 }
 
 register_activation_hook(__FILE__,"swag_activate");
 
-SwagController::setup();
 SwagTgmpaController::instance()->init();
 
 function swag_add_action_links($links) {

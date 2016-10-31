@@ -32,31 +32,21 @@
 		    	<div class="header">
 		    		<div class="title" style="background-color: <?php echo $swagpath["color"]; ?>;">
 		    			<?php echo $swagpath["title"]; ?>
-
-		                <?php if ($completed) { ?>
-		                    <img class="course-completed" src="<?php echo $plugins_uri; ?>/img/completed-logo.png"/>
-		                <?php } ?>
 		    		</div>
 		    	</div>
 
 		    	<div class="description">
-		    		<?php foreach ($swagpath["swag"] as $swag) { ?>
-		    			<div class="swag">
-		    				<?php if ($swag->isCompletedByCurrentUser()) { ?>
-								<img src="<?php echo plugins_url()."/wp-swag/img/badge.png" ?>">
-							<?php } else { ?>
-								<img src="<?php echo plugins_url()."/wp-swag/img/badge-gray.png" ?>">
-							<?php } ?>
-		    				<?php echo $swag->getString(); ?>
-		    			</div>
-		    		<?php } ?>
-		    		<div class="excerpt">
-			    		<?php echo $swagpath["description"]; ?>
-		    		</div>
+		    		<?php echo $swagpath["description"]; ?>
 		    	</div>
 
 		        <div class="footer">
 		            <a href="<?php echo $swagpath["url"]; ?>">Follow Swagpath</a>
+
+		            <?php if ($swagpath["complete"]) { ?>
+			            <img class="listing-complete" src="<?php echo $pluginurl ?>/img/badge.png" />
+			        <?php } else { ?>
+			            <img class="listing-complete" src="<?php echo $pluginurl ?>/img/badge-gray.png" />
+		        	<?php } ?>
 		        </div>
 		    </div>
 		</div>

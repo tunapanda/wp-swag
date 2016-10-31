@@ -133,7 +133,7 @@ class SwagPostItem {
 	}
 
 	/**
-	 * Get xAPI for checking completion.
+	 * Get xAPI object for checking completion.
 	 */
 	public function getObjectUrl() {
 		if (!$this->isTypeAvailable())

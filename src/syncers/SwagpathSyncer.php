@@ -89,6 +89,14 @@ class SwagpathSyncer {
 		if (!$post)
 			throw new Exception("No swagpath post, strange");
 
+		$post->post_excerpt=$data["excerpt"];
+		$post->post_title=$data["title"];
+		$post->post_status=$data["status"];
+		wp_update_post($post);
+
+		update_post_meta($id,"swagifact",$data["swagifact"]);
+
+		// Lesson plan
 		if ($data["lessonplan"]) {
 			$q=new WP_Query(array(
 				"post_type"=>"attachment",
@@ -106,18 +114,16 @@ class SwagpathSyncer {
 			update_post_meta($id,"lessonplan","");
 		}
 
-		update_post_meta($id,"swagifact",$data["swagifact"]);
-		update_post_meta($id,"providesArray",$data["provides"]);
-		update_post_meta($id,"requiresArray",$data["requires"]);
+		// Prereqs.
+		$preSlugs=$data["prerequisites"];
+		$preIds=array();
+		foreach ($preSlugs as $preSlug)
+			$preIds[]=SwagpathSyncer::getIdBySlug($preSlug);
 
-		$post->post_excerpt=$data["excerpt"];
-		$post->post_title=$data["title"];
-		$post->post_status=$data["status"];
+		update_post_meta($id,"prerequisites",$preIds);
 
-		wp_update_post($post);
-
-		$swagpath=Swagpath::getById($id);
-		$swagpath->updateMetas();
+		// Tracks
+		wp_set_object_terms($id,$data["tracks"],"swagtrack");
 	}
 
 	/**
@@ -134,14 +140,28 @@ class SwagpathSyncer {
 		if (!$post)
 			return NULL;
 
+		$preSlugs=array();
+		$preIds=get_post_meta($id,"prerequisites",TRUE);
+		foreach ($preIds as $preId)
+			$preSlugs[]=SwagpathSyncer::getSlugById($preId);
+
+		sort($preSlugs);
+
+		$tracks=wp_get_object_terms($id,"swagtrack");
+		$trackSlugs=array();
+		foreach ($tracks as $track)
+			$trackSlugs[]=$track->slug;
+
+		sort($trackSlugs);
+
 		return array(
 			"title"=>$post->post_title,
 			"status"=>$post->post_status,
 			"swagifact"=>get_post_meta($id,"swagifact",TRUE),
-			"provides"=>get_post_meta($id,"providesArray",TRUE),
-			"requires"=>get_post_meta($id,"requiresArray",TRUE),
 			"lessonplan"=>$lessonplanPost->post_name,
 			"excerpt"=>$post->post_excerpt,
+			"prerequisites"=>$preSlugs,
+			"tracks"=>$trackSlugs
 		);
 	}
 
