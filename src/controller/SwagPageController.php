@@ -148,11 +148,22 @@ class SwagPageController extends Singleton {
 		if (isset($_REQUEST["mode"]))
 			$mode=$_REQUEST["mode"];
 
+		$q=new WP_Query(array(
+			"name"=>"map",
+			"post_type"=>"swag"
+		));
+
+		$posts=$q->get_posts();
+		if (sizeof($posts)!=1)
+			throw new Exception("Expected one post with a swagmap, found=".sizeof($posts));
+
+		$url=get_permalink($posts[0]);
+
 		$template=new Template(__DIR__."/../../tpl/swagmap.php");
 		$template->set("mode",$mode);
 		$template->set("plugins_uri",plugins_url()."/wp-swag");
-		$template->set("mylink",home_url()."/swag/map/?mode=my");
-		$template->set("fulllink",home_url()."/swag/map/?mode=full");
+		$template->set("mylink",$url."?mode=my");
+		$template->set("fulllink",$url."?mode=full");
 		$template->show();
 	}
 
