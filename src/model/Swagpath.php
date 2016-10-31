@@ -33,6 +33,36 @@ class Swagpath {
 	}
 
 	/**
+	 * Get id.
+	 */
+	public function getId() {
+		return $this->getPost()->ID;
+	}
+
+	/**
+	 * Get display color.
+	 */
+	public function getDisplayColor() {
+		$track=$this->getTrack();
+
+		if (!$track)
+			return SwagTrack::DEFAULT_COLOR;
+
+		return $track->getDisplayColor();
+	}
+
+	/**
+	 * Get track.
+	 */
+	public function getTrack() {
+		$trackIds=wp_get_object_terms($this->post->ID,"swagtrack");
+		if (!$trackIds)
+			return NULL;
+
+		return SwagTrack::getById($trackIds[0]);
+	}
+
+	/**
 	 * Get slug for top level track.
 	 */
 	public function getTopLevelTrack() {
@@ -222,6 +252,55 @@ class Swagpath {
 	 */
 	public function isCompletedByCurrentUser() {
 		return SwagUser::getCurrent()->isSwagpathCompleted($this);
+	}
+
+	/**
+	 * Get by track id.
+	 */
+	public static function getByTrackId($parentTrackId) {
+		if ($parentTrackId) {
+			$q=new WP_Query(array(
+				"post_type"=>"swagpath",
+				"tax_query"=>array(
+					array(
+						"taxonomy"=>"swagtrack",
+						"include_children"=>false,
+						"field"=>"term_id",
+						"terms"=>$parentTrackId
+					)
+				),
+				"posts_per_page"=>-1
+			));
+		}
+
+		else {
+			$notTerms=get_terms(array(
+				'taxonomy'=>'swagtrack',
+				'hide_empty'=>false,
+				"fields"=>'ids'
+			));
+
+			$q=new WP_Query(array(
+				"post_type"=>"swagpath",
+				"tax_query"=>array(
+					array(
+						"taxonomy"=>"swagtrack",
+						"include_children"=>false,
+						"field"=>"term_id",
+						"terms"=>$notTerms,
+						"operator"=>"NOT IN"
+					)
+				),
+				"posts_per_page"=>-1
+			));
+		}
+
+		$posts=$q->get_posts();
+		$res=array();
+		foreach ($posts as $post)
+			$res[]=new Swagpath($post);
+
+		return $res;
 	}
 
 	/**

@@ -32,7 +32,7 @@ class SwagMapController extends Singleton {
 					"name"=>$swagpath->getPost()->post_title,
 					"type"=>"swag",
 					"completed"=>$swagpath->isCompletedByCurrentUser(),
-					"color"=>"#009900",
+					"color"=>$swagpath->getDisplayColor(),
 					"url"=>get_permalink($swagpath->getPost()->ID)
 				);
 			}

@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__."/../utils/Singleton.php";
+require_once __DIR__."/../model/SwagTrack.php";
 
 use swag\Singleton;
 
@@ -103,12 +104,21 @@ class SwagPageController extends Singleton {
 		$dummyTrack=new stdClass;
 		$dummyTrack->name=NULL;
 		$dummyTrack->slug=NULL;
+		$dummyTrack->term_id=NULL;
 		array_unshift($topLevelTracks,$dummyTrack);
 
 		$tracks=array();
 		foreach ($topLevelTracks as $topLevelTrack) {
+			$swagTrack=SwagTrack::getById($topLevelTrack->term_id);
+			if ($swagTrack)
+				$color=$swagTrack->getDisplayColor();
+
+			else
+				$color=SwagTrack::DEFAULT_COLOR;
+
 			$trackData=array(
 				"name"=>$topLevelTrack->name,
+				"color"=>$color,
 				"badges"=>array(),
 				"score"=>"",
 			);
@@ -233,101 +243,47 @@ class SwagPageController extends Singleton {
 	 * Render the table of contents.
 	 */
 	public function swagtocShortcode($args) {
-		$track="";
-
-		if (isset($_REQUEST["track"]))
-			$track=$_REQUEST["track"];
-
-		$tracks=array();
-		$swagpaths=array();
 		$url=get_permalink();
-		$unprepared=0;
 
-		$parentTrackId=0;
-		if ($track) {
-			$t=get_terms(array(
-				"taxonomy"=>"swagtrack",
-				"slug"=>$track,
-				"hide_empty"=>FALSE,
-			));
-			$parentTrack=$t[0];
-			//should it be term_taxonomy_id?
-			$parentTrackId=$parentTrack->term_id;
-		}
-
-		$terms=get_terms(array(
-			"taxonomy"=>"swagtrack",
-			"hide_empty"=>FALSE,
-			"parent"=>$parentTrackId,
-		));
-
-		foreach ($terms as $term) {
-			$tracks[]=array(
-				"title"=>$term->name,
-				"description"=>$term->description,
-				"url"=>$url."?track=".$term->slug,
-				"color"=>"#339966"
-			);
-		}
-
-		if ($parentTrackId) {
-			$q=new WP_Query(array(
-				"post_type"=>"swagpath",
-				"tax_query"=>array(
-					array(
-						"taxonomy"=>"swagtrack",
-						"include_children"=>false,
-						"field"=>"term_id",
-						"terms"=>$parentTrackId
-					)
-				),
-				"posts_per_page"=>-1
-			));
+		if (isset($_REQUEST["track"])) {
+			$parentTrack=SwagTrack::getBySlug($_REQUEST["track"]);
+			$parentTrackId=$parentTrack->getId();
 		}
 
 		else {
-			$notTerms=get_terms(array(
-				'taxonomy'=>'swagtrack',
-				'hide_empty'=>false,
-				"fields"=>'ids'
-			));
-
-			$q=new WP_Query(array(
-				"post_type"=>"swagpath",
-				"tax_query"=>array(
-					array(
-						"taxonomy"=>"swagtrack",
-						"include_children"=>false,
-						"field"=>"term_id",
-						"terms"=>$notTerms,
-						"operator"=>"NOT IN"
-					)
-				),
-				"posts_per_page"=>-1
-			));
+			$parentTrack=NULL;
+			$parentTrackId=NULL;
 		}
 
-		$posts=$q->get_posts();
-		$unprepared=0;
+		$tracks=SwagTrack::getByParentId($parentTrackId);
+		$trackViews=array();
+		foreach ($tracks as $track) {
+			$trackViews[]=array(
+				"title"=>$track->getTerm()->name,
+				"description"=>$track->getTerm()->description,
+				"url"=>$url."?track=".$track->getTerm()->slug,
+				"color"=>$track->getDisplayColor()
+			);
+		}
 
-		foreach ($posts as $post) {
-			$swagpath=Swagpath::getById($post->ID);
-			$swagpaths[]=array(
-				"title"=>$post->post_title,
-				"description"=>$post->post_excerpt,
-				"url"=>get_permalink($post->ID),
+		$unprepared=0;
+		$swagpaths=Swagpath::getByTrackId($parentTrackId);
+		$swagpathViews=array();
+		foreach ($swagpaths as $swagpath) {
+			$swagpathViews[]=array(
+				"title"=>$swagpath->getPost()->post_title,
+				"description"=>$swagpath->getPost()->post_excerpt,
+				"url"=>get_permalink($swagpath->getId()),
 				"prepared"=>$swagpath->isCurrentUserPrepared(),
 				"complete"=>$swagpath->isCompletedByCurrentUser(),
-				"color"=>"#009900",
-
-				// FIXME is this completed?
+				"color"=>$swagpath->getDisplayColor(),
 			);
 
 			if (!$swagpath->isCurrentUserPrepared())
 				$unprepared++;
 		}
 
-		usort($swagpaths,"SwagPageController::cmpSwagpathViewData");
+		usort($swagpathViews,"SwagPageController::cmpSwagpathViewData");
 
 		$trail=array();
 		$ancestors=get_ancestors($parentTrackId,"swagtrack","taxonomy");
@@ -355,8 +311,8 @@ class SwagPageController extends Singleton {
 
 		$template=new Template(__DIR__."/../../tpl/toc.php");
 		$template->set("pluginurl",plugins_url()."/wp-swag");
-		$template->set("tracks",$tracks);
-		$template->set("swagpaths",$swagpaths);
+		$template->set("tracks",$trackViews);
+		$template->set("swagpaths",$swagpathViews);
 		$template->set("unprepared",$unprepared);
 		$template->set("trail",$trail);
 
