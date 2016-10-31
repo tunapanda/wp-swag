@@ -152,8 +152,12 @@ class Swagpath {
 		$prerequisites=array();
 
 		$ids=ArrayUtil::flattenArray(get_post_meta($this->post->ID,"prerequisites"));
-		foreach ($ids as $id)
-			$prerequisites[]=Swagpath::getById($id);
+		foreach ($ids as $id) {
+			$swagpath=Swagpath::getById($id);
+
+			if ($swagpath)
+				$prerequisites[]=$swagpath;
+		}
 
 		return $prerequisites;
 	}
@@ -313,7 +317,7 @@ class Swagpath {
 		$post=get_post($postId);
 
 		if (!$post)
-			throw new Exception("Post not found");
+			return NULL;
 
 		if ($post->post_type!="swagpath")
 			throw new Exception("This is not a swagpath post.");
