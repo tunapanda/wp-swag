@@ -336,7 +336,7 @@ class Swagpath {
 		));
 
 		if (!$posts)
-			throw new Exception("Post not found");
+			return NULL;
 
 		return new Swagpath($posts[0]);
 	}
