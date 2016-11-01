@@ -310,7 +310,7 @@ class SwagPageController extends Singleton {
 	public function swagtocShortcode($args) {
 		$url=get_permalink();
 
-		if (isset($_REQUEST["track"])) {
+		if (isset($_REQUEST["track"]) && $_REQUEST["track"]) {
 			$parentTrack=SwagTrack::getBySlug($_REQUEST["track"]);
 			$parentTrackId=$parentTrack->getId();
 		}
