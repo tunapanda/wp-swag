@@ -36,8 +36,33 @@ class SwagPageController extends Singleton {
 		add_shortcode("swagtoc", array($this,"swagtocShortcode"));
 		add_shortcode("swagmap", array($this,"swagmapShortcode"));
 		add_shortcode("my-swag",array($this,"mySwagShortcode"));
+		add_shortcode("author-swag",array($this,"authorSwagShortcode"));
+		add_shortcode("page-link",array($this,"pageLinkShortcode"));
+		add_shortcode("login-user-author-link",array($this,"loginUserAuthorLinkShortcode"));
 
 		add_shortcode("swag-view-test",array($this,"swagViewTestShortcode"));
+	}
+
+	public function loginUserAuthorLinkShortcode() {
+		$u=wp_get_current_user();
+		$url=get_author_posts_url($u->ID);
+
+		return "<a href='$url'>$url</a>";
+	}
+
+	public function pageLinkShortcode($args) {
+		$q=new WP_Query(array(
+			"post_type"=>"page",
+			"post_name"=>$args["slug"]
+		));
+
+		$posts=$q->get_posts();
+		$post=$posts[0];
+
+		$title=$post->post_title;
+		$url=get_post_permalink($post->ID);
+
+		return "<a href='$url'>$title</a>";
 	}
 
 	/**
@@ -91,11 +116,9 @@ class SwagPageController extends Singleton {
 	}
 
 	/**
-	 * My Swag.
+	 * Render the badge page for the given user.
 	 */
-	public function mySwagShortcode($args) {
-		$swagUser=SwagUser::getCurrent();
-
+	public function renderBadgePage($swagUser, $args) {
 		$topLevelTracks=get_terms(array(
 			'taxonomy'=>'swagtrack',
 			'parent'=>0
@@ -139,8 +162,39 @@ class SwagPageController extends Singleton {
 		$template=new Template(__DIR__."/../../tpl/myswag.php");
 		$template->set("pluginUrl",plugins_url()."/wp-swag/");
 		$template->set("tracks",$tracks);
+		$template->set("avatar",get_avatar($swagUser->getId(),75));
+		$template->set("swagCount",sizeof($swagUser->getCompletedSwagpaths()));
+		$template->set("username",$swagUser->getUser()->display_name);
 
 		return $template->render();
+	}
+
+	/**
+	 * Show swag for current author.
+	 */
+	public function authorSwagCountShortcode($args) {
+		$swagUser=SwagUser::getById(get_the_author_meta('ID'));
+		return sizeof($swagUser->getCompletedSwagpaths());
+	}
+
+	/**
+	 * Show swag for current author.
+	 */
+	public function authorSwagShortcode($args) {
+		global $wp_query;
+
+		$user=get_user_by("login",$wp_query->query["author_name"]);
+		$swagUser=SwagUser::getById($user->ID);
+
+		return $this->renderBadgePage($swagUser,$args);
+	}
+
+	/**
+	 * My Swag.
+	 */
+	public function mySwagShortcode($args) {
+		$swagUser=SwagUser::getCurrent();
+		return $this->renderBadgePage($swagUser,$args);
 	}
 
 	public function swagmapShortcode($args) {

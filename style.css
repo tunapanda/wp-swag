@@ -352,6 +352,42 @@ img.course-completed {
     right: 0;
 }
 
+/**** Member. ****/
+.member-page {
+    position: relative;
+    margin-top: -30px;
+}
+
+.member-page img.avatar {
+    margin-top: 30px;
+    box-shadow: 0px 0px 10px rgba(0,0,0,.25);
+}
+
+.member-page h1 {
+    position: absolute;
+    top: 30px;
+    margin: 0;
+    padding: 0;
+    left: 90px;
+    font-size: 35px;
+    color: #bbb;
+}
+
+.member-page .member-info {
+    position: absolute;
+    left: 90px;
+    top: 80px;
+    color: #888;
+}
+
+.member-page .swag-container {
+    border: 1px solid #ddd;
+    background: #fff;
+    padding: 20px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
 /**** Content, i.e. swagpath page. ****/
 .swagpath-completed {
     position: fixed;

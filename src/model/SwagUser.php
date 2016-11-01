@@ -5,15 +5,27 @@
  */
 class SwagUser {
 
+	private static $swagUserById=array();
+
 	/**
 	 * Construct.
 	 */
-	public function __construct($user) {
+	private function __construct($user) {
 		$this->user=$user;
 		$this->xapi=SwagPlugin::instance()->getXapi();
 
 		$this->completedSwagFetched=NULL;
 		$this->completedSwag=NULL;
+
+		if ($user->ID)
+			SwagUser::$swagUserById[$user->ID]=$this;
+	}
+
+	/**
+	 *
+	 */
+	public function getId() {
+		return $this->user->ID;
 	}
 
 	/**
@@ -122,6 +134,20 @@ class SwagUser {
 			$current=new SwagUser(wp_get_current_user());
 
 		return $current;
+	}
+
+	/**
+	 * Get by id.
+	 */
+	public static function getById($id) {
+		if (isset(SwagUser::$swagUserById[$id]))
+			return SwagUser::$swagUserById[$id];
+
+		$user=get_user_by("ID",$id);
+		if (!$user)
+			return NULL;
+
+		return new SwagUser($user);
 	}
 
 	/**

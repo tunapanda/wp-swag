@@ -38,6 +38,9 @@ class SwagpathController extends Singleton {
 	 */
 	public function templateInclude($template) {
 		$post=get_post();
+		if (!$post)
+			return $template;
+
 		if ($post->post_type!="swagpath")
 			return $template;
 
