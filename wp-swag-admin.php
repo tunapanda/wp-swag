@@ -91,6 +91,21 @@ class WP_Swag_admin{
 	 * Here we have the chance to modify the statement before it is saved.
 	 */
 	public function ti_xapi_pre_save($statement) {
+		$currentUser=SwagUser::getCurrent();
+
+		if ($currentUser->isLoggedIn() &&
+				$statement["actor"]["mbox"]!="mailto:".$currentUser->getEmail())
+			throw new Exception("logged in, but with a different user");
+
+		if (!$currentUser->isLoggedIn() &&
+				isset($statement["actor"]["mbox"]))
+			throw new Exception("not logged in, but got email in the statement");
+
+		if (!isset($statement["actor"]["mbox"]))
+			$statement["actor"]["mbox"]="mailto:".$currentUser->getEmail();
+
+		unset($statement["actor"]["account"]);
+
 		return $statement;
 	}
 
@@ -101,6 +116,8 @@ class WP_Swag_admin{
 	public function ti_xapi_post_save($statement) {
 		if ($statement["verb"]["id"]!="http://adlnet.gov/expapi/verbs/completed")
 			return;
+
+		$postId=NULL;
 
 		foreach ($statement["context"]["contextActivities"]["grouping"] as $groupingActivity) {
 			$id=url_to_postid($groupingActivity["id"]);
@@ -114,40 +131,9 @@ class WP_Swag_admin{
 				$postId=$id;
 		}
 
-		if (!$postId)
-			return;
-
-		$post=get_post($postId);
-
-		if (!$post)
-			return;
-
+		$swagpath=Swagpath::getById($postId);
 		$swagUser=SwagUser::getByEmail($statement["actor"]["mbox"]);
-		$swagpath=SwagPath::getById($post->ID);
 		$swagpath->saveProvidedSwagIfCompleted($swagUser);
-		/*$swagPost=new SwagPost($post);
-		$swagPost->*/
-	}
-
-	public function ti_my_swag() {
-		$plugins_uri = self::$plugins_uri;
-		$swagUser=new SwagUser(wp_get_current_user());
-		$completedSwag=$swagUser->getCompletedSwag();
-		if (!$completedSwag)
-			$completedSwag=array();
-
-		$out="";
-
-		foreach ($completedSwag as $swag) {
-			if ($swag) {
-				$out.="<div class='swag-badge-container'>\n";
-				$out.="<img class='swag-badge-image' src='$plugins_uri/img/badge.png'>\n";
-				$out.="<div class='swag-badge-label'>{$swag->getString()}</div>\n";
-				$out.="</div>\n";
-			}
-		}
-
-		return $out;
 	}
 
 	/**

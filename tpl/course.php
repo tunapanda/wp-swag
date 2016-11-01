@@ -20,6 +20,13 @@
 	<?php } ?>
 </div>
 
+<?php if (!$swagUser->isLoggedIn()) { ?>
+	<div class='course-info'>
+		You are not logged in, your progress will not be saved.
+		Why not <a href="<?php echo $loginUrl; ?>">sign up</a>?
+		Or <a href="<?php echo $loginUrl; ?>">log in</a>?
+	</div>
+<?php } ?>
 <?php if ($showHintInfo) { ?>
 	<div class='course-info'>
 		In order to get the most out of this swagpath, it is recommended that you

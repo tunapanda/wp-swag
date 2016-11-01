@@ -184,9 +184,6 @@ class Swagpath {
 	 * Get related statements for the given user.
 	 */
 	public function getRelatedStatements($swagUser) {
-		if (!$swagUser->isLoggedIn())
-			return array();
-
 		$email=$swagUser->getEmail();
 
 		if (array_key_exists($email,$this->relatedStatementsByEmail))
@@ -311,6 +308,9 @@ class Swagpath {
 	 * Get Swagpath by id.
 	 */
 	public static function getById($postId) {
+		if (!$postId)
+			return NULL;
+
 		if (isset(Swagpath::$swagpathById[$postId]))
 			return Swagpath::$swagpathById[$postId];
 
@@ -389,10 +389,6 @@ class Swagpath {
 		if (!$xapi)
 			return array();
 
-		$user=$swagUser->getUser();
-		if (!$user || !$user->ID)
-			return;
-
 		$current=$xapi->getStatements(array(
 			"agentEmail"=>$swagUser->getEmail(),
 			"activity"=>$this->getXapiObjectId(),
@@ -404,8 +400,8 @@ class Swagpath {
 
 		$statement=array(
 			"actor"=>array(
-				"mbox"=>"mailto:".$user->user_email,
-				"name"=>$user->display_name
+				"mbox"=>"mailto:".$swagUser->getEmail(),
+				"name"=>$swagUser->getDisplayName(),
 			),
 
 			"object"=>array(

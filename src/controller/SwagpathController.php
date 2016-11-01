@@ -138,6 +138,8 @@ class SwagpathController extends Singleton {
 		$template->set("completed",$swagpath->isCompletedByCurrentUser());
 		$template->set("pluginUrl",plugins_url()."/wp-swag/");
 
+		$template->set("loginUrl",home_url()."/my-account/");
+
 		// Lesson plan
 		$template->set("showLessonPlan",FALSE);
 		$lessonPlanUrl=$swagpath->getLessonPlanUrl();
