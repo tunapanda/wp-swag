@@ -55,8 +55,6 @@ class SwagpathController extends Singleton {
 	public function rwmbMetaBoxes($metaBoxes) {
 		global $wpdb;
 
-		error_log("doing meta boxes...");
-
 		$options=array();
 
 		if (is_plugin_active("h5p/h5p.php")) {
@@ -164,7 +162,7 @@ class SwagpathController extends Singleton {
 		$template->set("showLessonPlan",FALSE);
 		$lessonPlanUrl=$swagpath->getLessonPlanUrl();
 
-		if ($lessonPlanUrl && is_user_logged_in()) {
+		if ($lessonPlanUrl) {
 			$template->set("lessonPlan",$swagpath->getLessonPlanUrl());
 			$template->set("showLessonPlan",TRUE);
 		}

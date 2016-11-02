@@ -18,6 +18,17 @@
 	<?php } else { ?>
 		<img class="swagpath-badge" src="<?php echo $plugins_uri; ?>/img/badge-gray.png"/>
 	<?php } ?>
+
+	<?php if($showLessonPlan and $lessonplanAvailable) { ?>
+		<a href="<?php echo $lessonPlan; ?>"
+			class="button-lessonplan" 
+			style="text-align:right;float:right">Download Lesson Plan</a>
+	<?php } else if ($showLessonPlan and !$lessonplanAvailable) { ?>
+		<button style="text-align:right;float:right"
+			title="Please complete swag to download the lesson plan"
+			class="button-lessonplan disabled" disabled>Download Lesson Plan</button>
+	<?php } ?>
+
 </div>
 
 <?php if (!$swagUser->isLoggedIn()) { ?>
@@ -60,11 +71,6 @@
 	</ul>
 	<div class='content-tab-content'>
 		<h1><?php echo $swagpath->getSelectedItem()->getTitle(); ?></h1>
-		<?php if($showLessonPlan and $lessonplanAvailable) : ?>
-		<a href="<?php echo $lessonPlan; ?>" class="button-lessonplan" style="text-align:right;float:right">Download Lesson Plan</a>
-	<?php elseif ($showLessonPlan and !$lessonplanAvailable) : ?>
-		<button style="text-align:right;float:right" title="Please complete swag to download the lesson plan" class="button-lessonplan disabled" disabled>Download Lesson Plan</button>
-		<?php endif; ?>
 		<?php echo $swagpath->getSelectedItem()->getContent(); ?>
 	</div>
 </div>
