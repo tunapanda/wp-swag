@@ -151,9 +151,9 @@ class Swagpath {
 	public function getPrerequisites() {
 		$prerequisites=array();
 
-		$ids=ArrayUtil::flattenArray(get_post_meta($this->post->ID,"prerequisites"));
-		foreach ($ids as $id) {
-			$swagpath=Swagpath::getById($id);
+		$slugs=ArrayUtil::flattenArray(get_post_meta($this->post->ID,"prerequisites"));
+		foreach ($slugs as $slug) {
+			$swagpath=Swagpath::getBySlug($slug);
 
 			if ($swagpath)
 				$prerequisites[]=$swagpath;

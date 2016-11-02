@@ -116,11 +116,7 @@ class SwagpathSyncer {
 
 		// Prereqs.
 		$preSlugs=$data["prerequisites"];
-		$preIds=array();
-		foreach ($preSlugs as $preSlug)
-			$preIds[]=SwagpathSyncer::getIdBySlug($preSlug);
-
-		update_post_meta($id,"prerequisites",$preIds);
+		update_post_meta($id,"prerequisites",$preSlugs);
 
 		// Tracks
 		wp_set_object_terms($id,$data["tracks"],"swagtrack");
@@ -140,11 +136,7 @@ class SwagpathSyncer {
 		if (!$post)
 			return NULL;
 
-		$preSlugs=array();
-		$preIds=get_post_meta($id,"prerequisites",TRUE);
-		foreach ($preIds as $preId)
-			$preSlugs[]=SwagpathSyncer::getSlugById($preId);
-
+		$preSlugs=get_post_meta($id,"prerequisites",TRUE);
 		sort($preSlugs);
 
 		$tracks=wp_get_object_terms($id,"swagtrack");

@@ -55,6 +55,8 @@ class SwagpathController extends Singleton {
 	public function rwmbMetaBoxes($metaBoxes) {
 		global $wpdb;
 
+		error_log("doing meta boxes...");
+
 		$options=array();
 
 		if (is_plugin_active("h5p/h5p.php")) {
@@ -89,17 +91,35 @@ class SwagpathController extends Singleton {
 	        ),
 		);
 
+		$rows=$wpdb->get_results($wpdb->prepare(
+			"SELECT post_name, post_title ".
+			"FROM   {$wpdb->prefix}posts ".
+			"WHERE  post_type IN ('swagpath') ".
+			"AND    post_status IN ('publish','draft')",
+			$slug),ARRAY_A);
+
+		if ($wpdb->last_error)
+			throw new Exception($wpdb->last_error);
+
+		$options=array();
+		foreach ($rows as $row) {
+			$options[$row["post_name"]]=$row["post_title"];
+		}
+
+		if (!$options)
+			$options=array("_"=>"(No swagpaths available)");
+
 		$metaBoxes[]=array(
 	        'title'      => "Swag",
 	        'post_types' => 'swagpath',
 	        'context'=>'side',
 	        'fields'     => array(
 	            array(
+	            	"type" => "select_advanced",
 	            	"id"   => "prerequisites",
 	            	"name" => "Prerequisites",
-	            	"type" => "post",
-	                "clone"=>true,
-	                "post_type"=>"swagpath",
+	                "clone"=> true,
+	                "options" =>$options,
 	                "desc"=>
 	                	"The Swagpaths recommended to complete before attempting this swagpath."
 	            ),
@@ -217,4 +237,5 @@ class SwagpathController extends Singleton {
 	}
 }
 
-add_filter("rwmb_meta_boxes",array(SwagpathController::instance(),'rwmbMetaBoxes'));
+if (is_admin())
+	add_filter("rwmb_meta_boxes",array(SwagpathController::instance(),'rwmbMetaBoxes'));

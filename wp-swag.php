@@ -4,7 +4,7 @@ Plugin Name: Swag
 Plugin URI: https://github.com/tunapanda/wp-swag
 GitHub Plugin URI: https://github.com/tunapanda/wp-swag
 Description: The gamified, self-paced, xAPI enabled learning environment from Tunapanda!
-Version: 0.0.14
+Version: 0.0.15
 */
 
 require_once __DIR__."/wp-swag-admin.php";
