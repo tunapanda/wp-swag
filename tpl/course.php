@@ -87,3 +87,11 @@
 		<a href="#" class="swagpath-action-close">Close</a>
 	</div>
 </div>
+
+<?php if (!$swagUser->isLoggedIn()) { ?>
+	<style>
+		.comment-respond {
+			display: none;
+		}
+	</style>
+<?php } ?>
