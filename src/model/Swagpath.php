@@ -108,22 +108,7 @@ class Swagpath {
 				$type=$parts[0];
 				$slug=$parts[1];
 
-				$item=NULL;
-				switch ($type) {
-					case "h5p":
-					case "h5p-course-item":
-						$item=new SwagPostItem("h5p",array(
-							"slug"=>$slug
-						));
-						break;
-
-					case "deliverable":
-					case "deliverable-course-item":
-						$item=new SwagPostItem("deliverable",array(
-							"slug"=>$slug
-						));
-						break;
-				}
+				$item=SwagPostItem::create($type,$slug);
 				
 				if ($item) {
 					$item->setSwagPost($this);
@@ -196,7 +181,7 @@ class Swagpath {
 		$this->relatedStatementsByEmail[$email]=$xapi->getStatements(array(
 			"agentEmail"=>$swagUser->getEmail(),
 			"activity"=>get_permalink($this->getPost()->ID),
-			"verb"=>"http://adlnet.gov/expapi/verbs/completed",
+//			"verb"=>"http://adlnet.gov/expapi/verbs/completed",
 			"related_activities"=>"true"
 		));
 
@@ -431,6 +416,7 @@ class Swagpath {
 		);
 
 		$xapi->putStatement($statement);
+		$swagUser->clearFetchedStatements();
 	}
 
 	/**

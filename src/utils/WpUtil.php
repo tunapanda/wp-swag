@@ -2,32 +2,47 @@
 
 namespace swag;
 
+if (class_exists("swag\\WpUtil"))
+	return;
+
 /**
  * Wordpress utils.
  */
-if (!class_exists("swag\\WpUtil")) {
-	class WpUtil {
+class WpUtil {
 
-		/**
-		 * Bootstrap from inside a plugin.
-		 */
-		public static function getWpLoadPath() {
-			if (php_sapi_name()=="cli")
-				$path=$_SERVER["PWD"];
+	/**
+	 * Get base path.
+	 */
+	public static function getWpBasePath() {
+		if (php_sapi_name()=="cli")
+			$path=$_SERVER["PWD"];
 
-			else
-				$path=$_SERVER['SCRIPT_FILENAME'];
+		else
+			$path=$_SERVER['SCRIPT_FILENAME'];
 
-			while (1) {
-				if (file_exists($path."/wp-load.php"))
-					return $path."/wp-load.php";
+		while (1) {
+			if (file_exists($path."/wp-load.php"))
+				return $path;
 
-				$last=$path;
-				$path=dirname($path);
+			$last=$path;
+			$path=dirname($path);
 
-				if ($last==$path)
-					throw new \Exception("Not inside a wordpress install.");
-			}
+			if ($last==$path)
+				throw new \Exception("Not inside a wordpress install.");
 		}
+	}
+
+	/**
+	 * Get path to WordPress bootstrap file.
+	 */
+	public static function getWpLoadPath() {
+		return WpUtil::getWpBasePath()."/wp-load.php";
+	}
+
+	/**
+	 * Bootstrap WordPress.
+	 */
+	public function bootstrap() {
+		require_once WpUtil::getWpLoadPath();
 	}
 }

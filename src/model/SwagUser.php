@@ -97,6 +97,14 @@ class SwagUser {
 	}
 
 	/**
+	 * Clear fetched statements.
+	 */
+	public function clearFetchedStatements() {
+		$this->completedSwagFetched=NULL;
+		$this->completedSwag=NULL;
+	}
+
+	/**
 	 * Get collected swag.
 	 */
 	public function getCompletedSwagpaths() {

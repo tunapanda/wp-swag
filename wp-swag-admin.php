@@ -13,9 +13,11 @@ require_once __DIR__."/src/controller/SettingsPageController.php";
 require_once __DIR__."/src/controller/SwagPageController.php";
 require_once __DIR__."/src/controller/SwagpathController.php";
 require_once __DIR__."/src/controller/SwagTrackController.php";
+require_once __DIR__."/src/utils/WpUtil.php";
 
 class WP_Swag_admin{
 	static $plugins_uri;
+	static $adminMessage;
 
 	public static function init_hooks(){
 		self::$plugins_uri = plugins_url()."/wp-swag";
@@ -41,6 +43,27 @@ class WP_Swag_admin{
 		SwagPageController::instance()->init();
 		SettingsPageController::instance()->init();
 		SwagTrackController::instance()->init();
+
+		if (is_admin()) {
+			$basepath=swag\WpUtil::getWpBasePath();
+			$data=get_plugin_data($basepath."/wp-content/plugins/wp-h5p-xapi/wp-h5p-xapi.php",FALSE,FALSE);
+			if ($data) {
+				$version=$data["Version"];
+				$versionParts=explode(".",$version);
+
+				if (intval($versionParts[1])==1 && intval($versionParts[2])<4) {
+					self::$adminMessage="Your version of wp-h5p-xapi is old, you need at least version 0.1.4";
+					add_action("admin_notices",array(get_called_class(),"adminNotices"));
+				}
+			}
+		}
+	}
+
+	/**
+	 * Admin notice.
+	 */
+	public static function adminNotices() {
+		echo "<div class='notice notice-error'><p>".self::$adminMessage."</p></div>";
 	}
 
 	/**
@@ -114,8 +137,8 @@ class WP_Swag_admin{
 	 * Save xapi statement for swag if applicable.
 	 */
 	public function ti_xapi_post_save($statement) {
-		if ($statement["verb"]["id"]!="http://adlnet.gov/expapi/verbs/completed")
-			return;
+		/*if ($statement["verb"]["id"]!="http://adlnet.gov/expapi/verbs/completed")
+			return;*/
 
 		$postId=NULL;
 
@@ -132,8 +155,26 @@ class WP_Swag_admin{
 		}
 
 		$swagpath=Swagpath::getById($postId);
+		if (!$swagpath)
+			return;
+
 		$swagUser=SwagUser::getByEmail($statement["actor"]["mbox"]);
 		$swagpath->saveProvidedSwagIfCompleted($swagUser);
+
+		$query=parse_url($_SERVER["HTTP_REFERER"],PHP_URL_QUERY);
+		parse_str($query,$vars);
+
+		$tab=0;
+		if (isset($vars["tab"]))
+			$tab=$vars["tab"];
+
+		$swagifacts=$swagpath->getSwagPostItems();
+		$swagifact=$swagifacts[$tab];
+
+		h5pxapi_response_message(array(
+			"swagpathComplete"=>$swagpath->isCompletedByUser($swagUser),
+			"swagifactComplete"=>$swagifact->isCompleted($swagUser)
+		));
 	}
 
 	/**

@@ -51,31 +51,22 @@ jQuery(function($) {
 	$(document).ready(function() {
 		var shownCompletedScreen;
 
-		if (typeof H5P !== 'undefined') {
-			H5P.externalDispatcher.on('xAPI', function(event) {
-				var verbId = event.data.statement.verb.id;
-				if (verbId == "http://adlnet.gov/expapi/verbs/completed") {
-					var imgUri = PLUGIN_URI + "/img/completed-logo.png";
-					$("ul.content-tab-list li.selected a img.coursepresentation").attr("src", imgUri);
+		$(document).on("h5pXapiStatementSaved",function(e) {
+			if (e.message.swagpathComplete) {
+				var imgUri = PLUGIN_URI + "/img/badge.png";
+				$(".swagpath-badge").attr("src", imgUri);
+
+				if (!shownCompletedScreen) {
+					shownCompletedScreen = true;
+					$(".swagpath-completed").fadeIn();
 				}
+			}
 
-				var completed = true;
-				$("img.coursepresentation").each(function(i, el) {
-					if (!($(this).attr("src").includes("completed-logo")))
-						completed = false;
-				});
-
-				if (completed) {
-					var imgUri = PLUGIN_URI + "/img/badge.png";
-					$(".swagpath-badge").attr("src", imgUri);
-
-					if (!shownCompletedScreen) {
-						shownCompletedScreen = true;
-						$(".swagpath-completed").fadeIn();
-					}
-				}
-			});
-		}
+			if (e.message.swagifactComplete) {
+				var imgUri = PLUGIN_URI + "/img/completed-logo.png";
+				$("ul.content-tab-list li.selected a img.coursepresentation").attr("src", imgUri);
+			}
+		});
 
 		$(".swagpath-action-close").click(function() {
 			$(".swagpath-completed").hide();

@@ -1,16 +1,17 @@
 <?php
 
 require_once __DIR__."/../utils/H5pUtil.php";
+require_once __DIR__."/../swagifact/H5pSwagifact.php";
 
 /**
  * An item in a swag post.
  */
 class SwagPostItem {
 
-	private $index;
-	private $swagPost;
-	private $type;
-	private $parameters;
+	protected $index;
+	protected $swagPost;
+	protected $type;
+	protected $parameters;
 
 	/**
 	 * Constructor.
@@ -224,5 +225,28 @@ class SwagPostItem {
 				return do_shortcode("[deliverable slug='$slug']");
 				break;
 		}
+	}
+
+	/**
+	 * Create.
+	 */
+	public static function create($type, $slug) {
+		switch ($type) {
+			case "h5p":
+			case "h5p-course-item":
+				return new H5pSwagifact("h5p",array(
+					"slug"=>$slug
+				));
+				break;
+
+			case "deliverable":
+			case "deliverable-course-item":
+				return new SwagPostItem("deliverable",array(
+					"slug"=>$slug
+				));
+				break;
+		}
+
+		return $item;
 	}
 }

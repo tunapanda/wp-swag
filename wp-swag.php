@@ -4,7 +4,7 @@ Plugin Name: Swag
 Plugin URI: https://github.com/tunapanda/wp-swag
 GitHub Plugin URI: https://github.com/tunapanda/wp-swag
 Description: The gamified, self-paced, xAPI enabled learning environment from Tunapanda!
-Version: 0.0.16
+Version: 0.0.17
 */
 
 require_once __DIR__."/wp-swag-admin.php";
@@ -22,12 +22,12 @@ function swag_activate() {
 		trigger_error("wp-swag requires the cURL module",E_USER_ERROR);
 
 	$basename=basename(__DIR__);
-/*	if ($basename!="wp-swag")
+	if ($basename!="wp-swag")
 		trigger_error(
 			"wp-swag needs to be installed in a plugin directory called wp-swag. ".
 			"If you installed it via a .zip file, please rename the zip file to wp-swag.zip",
 			E_USER_ERROR
-		);*/
+		);
 
 	SwagPageController::instance()->install();
 }

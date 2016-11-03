@@ -31,6 +31,7 @@ class SwagTgmpaController extends Singleton {
 				'name'      => 'H5P xAPI',
 				'slug'      => 'wp-h5p-xapi',
 				'required'  => true,
+				'version'   => '0.1.4',
 			),
 			array(
 				'name'      => 'Remote Sync',
