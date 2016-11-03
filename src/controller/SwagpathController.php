@@ -26,23 +26,62 @@ class SwagpathController extends Singleton {
 			),
 			"public"=>true,
 			"has_archive"=>true,
-			"supports"=>array("title","excerpt"),
+			"supports"=>array("title","excerpt","comments"),
 			"show_in_nav_menus"=>false
 		));
 
 		add_filter("template_include",array($this,"templateInclude"));
+		add_action("save_post",array($this,"onSavePost"));
+	}
+
+	/**
+	 * When a post is saved.
+	 */
+	public function onSavePost($postId) {
+		global $wpdb;
+
+		error_log("post saved...");
+
+		$post=get_post($postId);
+		if ($post->post_type!="swagpath")
+			return;
+
+		$wpdb->query($wpdb->prepare(
+			"UPDATE {$wpdb->prefix}posts ".
+			"SET    comment_status='open' ".
+			"WHERE  ID=%s",
+			$postId
+		));
+
+		if ($wpdb->last_error)
+			throw new Exception($wpdb->last_error);
 	}
 
 	/**
 	 * Template include hook. Always use custome page template for swagpaths.
 	 */
 	public function templateInclude($template) {
+		global $wpdb;
+
 		$post=get_post();
 		if (!$post)
 			return $template;
 
 		if ($post->post_type!="swagpath")
 			return $template;
+
+/*		if ($post->comment_status!="open") {
+
+			$wpdb->query($wpdb->prepare(
+				"UPDATE {$wpdb->prefix}posts ".
+				"SET    comment_status='open' ".
+				"WHERE  ID=%s",
+				$post->ID
+			));
+
+			if ($wpdb->last_error)
+				throw new Exception($wpdb->last_error);
+		}*/
 
 		$template=__DIR__."/../../tpl/swagpath_page.php";
 
