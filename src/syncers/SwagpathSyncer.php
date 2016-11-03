@@ -77,7 +77,8 @@ class SwagpathSyncer {
 			$id=wp_insert_post(array(
 				"post_name"=>$slug,
 				"post_title"=>$data["post_title"],
-				"post_type"=>"swagpath"
+				"post_type"=>"swagpath",
+				"comment_status"=>$data["comment_status"]
 			));
 		}
 
@@ -92,6 +93,7 @@ class SwagpathSyncer {
 		$post->post_excerpt=$data["excerpt"];
 		$post->post_title=$data["title"];
 		$post->post_status=$data["status"];
+		$post->comment_status=$data["comment_status"];
 		wp_update_post($post);
 
 		update_post_meta($id,"swagifact",$data["swagifact"]);
@@ -153,7 +155,8 @@ class SwagpathSyncer {
 			"lessonplan"=>$lessonplanPost->post_name,
 			"excerpt"=>$post->post_excerpt,
 			"prerequisites"=>$preSlugs,
-			"tracks"=>$trackSlugs
+			"tracks"=>$trackSlugs,
+			"comment_status"=>$post->comment_status
 		);
 	}
 
