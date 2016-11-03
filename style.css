@@ -353,6 +353,10 @@ img.course-completed {
 }
 
 /**** Member. ****/
+.member-page-header {
+    height: 105px;
+}
+
 .member-page {
     position: relative;
     margin-top: -30px;

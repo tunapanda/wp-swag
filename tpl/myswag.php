@@ -1,8 +1,10 @@
 <div class="member-page">
-	<?php echo $avatar; ?>
-	<h1><?php echo $username; ?></h1>
-	<div class="member-info">
-		Total Swag: <?php echo $swagCount; ?>
+	<div class="member-page-header">
+		<?php echo $avatar; ?>
+		<h1><?php echo $username; ?></h1>
+		<div class="member-info">
+			Total Swag: <?php echo $swagCount; ?>
+		</div>
 	</div>
 	<div class="swag-container">
 		<div class="swag-page">
