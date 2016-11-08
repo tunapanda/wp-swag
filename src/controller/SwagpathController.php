@@ -40,8 +40,6 @@ class SwagpathController extends Singleton {
 	public function onSavePost($postId) {
 		global $wpdb;
 
-		error_log("post saved...");
-
 		$post=get_post($postId);
 		if ($post->post_type!="swagpath")
 			return;

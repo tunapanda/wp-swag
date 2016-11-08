@@ -51,7 +51,7 @@ jQuery(function($) {
 	$(document).ready(function() {
 		var shownCompletedScreen;
 
-		$(document).on("h5pXapiStatementSaved",function(e) {
+		$(document).on("h5pXapiStatementSaved", function(e) {
 			if (e.message.swagpathComplete) {
 				var imgUri = PLUGIN_URI + "/img/badge.png";
 				$(".swagpath-badge").attr("src", imgUri);
@@ -102,7 +102,8 @@ jQuery(function($) {
 		var force = d3.layout.force()
 			.charge(-100)
 			.linkDistance(80)
-			.gravity(0.05)
+			.linkStrength(.5)
+			.gravity(0.02)
 			.size([width, height]);
 
 		var svg = d3.select("#swagmapcontainer").append("svg")
@@ -118,7 +119,6 @@ jQuery(function($) {
 			svg.attr("height", height);
 			force.size([width, height]).resume();
 		});
-
 
 		var dataurl = PLUGIN_URI + "/swagmapdata.php?mode=" + SWAGMAP_MODE;
 		console.log("**********************************");
@@ -199,6 +199,24 @@ jQuery(function($) {
 			}
 
 			force.on("tick", function() {
+
+				// Make sure it doesn't dissapear.
+				var firstNode = force.nodes()[0];
+				var width = $("#swagmapcontainer").width();
+				var height = $("#swagmapcontainer").height();
+
+				if (firstNode.x < 0)
+					firstNode.x = 0;
+
+				if (firstNode.y < 0)
+					firstNode.y = 0;
+
+				if (firstNode.x > width)
+					firstNode.x = width;
+
+				if (firstNode.y > height)
+					firstNode.y = height;
+
 				linkEnd.attr("transform", function(d) {
 					updateLinkDataExtras(d);
 
