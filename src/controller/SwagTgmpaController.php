@@ -55,6 +55,22 @@ class SwagTgmpaController extends Singleton {
 				'slug'      => 'github-updater',
 				'source'    => "https://github.com/afragen/github-updater/archive/master.zip",
 			),
+			array(
+				'name'      => 'Logged In User Shortcode',
+				'slug'      => 'logged-in-user-shortcode',
+				'required'  => true,
+			),
+			array(
+				'name'      => 'Profile Builder',
+				'slug'      => 'profile-builder',
+				'required'  => true,
+			),
+			array(
+				'name'      => 'Tabby Responsive Tabs',
+				'slug'      => 'tabby-responsive-tabs',
+				'required'  => true,
+			),
+
 		);
 
 		$config = array(
