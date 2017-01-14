@@ -13,5 +13,6 @@ python:
 #      - g++-4.8
 #      - openjdk-7-jdk
 install:
+  - composer global require --dev apigen/apigen
   - echo hello world
 script: ./bin/docs.sh
