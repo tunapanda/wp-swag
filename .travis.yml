@@ -1,0 +1,17 @@
+sudo: required
+dist: trusty
+language: php
+php:
+  - "7.1"
+python:
+  - "3.4"
+#addons:
+#  apt:
+#    sources:
+#      - ubuntu-toolchain-r-test
+#    packages:
+#      - g++-4.8
+#      - openjdk-7-jdk
+install:
+  - echo hello world
+script: ./bin/docs.sh

@@ -1,6 +1,3 @@
-hello world!
+# Swag
 
-is this a markdown
-doc or what?
-
-is the top stuff covered? WTF!
+Swag is a gamified open source elearning platform meant for delivering education content especially in areas without internet connection. It allow users to create and share their content within the platform without the need for internet.
