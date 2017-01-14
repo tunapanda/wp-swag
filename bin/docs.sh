@@ -6,4 +6,4 @@ echo "Running apigen..."
 apigen generate -q
 
 echo "Running mkdocs..."
-mkdocs gh-deploy --dirty
+mkdocs gh-deploy --dirty --force
