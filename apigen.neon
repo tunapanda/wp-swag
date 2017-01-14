@@ -1,3 +1,3 @@
 source: ./src
-destination: ./docs/classes
+destination: ./docs/_static/
 title: Swag
