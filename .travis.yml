@@ -14,5 +14,6 @@ python:
 #      - openjdk-7-jdk
 install:
   - composer global require --dev apigen/apigen
+  - export PATH=$PATH:./vendor/bin
   - echo hello world
 script: ./bin/docs.sh
