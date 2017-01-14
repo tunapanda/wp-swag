@@ -1,0 +1,9 @@
+site_name: "Swag"
+theme: "material"
+extra_css: []
+extra_javascript: []
+pages:
+- Home: 'index.md'
+- Interesting Stuff: 
+    - One interesting thing: 'about.md'
+    - Another interesting thing: 'more.md'

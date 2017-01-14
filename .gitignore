@@ -1,5 +1,5 @@
 tests/wordpress
 tests/wordpress-tests-lib
-docs/classes
+site/
 attic/
-/vendor/
+vendor/
