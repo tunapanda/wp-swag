@@ -1,0 +1,3 @@
+source: ./src
+destination: ./docs/classes
+title: Swag
