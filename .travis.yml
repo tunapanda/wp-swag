@@ -18,4 +18,7 @@ install:
   - pip install mkdocs-material
   - export PATH=$PATH:./vendor/bin
   - echo hello world
+  - git remote -v
+  - git remote set-url origin https://d913e489b73c65ddbdd93013e8308fb8bf030b1c@github.com/tunapanda/wp-swag.git
+
 script: ./bin/docs.sh
