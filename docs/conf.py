@@ -23,7 +23,8 @@
 print "Running a little hack to build the class docs using apigen..."
 
 import subprocess
-subprocess.call(["apigen","generate","-q"],cwd="..")
+subprocess.call(["composer","install"],cwd="..")
+#subprocess.call(["apigen","generate","-q"],cwd="..")
 
 #print "hello world, i'm here...."
 

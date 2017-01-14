@@ -1,0 +1,10 @@
+{
+    "name": "tunapanda/wp-swag",
+    "authors": [
+        {
+            "name": "Mikael Lindqvist",
+            "email": "li.mikael@gmail.com"
+        }
+    ],
+    "require": {}
+}
