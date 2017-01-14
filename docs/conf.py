@@ -23,8 +23,9 @@
 print "Running a little hack to build the class docs using apigen..."
 
 import subprocess
-subprocess.call(["composer","install"],cwd="..")
+#subprocess.call(["composer","install"],cwd="..")
 #subprocess.call(["apigen","generate","-q"],cwd="..")
+subprocess.call(["php","-v"],cwd="..")
 
 #print "hello world, i'm here...."
 
