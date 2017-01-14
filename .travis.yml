@@ -19,6 +19,6 @@ install:
   - export PATH=$PATH:./vendor/bin
   - echo hello world
   - git remote -v
-  - git remote set-url origin https://710895255b146e415fc24e05467d9a368b3dbdac@github.com/tunapanda/wp-swag.git
+  - git remote set-url origin https://$GITHUB_TOKEN@github.com/tunapanda/wp-swag.git
 
 script: ./bin/docs.sh
