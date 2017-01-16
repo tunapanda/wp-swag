@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>Class Template | Swag</title>
+
+	<link rel="stylesheet" href="resources/style.css?c2f33731c1948fbed7c333554678bfa68d4817da">
+
+</head>
+
+<body>
+<div id="left">
+	<div id="menu">
+		<a href="index.html" title="Overview"><span>Overview</span></a>
+
+
+		<div id="groups">
+				<h3>Namespaces</h3>
+			<ul>
+				<li class="active">
+					<a href="namespace-None.html">
+						None					</a>
+
+						</li>
+				<li>
+					<a href="namespace-swag.html">
+						swag					</a>
+
+						</li>
+			</ul>
+		</div>
+
+		<hr>
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li><a href="class-H5pSwagifact.html">H5pSwagifact</a></li>
+				<li><a href="class-H5pUtil.html">H5pUtil</a></li>
+				<li><a href="class-SettingsPageController.html">SettingsPageController</a></li>
+				<li><a href="class-ShortcodeUtil.html">ShortcodeUtil</a></li>
+				<li><a href="class-SwagMapController.html">SwagMapController</a></li>
+				<li><a href="class-SwagPageController.html">SwagPageController</a></li>
+				<li><a href="class-Swagpath.html">Swagpath</a></li>
+				<li><a href="class-SwagpathController.html">SwagpathController</a></li>
+				<li><a href="class-SwagpathSyncer.html">SwagpathSyncer</a></li>
+				<li><a href="class-SwagPlugin.html">SwagPlugin</a></li>
+				<li><a href="class-SwagPostItem.html">SwagPostItem</a></li>
+				<li><a href="class-SwagTgmpaController.html">SwagTgmpaController</a></li>
+				<li><a href="class-SwagTrack.html">SwagTrack</a></li>
+				<li><a href="class-SwagTrackController.html">SwagTrackController</a></li>
+				<li><a href="class-SwagUser.html">SwagUser</a></li>
+				<li class="active"><a href="class-Template.html">Template</a></li>
+				<li><a href="class-Xapi.html">Xapi</a></li>
+			</ul>
+
+
+
+
+
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+<div id="rightInner">
+	<form id="search">
+		<input type="hidden" name="cx" value="">
+		<input type="hidden" name="ie" value="UTF-8">
+		<input type="text" name="q" class="text" placeholder="Search">
+	</form>
+
+	<div id="navigation">
+		<ul>
+			<li>
+				<a href="index.html" title="Overview"><span>Overview</span></a>
+			</li>
+			<li>
+				<a href="namespace-None.html" title="Summary of None"><span>Namespace</span></a>
+			</li>
+			<li class="active">
+<span>Class</span>			</li>
+		</ul>
+		<ul>
+		</ul>
+		<ul>
+		</ul>
+	</div>
+
+<div id="content" class="class">
+	<h1>Class Template</h1>
+
+
+	<div class="description">
+	<p>A simple templating engine. This is a simple example of how to use this class:</p>
+
+<pre><span class="php-var">$t</span>=<span class="php-keyword1">new</span> Template(<span class="php-quote">&quot;templatefile.php&quot;</span>);
+  <span class="php-var">$t</span>-&gt;set(<span class="php-quote">&quot;hello&quot;</span>,<span class="php-quote">&quot;hello world&quot;</span>);
+  <span class="php-var">$t</span>-&gt;show();</pre>
+
+<p>In this example, we have a template called <code>templatefile.php</code> that gets loaded
+and rendered using the <code>show</code> call. The variables registered using the <code>set</code> method
+will be made available to the template in the global scope. The contents of
+the <code>templatefile.php</code> for this example could be:</p>
+
+<pre>&lt;html&gt;
+    &lt;body&gt;
+      We say hello like this: <span class="xlang">&lt;?php</span> <span class="php-keyword1">echo</span> <span class="php-var">$hello</span>; <span class="xlang">?&gt;</span>
+    &lt;/body&gt;
+  &lt;/html&gt;</pre>
+	</div>
+
+
+
+
+
+
+
+
+
+	<div class="info">
+		
+		
+		
+		
+
+			<b>Located at</b> <a href="source-class-Template.html#3-92" title="Go to source code">utils/Template.php</a>
+		<br>
+	</div>
+
+
+
+	<table class="summary methods" id="methods">
+	<caption>Methods summary</caption>
+	<tr data-order="__construct" id="___construct">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#___construct">#</a>
+		<code><a href="source-class-Template.html#30-37" title="Go to source code">__construct</a>( <span>mixed <var>$filename</var></span> )</code>
+
+		<div class="description short">
+			<p>Create a Template for the specified file.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Create a Template for the specified file.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$filename</var></dt>
+					<dd>The file to use as template.</dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="set" id="_set">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_set">#</a>
+		<code><a href="source-class-Template.html#39-48" title="Go to source code">set</a>( <span>mixed <var>$name</var></span>, <span>mixed <var>$value</var></span> )</code>
+
+		<div class="description short">
+			<p>Set a variable that can be accessed by the template.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Set a variable that can be accessed by the template.</p>
+
+<p>The variable will be available to the template in the global scope.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$name</var></dt>
+					<dd>The name of the variable.</dd>
+					<dt><var>$value</var></dt>
+					<dd>The value that the variable should take.</dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="show" id="_show">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_show">#</a>
+		<code><a href="source-class-Template.html#50-58" title="Go to source code">show</a>( )</code>
+
+		<div class="description short">
+			<p>Render the template and output it to the browser.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Render the template and output it to the browser.</p>
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="render" id="_render">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_render">#</a>
+		<code><a href="source-class-Template.html#60-91" title="Go to source code">render</a>( )</code>
+
+		<div class="description short">
+			<p>Render template, but don't ouput it to the browser.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Render template, but don't ouput it to the browser.</p>
+
+<p>This is useful if we want to
+use a template inside another template. For example, we might have a
+page template that defaines header and footer for our page. Inside the page
+template we want to display the content generated by a content template.
+We can do this by first rendering the content template:</p>
+
+<pre><span class="php-var">$contentTemplate</span>=<span class="php-keyword1">new</span> Template(<span class="php-quote">&quot;the_content_templte.php&quot;</span>);
+  <span class="php-comment">// Set any variables used by the content template.</span>
+  <span class="php-var">$content</span>=<span class="php-var">$contentTemplate</span>-&gt;render();</pre>
+
+<p>Now, we use the rendered content as input for our page template and output
+everything to the browser:</p>
+
+<pre><span class="php-var">$pageTemplate</span>=<span class="php-keyword1">new</span> Template(<span class="php-quote">&quot;the_page_template.php&quot;</span>);
+  <span class="php-var">$pageTemplate</span>-&gt;set(<span class="php-quote">&quot;content&quot;</span>,<span class="php-var">$content</span>);
+  <span class="php-var">$pageTemplate</span>-&gt;show();</pre>
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+	<div id="footer">
+		Swag API documentation generated by <a href="http://apigen.org">ApiGen</a>
+	</div>
+</div>
+</div>
+<script src="resources/combined.js"></script>
+<script src="elementlist.js"></script>
+</body>
+</html>
