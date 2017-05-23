@@ -1,5 +1,7 @@
 # Swag from Janet’s perspective
 
+[Note: this is a hypothetical future use case. While we have currently deployed Swag at Tunapanda Institute-run facilities in Kibera, Nairobi, and Lodowar, Turkana, we have not reached this level of development yet]
+
 Janet is born and raised in Kibera, Nairobi, Kenya. Kibera is one of the largest slums in Africa and living here is not an easy thing. Janet joined a school in the late 90s for a Kenya National Certificate of Primary Education (KCPE) which took her 8 years to acquire. Thereafter, she joined a high school for a 4-year course in Kenya National Certificate of Secondary Education (KSCE). She sat my exams in November 2010 and attained a B minus (B -) of 58 points.
 
 With the grade she attained, she knew that her dream to join a regular programme in computer science at any public university in Kenya and be a beneficiary of higher education loans board (HELB) was shuttered.
