@@ -27,11 +27,13 @@ class SwagpathController extends Singleton {
 			"public"=>true,
 			"has_archive"=>true,
 			"supports"=>array("title","excerpt","comments"),
-			"show_in_nav_menus"=>false
+			"show_in_nav_menus"=>false,
+			"show_in_rest"=>true
 		));
 
 		add_filter("template_include",array($this,"templateInclude"));
 		add_action("save_post",array($this,"onSavePost"));
+		add_action("rest_api_init",array($this,"restAPIInit"));
 	}
 
 	/**
@@ -269,6 +271,39 @@ class SwagpathController extends Singleton {
 		$template->set("trackSlug",$trackSlug);
 		$template->set("trail",$trail);
 		$template->show();
+	}
+
+	// Add swagifacts to REST API for swagpaths including a download link
+	function restAPIInit() {
+		if (is_plugin_active("h5p/h5p.php")) {
+			register_rest_field('swagpath', "swagifacts", array(
+				"get_callback" => function( $swagpath ) {
+					global $wpdb;
+				
+					$swagifact_slugs = rwmb_meta('swagifact', '', $swagpath['id']);
+
+					$h5ps = array();
+					foreach( $swagifact_slugs as $swagifact_slug) {
+						$parts = explode(":", $swagifact_slug );
+						if( $parts[0] === 'h5p') {
+							$row = $wpdb->get_row($wpdb->prepare(
+								"SELECT  * ".
+								"FROM    {$wpdb->prefix}h5p_contents ".
+								"WHERE   slug = %s",
+								$parts[1]
+							),ARRAY_A);
+
+							$h5ps[] = array(
+								'title' => $row["title"],
+								'slug' => $row['slug'],
+								'exportUrl' => wp_upload_dir()["baseurl"] . '/h5p/exports/' . $row['slug'] . '-' . $row['id'] . '.h5p'
+							);
+						}
+					}
+					return $h5ps;
+				}
+			));
+		}
 	}
 }
 

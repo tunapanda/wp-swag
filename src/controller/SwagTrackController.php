@@ -16,7 +16,8 @@ class SwagTrackController extends Singleton {
 	public function init() {
 		register_taxonomy("swagtrack","swagpath",array(
 			"label"=>"Swagtracks",
-			"hierarchical"=>TRUE
+			"hierarchical"=>TRUE,
+			"show_in_rest"=>true
 		));
 
 		add_action("swagtrack_add_form_fields",array($this,"addFormFields"));
