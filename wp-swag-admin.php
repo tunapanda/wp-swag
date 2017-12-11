@@ -13,6 +13,7 @@ require_once __DIR__."/src/controller/SettingsPageController.php";
 require_once __DIR__."/src/controller/SwagPageController.php";
 require_once __DIR__."/src/controller/SwagpathController.php";
 require_once __DIR__."/src/controller/SwagTrackController.php";
+require_once __DIR__."/src/controller/BadgeController.php";
 require_once __DIR__."/src/utils/WpUtil.php";
 
 class WP_Swag_admin{
