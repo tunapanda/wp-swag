@@ -177,6 +177,21 @@ class SwagpathController extends Singleton {
 			)
 		);
 
+		$metaBoxes[]=array(
+			"title"=>"Badges",
+			"post_types"=>"swagpath",
+			"fields"=>array(
+				array(
+					"id"=>"badges",
+					"type"=>"post",
+					"name"=>"Open Badges awarded for completing this Swagpath",
+					"post_type"=>"badge",
+					"field_type"=> "select_advanced",
+					"placeholder" => "Select a Badge"
+				)
+			)
+		);
+
 		return $metaBoxes;
 	}
 
