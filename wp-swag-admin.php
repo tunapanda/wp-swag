@@ -20,25 +20,29 @@ class WP_Swag_admin{
 	static $plugins_uri;
 	static $adminMessage;
 
-	public static function init_hooks(){
+	function __construct() {
+		add_action("init", array($this, "init_hooks"));
+	}
+
+	public function init_hooks(){
 		self::$plugins_uri = plugins_url()."/wp-swag";
 
 		// initialise the the admin settings
-		add_action('admin_init',array(get_called_class(),'ti_admin_init'));
-		add_action('admin_menu',array(get_called_class(),'ti_admin_menu'));
+		add_action('admin_init',array($this,'ti_admin_init'));
+		add_action('admin_menu',array($this,'ti_admin_menu'));
 
-		add_action('wp_enqueue_scripts',array(get_called_class(), "ti_enqueue_scripts"));
-		add_action('admin_enqueue_scripts',array(get_called_class(), "ti_enqueue_scripts"));
+		add_action('wp_enqueue_scripts',array($this, "ti_enqueue_scripts"));
+		add_action('admin_enqueue_scripts',array($this, "ti_enqueue_scripts"));
 
-		add_action("h5p-xapi-post-save",array(get_called_class(),"ti_xapi_post_save"));
-		add_action("h5p-xapi-pre-save",array(get_called_class(),"ti_xapi_pre_save"));
-		add_action("deliverable-xapi-post-save",array(get_called_class(), "ti_xapi_post_save"));
+		add_action("h5p-xapi-post-save",array($this,"ti_xapi_post_save"));
+		add_action("h5p-xapi-pre-save",array($this,"ti_xapi_pre_save"));
+		add_action("deliverable-xapi-post-save",array($this, "ti_xapi_post_save"));
 
 		add_filter("h5p-xapi-auth-settings",
-			array(get_called_class(),"ti_xapi_h5p_auth_settings"));
+			array($this,"ti_xapi_h5p_auth_settings"));
 
 		add_filter("deliverable-xapi-auth-settings",
-			array(get_called_class(),"ti_deliverable_xapi_auth_settings"));
+			array($this, "ti_deliverable_xapi_auth_settings"));
 
 		SwagpathController::instance()->init();
 		SwagPageController::instance()->init();
@@ -54,7 +58,7 @@ class WP_Swag_admin{
 
 				if (intval($versionParts[1])==1 && intval($versionParts[2])<4) {
 					self::$adminMessage="Your version of wp-h5p-xapi is old, you need at least version 0.1.4";
-					add_action("admin_notices",array(get_called_class(),"adminNotices"));
+					add_action("admin_notices",array($this,"adminNotices"));
 				}
 			}
 		}
@@ -76,7 +80,7 @@ class WP_Swag_admin{
 			'Tunapanda Swag',
 			'manage_options',
 			'ti_settings',
-			array(get_called_class(), 'ti_create_settings_page')
+			array($this, 'ti_create_settings_page')
 		);
 	}
 

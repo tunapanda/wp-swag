@@ -7,7 +7,7 @@ namespace swag;
  */
 class Singleton {
 	private static $instances=array();
-
+	var $initCalled = false;
 	/**
 	 * Init.
 	 */
