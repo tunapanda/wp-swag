@@ -34,6 +34,8 @@ class SwagpathController extends Singleton {
 		add_filter("template_include",array($this,"templateInclude"));
 		add_action("save_post",array($this,"onSavePost"));
 		add_action("rest_api_init",array($this,"restAPIInit"));
+
+		add_action( "rwmb_after_save_post", array($this, "generate_open_badge") );
 	}
 
 	/**
@@ -128,12 +130,12 @@ class SwagpathController extends Singleton {
 	        ),
 		);
 
-		$rows=$wpdb->get_results($wpdb->prepare(
+		$rows=$wpdb->get_results(
 			"SELECT post_name, post_title ".
 			"FROM   {$wpdb->prefix}posts ".
 			"WHERE  post_type IN ('swagpath') ".
-			"AND    post_status IN ('publish','draft')",
-			$slug),ARRAY_A);
+			"AND    post_status IN ('publish','draft')"
+			,ARRAY_A);
 
 		if ($wpdb->last_error)
 			throw new Exception($wpdb->last_error);
@@ -182,9 +184,14 @@ class SwagpathController extends Singleton {
 			"post_types"=>"swagpath",
 			"fields"=>array(
 				array(
+					"id" => "generate_badge",
+					"type" => "checkbox",
+					"name" => "Generate an Open Badge for this Swagpath"
+				),
+				array(
 					"id"=>"badges",
 					"type"=>"post",
-					"name"=>"Open Badges awarded for completing this Swagpath",
+					"name"=>"Additional Open Badges awarded for completing this Swagpath",
 					"post_type"=>"badge",
 					"field_type"=> "select_advanced",
 					"placeholder" => "Select a Badge"
@@ -319,6 +326,39 @@ class SwagpathController extends Singleton {
 				}
 			));
 		}
+	}
+
+	public function generate_open_badge( $post_id ) {
+		if (get_post_type( $post_id ) !== "swagpath") {
+			return;
+		}
+
+		$generate_badge = get_post_meta( $post_id, "generate_badge", true );
+		$badge = get_post_meta( $post_id, "default_badge", true );
+
+		if ( $badge && $generate_badge !== '1') {
+			return wp_delete_post( $badge );
+		}
+
+		$name = get_the_title( $post_id );
+		$desc = apply_filters('the_content', get_post_field('post_content', $post_id));
+
+		if ( !badge ) {
+			$badge = wp_insert_post( array(
+				"post_title" => $name,
+				"post_content" => $desc,
+				"post_status" => "publish",
+				"post_type" => "badge"
+			) );
+
+			return update_post_meta( $post_id, "default_badge", $badge );
+		}
+
+		return wp_update_post( array(
+			'ID' => $badge,
+			"post_title" => $name,
+			"post_content" => $desc
+		) );
 	}
 }
 
