@@ -1,17 +1,6 @@
 <?php 
 
 class BadgeController {
-	var $issuer = array(
-		"@context" => "https://w3id.org/openbadges/v2",
-		"description" => "We focus on low-cost replicability of training facilities and can offer turnkey solutions for learning. We enable anyone to open schools and create learning experiences in their communities using our unique operating pedagogy, open source tools, offline education networks, and more.",
-		"url" => "http://tunapanda.org",
-		"email" => "info@tunapanda.org",
-		"type" => "Issuer",
-		"id" => "https://api.badgr.io/public/issuers/_AHjGP_pRouHnxLczMK0eQ?v=2_0",
-		"name" => "Tunapanda",
-		"image" => "https://api.badgr.io/public/issuers/_AHjGP_pRouHnxLczMK0eQ/image"
-	);
-
   function __construct() {
 		$this->settings_api = new WeDevs_Settings_API;
 
@@ -34,6 +23,10 @@ class BadgeController {
 
 		add_action( 'admin_init', array($this, 'admin_init') );
 		add_action( 'admin_menu', array($this, 'admin_menu') );
+
+		add_rewrite_rule('openbadges/issuer', 'wp-admin/admin-ajax.php?action=openbadges_issuer', 'top');
+		add_action( 'wp_ajax_openbadges_issuer', array($this, 'ajax_open_badges_issuer') );
+		add_action( 'wp_ajax_nopriv_openbadges_issuer', array($this, 'ajax_open_badges_issuer') );		
 	}
 
 	public function admin_init() {
@@ -49,6 +42,8 @@ class BadgeController {
 				array(
 					'name' => 'issuer_name',
 					'label' => __( 'Issuer Name', 'swag' ),
+					'desc' => __( 'Defaults to Site Title' ),
+					'default' => get_option( 'blogname' ),
 					'type' => 'text',
 					'sanitize_callback' => 'sanitize_text_field'
 				),
@@ -61,12 +56,16 @@ class BadgeController {
 				array(
 					'name' => 'issuer_url',
 					'label' => __( 'Issuer URL', 'swag' ),
+					'desc' => __( 'Defaults to Site Homepage' ),
+					'default' => get_option( 'siteurl' ),					
 					'type' => 'text',
 					'sanitize_callback' => 'sanitize_text_field'
 				),
 				array(
 					'name' => 'issuer_email',
+					'desc' => __( 'Defaults to Admin Email' ),					
 					'label' => __( 'Issuer Email', 'swag' ),
+					'default' => get_option( 'admin_email' ),					
 					'type' => 'text',
 					'sanitize_callback' => 'sanitize_text_field'
 				)
@@ -78,6 +77,27 @@ class BadgeController {
 
 	public function admin_menu() {
 		add_options_page( 'Open Badges', 'Open Badges', 'edit_posts', 'swag_open_badges', array($this, 'settings_menu'), '' );		
+	}
+
+	public function issuer_json() {
+		$settings = get_option( 'open_badges_issuer' );
+
+		$issuer = array(
+			"@context" => "https://w3id.org/openbadges/v2",
+			"description" => $settings['issuer_description'],
+			"url" => $settings['issuer_url'],
+			"email" => $settings['issuer_email'],
+			"type" => "Issuer",
+			"id" => get_option('siteurl') . '/openbadges/issuer',
+			"name" => $settings['issuer_name'],
+			"image" => get_option('siteurl') . '/openbadges/issuer/image'
+		);
+
+		return json_encode( $issuer, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES );
+	}
+
+	public function ajax_open_badges_issuer() {
+		die($this->issuer_json());
 	}
 	
 	public function meta_boxes( $meta_boxes ) {
