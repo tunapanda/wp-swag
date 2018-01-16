@@ -54,6 +54,15 @@ class BadgeController {
 					'sanitize_callback' => 'sanitize_text_field',
 				),
 				array(
+					'name'    => 'image',
+					'label'   => __( 'Image', 'wedevs' ),
+					'type'    => 'file',
+					'default' => '',
+					'options' => array(
+							'button_label' => 'Choose Image'
+					)
+				),
+				array(
 					'name' => 'issuer_url',
 					'label' => __( 'Issuer URL', 'swag' ),
 					'desc' => __( 'Defaults to Site Homepage' ),
@@ -90,7 +99,7 @@ class BadgeController {
 			"type" => "Issuer",
 			"id" => get_option('siteurl') . '/openbadges/issuer',
 			"name" => $settings['issuer_name'],
-			"image" => get_option('siteurl') . '/openbadges/issuer/image'
+			"image" => $settings['image']
 		);
 
 		return json_encode( $issuer, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES );
@@ -146,11 +155,11 @@ class BadgeController {
 			"type" => "BadgeClass",
 			"id" => $permalink,
 			"name" => $name,
-			"issuer" => "https://api.badgr.io/public/issuers/_AHjGP_pRouHnxLczMK0eQ?v=2_0",
+			"issuer" => get_option('siteurl') . '/openbadges/issuer',
 			"image" => $image_url,
 			"criteria" => array(
-				"id" => "http://swag.tunapanda.org/swagpath/sonic-pi/",
-				"narrative" => "Compete the course at http://swag.tunapanda.org/swagpath/sonic-pi/"
+				"id" => $permalink,
+				"narrative" => "Compete the course at $permalink"
 			),
 			"alignment" => array(),
 			"tags" => array()
