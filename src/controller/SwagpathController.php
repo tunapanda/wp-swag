@@ -24,6 +24,7 @@ class SwagpathController extends Singleton {
 				"add_new_item"=>"Add new swagpath",
 				"edit_item"=>"Edit Swagpath",
 			),
+			"taxonomies" => array('swagtrack'),
 			"public"=>true,
 			"has_archive"=>true,
 			"supports"=>array("title","excerpt","comments"),
@@ -31,7 +32,7 @@ class SwagpathController extends Singleton {
 			"show_in_rest"=>true
 		));
 
-		add_filter("template_include",array($this,"templateInclude"));
+		// add_filter("template_include",array($this,"templateInclude"));
 		add_action("save_post",array($this,"onSavePost"));
 		add_action("rest_api_init",array($this,"restAPIInit"));
 

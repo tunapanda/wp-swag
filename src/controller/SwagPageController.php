@@ -30,7 +30,7 @@ class SwagPageController extends Singleton {
 			"has_archive"=>false
 		));
 
-		add_action('pre_get_posts', array($this,'enableFrontPage'));
+		// add_action('pre_get_posts', array($this,'enableFrontPage'));
 		add_filter('get_pages',array($this,'addSwagToDropDown'));
 
 		add_shortcode("swagtoc", array($this,"swagtocShortcode"));
@@ -147,9 +147,19 @@ class SwagPageController extends Singleton {
 			);
 
 			$swagpaths=$swagUser->getCompletedByTopLevelTrack($topLevelTrack->slug);
+			$swagUser->getCompletedSwagpaths();
+
+
 			foreach ($swagpaths as $swagpath) {
+				$badge_id = get_post_meta($swagpath->getPost()->ID, 'default_badge', true);
+				$badge = get_post($badge_id);
+
 				$trackData["badges"][]=array(
-					"name"=>$swagpath->getPost()->post_title
+					"name"=>$swagpath->getPost()->post_title,
+					"description"=>$badge->post_content,
+					"image"=> array_values(rwmb_meta('badge_image', array( "size" => "large"), $badge_id))[0]['url'],
+					"date_issued" => date('d/m/Y', strtotime($swagpath->completedStatement['timestamp'])),
+					"permalink" => get_author_posts_url($swagUser->getUser()->ID) . 'badge/' . $badge->post_name
 				);
 			}
 
@@ -216,8 +226,8 @@ class SwagPageController extends Singleton {
 		$template=new Template(__DIR__."/../../tpl/swagmap.php");
 		$template->set("mode",$mode);
 		$template->set("plugins_uri",plugins_url()."/wp-swag");
-		$template->set("mylink",$url."?mode=my");
-		$template->set("fulllink",$url."?mode=full");
+		$template->set("mylink","/?mode=my");
+		$template->set("fulllink","/?mode=full");
 		$template->show();
 	}
 
