@@ -15,6 +15,7 @@ require_once __DIR__."/src/controller/SwagpathController.php";
 require_once __DIR__."/src/controller/SwagTrackController.php";
 require_once __DIR__."/src/controller/BadgeController.php";
 require_once __DIR__."/src/utils/WpUtil.php";
+require_once __DIR__ . "/src/utils/H5pUtil.php";
 
 class WP_Swag_admin{
 	static $plugins_uri;
@@ -34,8 +35,11 @@ class WP_Swag_admin{
 		add_action('wp_enqueue_scripts',array($this, "ti_enqueue_scripts"));
 		add_action('admin_enqueue_scripts',array($this, "ti_enqueue_scripts"));
 
-		add_action("h5p-xapi-post-save",array($this,"ti_xapi_post_save"));
-		add_action("h5p-xapi-pre-save",array($this,"ti_xapi_pre_save"));
+		add_action('wp_ajax_swagmap_data', array($this, 'swagmapdata'));
+		add_action('wp_ajax_nopriv_swagmap_data', array($this, 'swagmapdata'));
+
+		add_filter("h5p-xapi-post-save",array($this,"ti_xapi_post_save"));
+		add_filter("h5p-xapi-pre-save",array($this,"ti_xapi_pre_save"));
 		add_action("deliverable-xapi-post-save",array($this, "ti_xapi_post_save"));
 
 		add_filter("h5p-xapi-auth-settings",
@@ -110,9 +114,16 @@ class WP_Swag_admin{
 		wp_register_script("d3",plugins_url("/d3.v3.min.js", __FILE__));
 		wp_register_script("ti-main",plugins_url("/main.js", __FILE__));
 
+		wp_localize_script('ti-main', 'swag_settings', array('swagmap_url' => admin_url('admin-ajax.php?action=swagmap_data')));
+
 		wp_enqueue_script("ti-main");
 
 		wp_enqueue_script("d3");
+	}
+
+	public function swagmapdata() {
+		require_once __DIR__ . '/swagmapdata.php';
+		wp_die();
 	}
 
 	/**
@@ -153,11 +164,13 @@ class WP_Swag_admin{
 				$postId=$id;
 		}
 
-		foreach ($statement["context"]["contextActivities"]["category"] as $categoryActivity) {
-			$id=url_to_postid($categoryActivity["id"]);
-			if ($id)
-				$postId=$id;
-		}
+		// if (isset($statement["context"]["contextActivities"]["category"])) {
+		// 	foreach ($statement["context"]["contextActivities"]["category"] as $categoryActivity) {
+		// 		$id=$categoryActivity["id"];
+		// 		if ($id)
+		// 			$postId=$id;
+		// 	}
+		// }
 
 		$swagpath=Swagpath::getById($postId);
 		if (!$swagpath)
@@ -166,20 +179,20 @@ class WP_Swag_admin{
 		$swagUser=SwagUser::getByEmail($statement["actor"]["mbox"]);
 		$swagpath->saveProvidedSwagIfCompleted($swagUser);
 
-		$query=parse_url($_SERVER["HTTP_REFERER"],PHP_URL_QUERY);
-		parse_str($query,$vars);
+		$path=parse_url($id,PHP_URL_PATH);
+		$vars = explode('/', $path);
 
-		$tab=0;
-		if (isset($vars["tab"]))
-			$tab=$vars["tab"];
+		$swagifact_slug = end($vars);
 
 		$swagifacts=$swagpath->getSwagPostItems();
-		$swagifact=$swagifacts[$tab];
+		$h5p=H5pUtil::getH5pById($statement["object"]["definition"]["extensions"]["http://h5p.org/x-api/h5p-local-content-id"]);
+		$swagifact = SwagPostItem::create("h5p", $h5p['slug']);
+		$swagifact->setSwagPost($swagpath);
 
-		h5pxapi_response_message(array(
+		return array(
 			"swagpathComplete"=>$swagpath->isCompletedByUser($swagUser),
 			"swagifactComplete"=>$swagifact->isCompleted($swagUser)
-		));
+		);
 	}
 
 	/**
@@ -188,11 +201,14 @@ class WP_Swag_admin{
 	public function ti_xapi_h5p_auth_settings($arg) {
 		$xapi=SwagPlugin::instance()->getXapi();
 
-		return array(
-			"endpoint_url"=>$xapi->endpoint,
-			"username"=>$xapi->username,
-			"password"=>$xapi->password
-		);
+		if ($xapi) {
+			return array(
+				"endpoint_url"=>$xapi->endpoint,
+				"username"=>$xapi->username,
+				"password"=>$xapi->password
+			);
+		}
+		return;
 	}
 
 	/**
@@ -201,10 +217,13 @@ class WP_Swag_admin{
 	public function ti_deliverable_xapi_auth_settings($arg) {
 		$xapi=SwagPlugin::instance()->getXapi();
 
-		return array(
-			"endpoint_url"=>$xapi->endpoint,
-			"username"=>$xapi->username,
-			"password"=>$xapi->password
-		);
+		if ($xapi) {
+			return array(
+				"endpoint_url"=>$xapi->endpoint,
+				"username"=>$xapi->username,
+				"password"=>$xapi->password
+			);
+		}
+		return;
 	}
 }

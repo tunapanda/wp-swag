@@ -33,11 +33,13 @@ class H5pSwagifact extends SwagPostItem {
 
 			foreach ($h5pParameters["presentation"]["slides"] as $slide) {
 				foreach ($slide["elements"] as $element) {
-					$library=$element["action"]["library"];
-					$parts=explode(" ",$library);
-					$libraryName=$parts[0];
-					if (in_array($libraryName,$scoreElements))
-						$requireComplete=TRUE;
+					if (isset($element["action"])) {
+						$library=$element["action"]["library"];
+						$parts=explode(" ",$library);
+						$libraryName=$parts[0];
+						if (in_array($libraryName,$scoreElements))
+							$requireComplete=TRUE;
+					}
 				}
 			}
 		}

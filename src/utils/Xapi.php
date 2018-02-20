@@ -58,6 +58,10 @@ if (!class_exists("Xapi")) {
 			curl_setopt($curl,CURLOPT_URL,$url);
 			curl_setopt($curl,CURLOPT_HTTPHEADER,$headers);
 			curl_setopt($curl,CURLOPT_USERPWD,$userpwd);
+			curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 4000);
+curl_setopt($curl, CURLOPT_TIMEOUT, 400); //timeout in seconds
+
+			
 			$res=curl_exec($curl);
 
 			$code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
@@ -106,6 +110,9 @@ if (!class_exists("Xapi")) {
 			curl_setopt($curl,CURLOPT_URL,$url);
 			curl_setopt($curl,CURLOPT_POST,1);
 			curl_setopt($curl,CURLOPT_POSTFIELDS,$content);
+			curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 4000);
+			curl_setopt($curl, CURLOPT_TIMEOUT, 400); //timeout in seconds
+
 
 			$res=curl_exec($curl);
 			$decoded=json_decode($res,TRUE);
