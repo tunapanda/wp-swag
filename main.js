@@ -52,20 +52,20 @@ jQuery(function($) {
 		var shownCompletedScreen;
 
 		$(document).on("h5pXapiStatementSaved", function(e) {
-			if (e.message.swagpathComplete) {
-				var imgUri = PLUGIN_URI + "/img/badge.png";
-				$(".swagpath-badge").attr("src", imgUri);
+			// if (e.message && e.message.swagpathComplete) {
+			// 	var imgUri = PLUGIN_URI + "/img/badge.png";
+			// 	$(".swagpath-badge").attr("src", imgUri);
 
-				if (!shownCompletedScreen) {
-					shownCompletedScreen = true;
-					$(".swagpath-completed").fadeIn();
-				}
-			}
+			// 	if (!shownCompletedScreen) {
+			// 		shownCompletedScreen = true;
+			// 		$(".swagpath-completed").fadeIn();
+			// 	}
+			// }
 
-			if (e.message.swagifactComplete) {
-				var imgUri = PLUGIN_URI + "/img/completed-logo.png";
-				$("ul.content-tab-list li.selected a img.coursepresentation").attr("src", imgUri);
-			}
+			// if (e.message && e.message.swagifactComplete) {
+			// 	var imgUri = PLUGIN_URI + "/img/completed-logo.png";
+			// 	$("ul.content-tab-list li.selected a img.coursepresentation").attr("src", imgUri);
+			// }
 		});
 
 		$(".swagpath-action-close").click(function() {
@@ -120,7 +120,7 @@ jQuery(function($) {
 			force.size([width, height]).resume();
 		});
 
-		var dataurl = PLUGIN_URI + "/swagmapdata.php?mode=" + SWAGMAP_MODE;
+		var dataurl = swag_settings.swagmap_url + "&mode=" + SWAGMAP_MODE;
 		console.log("**********************************");
 		console.log("loading swagmap data from: " + dataurl);
 

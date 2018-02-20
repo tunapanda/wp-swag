@@ -16,14 +16,20 @@
 					</div>
 					<hr style="background-color: <?php echo $track["color"]; ?>"/>
 				<?php } ?>
-				<?php foreach ($track["badges"] as $badge) { ?>
-					<div class="swag-badge">
-						<img src="<?php echo $pluginUrl; ?>/img/badge-opaque.png"/>
-						<div class="swag-badge-title">
-							<?php echo $badge["name"]; ?>
+				<div class="swag-badges">
+					<?php foreach ($track["badges"] as $badge) { ?>
+						<div class="swag-badge">
+							<a href="<?= $badge['permalink'] ?>">
+							<img src="<?= $badge['image'] ?>" alt="<?= $badge['name'] ?>">
+							<div class="sw-badge-info">
+								<div class="badge-name"><h3><?= $badge['name'] ?></h3></div>
+								<div class="badge-description"><?= $badge['description'] ?></div>
+								<div class="badge-date">Awarded <?= $badge['date_issued'] ?></div>
+							</div>
+							</a>
 						</div>
-					</div>
-				<?php } ?>
+					<?php } ?>
+				</div>
 			<?php } ?>
 		</div>
 	</div>

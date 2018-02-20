@@ -19,6 +19,8 @@ class BadgeController {
 		));
 		
 		add_filter('rwmb_badge_json_field_meta', array( $this, 'badge_json'), 10, 3);
+		add_filter('rwmb_badge_json_value', array($this, 'badge_json'), 10, 3);
+
 		add_filter("rwmb_meta_boxes",array($this,'meta_boxes'), 10, 1);
 
 		add_action( 'admin_init', array($this, 'admin_init') );
@@ -55,7 +57,7 @@ class BadgeController {
 				),
 				array(
 					'name'    => 'image',
-					'label'   => __( 'Image', 'wedevs' ),
+					'label'   => __( 'Image', 'swag' ),
 					'type'    => 'file',
 					'default' => '',
 					'options' => array(
@@ -77,6 +79,16 @@ class BadgeController {
 					'default' => get_option( 'admin_email' ),					
 					'type' => 'text',
 					'sanitize_callback' => 'sanitize_text_field'
+				),
+				array(
+					'name'    => 'default_badge_image',
+					'label'   => __( 'Default Badge Image', 'swag' ),
+					'type'    => 'file',
+					'desc' => __( 'Default Image for badges', 'swag' ),
+					'default' => '',
+					'options' => array(
+							'button_label' => 'Choose Image'
+					)
 				)
 			)
 		));
@@ -142,11 +154,13 @@ class BadgeController {
 	public function badge_json($new, $field, $old) {
 		//generated read-only field
 		global $post;
+		$settings = get_option( 'open_badges_issuer' );		
 
 		$name = get_the_title( $post->id );
 		$desc = 		$desc = apply_filters('the_content', get_post_field('post_content', $post->id));		
 		$image = rwmb_meta('badge_image', array( "size" => "large"), $post->id);
-		$image_url = $image ? $image['url'] : '';
+		
+		$image_url = $image ? $image['url'] : $settings['default_badge_image'];
 		$permalink = get_permalink($post->id);
 
 		$json = array(

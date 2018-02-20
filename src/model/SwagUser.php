@@ -130,6 +130,7 @@ class SwagUser {
 			$swagpath=Swagpath::getBySlug($slug);
 
 			if ($swagpath)
+				$swagpath->completedStatement = $statement;
 				$this->completedSwag[]=$swagpath;
 		}
 

@@ -568,10 +568,10 @@ img.coursepresentation {
 }
 
 .swag-badge {
-    display: inline-block;
+    /* display: inline-block;
     position: relative;
     width: 160px;
-    height: 100px;
+    height: 100px; */
 }
 
 .swag-badge img {
@@ -615,7 +615,6 @@ img.coursepresentation {
 
 #swagmapcontainer {
     width: 100%;
-    float:left;
     position: relative;
 }
 #swag_description_container{
