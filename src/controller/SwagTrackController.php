@@ -16,6 +16,7 @@ class SwagTrackController extends Singleton {
 	public function init() {
 		register_taxonomy("swagtrack","swagpath",array(
 			"label"=>"Swagtracks",
+			"public" => true,
 			"hierarchical"=>TRUE,
 			"show_in_rest"=>true
 		));
