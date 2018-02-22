@@ -344,7 +344,7 @@ class SwagpathController extends Singleton {
 		$name = get_the_title( $post_id );
 		$desc = apply_filters('the_content', get_post_field('post_content', $post_id));
 
-		if ( !badge ) {
+		if ( !$badge ) {
 			$badge = wp_insert_post( array(
 				"post_title" => $name,
 				"post_content" => $desc,
