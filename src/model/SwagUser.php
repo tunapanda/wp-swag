@@ -148,9 +148,8 @@ class SwagUser
 
             if ($swagpath) {
                 $swagpath->completedStatement = $statement;
+                $this->completedSwag[] = $swagpath;
             }
-
-            $this->completedSwag[] = $swagpath;
         }
 
         $this->completedSwagFetched = true;
