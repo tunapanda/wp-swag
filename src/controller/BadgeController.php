@@ -167,9 +167,10 @@ class BadgeController
 
         $name = get_the_title($post->id);
         $desc = $desc = apply_filters('the_content', get_post_field('post_content', $post->id));
-        $image = rwmb_meta('badge_image', array("size" => "large"), $post->id);
+        $images = rwmb_meta('badge_image', array("size" => "large"), $post->id);
 
-        $image_url = $image ? $image['url'] : $settings['default_badge_image'];
+        $image_url = sizeof($images) > 0 ? $images[0] : $settings['default_badge_image'];
+
         $permalink = get_permalink($post->id);
 
         $json = array(

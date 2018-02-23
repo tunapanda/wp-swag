@@ -126,6 +126,8 @@ class SwagPageController extends Singleton
      */
     public function renderBadgePage($swagUser, $args)
     {
+        $settings = get_option('open_badges_issuer');
+
         $topLevelTracks = get_terms(array(
             'taxonomy' => 'swagtrack',
             'parent' => 0,
@@ -160,10 +162,13 @@ class SwagPageController extends Singleton
                 $badge_id = get_post_meta($swagpath->getPost()->ID, 'default_badge', true);
                 $badge = get_post($badge_id);
 
+                $images = rwmb_meta('badge_image', array("size" => "large"), $badge_id);
+                $image_url = sizeof($images) > 0 ? $images[0] : $settings['default_badge_image'];
+
                 $trackData["badges"][] = array(
                     "name" => $swagpath->getPost()->post_title,
                     "description" => $badge->post_content,
-                    "image" => array_values(rwmb_meta('badge_image', array("size" => "large"), $badge_id))[0]['url'],
+                    "image" => $image_url,
                     "date_issued" => date('d/m/Y', strtotime($swagpath->completedStatement['timestamp'])),
                     "permalink" => get_author_posts_url($swagUser->getUser()->ID) . 'badge/' . $badge->post_name,
                 );
