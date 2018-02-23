@@ -213,7 +213,9 @@ class SwagPageController extends Singleton
     public function mySwagShortcode($args)
     {
         $swagUser = SwagUser::getCurrent();
-        return $this->renderBadgePage($swagUser, $args);
+        if ($swagUser->isLoggedIn()) {
+            return $this->renderBadgePage($swagUser, $args);
+        }
     }
 
     public function swagmapShortcode($args)
