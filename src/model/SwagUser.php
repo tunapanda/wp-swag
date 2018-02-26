@@ -24,6 +24,9 @@ class SwagUser
 
         $this->completedSwagFetched = null;
         $this->completedSwag = null;
+
+        $this->attemptedSwagFetched = null;
+        $this->attemptedSwag = null;
     }
 
     /**
@@ -155,6 +158,64 @@ class SwagUser
         $this->completedSwagFetched = true;
 
         return $this->completedSwag;
+    }
+
+        /**
+     * Get collected swag.
+     */
+    public function getAttemptedSwagpaths()
+    {
+        $completed = $this->getCompletedSwagpaths();
+
+        if ($this->attemptedSwagFetched) {
+            return $this->attemptedSwag;
+        }
+
+        if ($this->xapi) {
+            $statements = $this->xapi->getStatements(array(
+                "agentEmail" => $this->getEmail(),
+                // "activity" => "http://swag.tunapanda.org/",
+                "verb" => "http://adlnet.gov/expapi/verbs/attempted",
+                "related_activities" => "true",
+            ));
+        } else {
+            $statements = array();
+        }
+
+        $this->attemptedSwag = array();
+
+        //remove duplicate attempts
+        // $reduced_statements = array_reduce($statements, function($reduced, $statement) {
+        //     if (!array_search($statement['object'], array_column($reduced, 'object'))) {
+        //         $reduced[] = $statement;
+        //     }
+        //     return $reduced;
+        // }, array());
+
+        $attemptedSwag = array();
+
+        foreach ($statements as $statement) {
+            $id = explode("/", $statement["context"]["contextActivities"]["grouping"][0]["id"]);
+            end($id);
+            $slug = prev($id);
+
+            if(sizeof(array_filter($this->attemptedSwag, function($attempted_swag) use ($slug) {
+                return $attempted_swag->getPost()->post_name === $slug;
+            })) > 0) {
+                break;
+            }
+
+            $swagpath = Swagpath::getBySlug($slug);
+
+            if ($swagpath) {
+                $swagpath->attemptedStatement = $statement;
+                $this->attemptedSwag[] = $swagpath;
+            }
+        }
+
+        $this->attemptedSwagFetched = true;
+
+        return $this->attemptedSwag;
     }
 
     /**
