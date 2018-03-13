@@ -338,6 +338,8 @@ class SwagpathController extends Singleton {
 		$badge = get_post_meta( $post_id, "default_badge", true );
 
 		if ( $badge && $generate_badge !== '1') {
+			delete_post_meta( $post_id, "generate_badge" );
+			delete_post_meta( $post_id, "default_badge" );
 			return wp_delete_post( $badge );
 		}
 
