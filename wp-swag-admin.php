@@ -145,6 +145,26 @@ class WP_Swag_admin{
 
 		unset($statement["actor"]["account"]);
 
+		if (class_exists('Groups_User')) {
+			$groups_user = new Groups_User( get_current_user_id() );
+			$groups = $groups_user->groups;
+
+			if (in_array(2, $groups_user->group_ids_deep)) {
+				foreach($groups as $group) {
+					if($group->parent_id === "2") {
+						$member = array($statement["actor"]);
+						$statement['context']['team'] = array(
+							"name" => $group->name,
+							"objectType" => "Group",
+							"member" => $member
+						);
+					}
+				}
+			}
+
+			// 
+		}
+
 		return $statement;
 	}
 
@@ -159,7 +179,9 @@ class WP_Swag_admin{
 		$postId=NULL;
 
 		foreach ($statement["context"]["contextActivities"]["grouping"] as $groupingActivity) {
+			// preg_match("/swagtrack\/[0-9a-z\-]+\/([0-9a-z\-]+)\/([0-9a-z\-]+)\/?$/", $groupingActivity["id"], $ids);
 			$id=url_to_postid($groupingActivity["id"]);
+			// $id = $ids[2];
 			if ($id)
 				$postId=$id;
 		}
