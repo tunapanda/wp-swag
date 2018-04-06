@@ -112,7 +112,7 @@ class WP_Swag_admin{
 		wp_enqueue_style("wp_swag");
 
 		wp_register_script("d3",plugins_url("/d3.v3.min.js", __FILE__));
-		wp_register_script("ti-main",plugins_url("/main.js", __FILE__));
+		wp_register_script("ti-main",plugins_url("/main.js", __FILE__), array('jquery'));
 
 		wp_localize_script('ti-main', 'swag_settings', array('swagmap_url' => admin_url('admin-ajax.php?action=swagmap_data')));
 
