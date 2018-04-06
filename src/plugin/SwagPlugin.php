@@ -32,12 +32,21 @@ class SwagPlugin
 
                 $xapi = new Xapi($endpoint, $username, $password);
             } else {
-                $endpoint = get_option("ti_xapi_endpoint_url");
-                $username = get_option("ti_xapi_username");
-                $password = get_option("ti_xapi_password");
+                $settings = get_option('xapi_settings');
+                $old_endpoint = get_option("ti_xapi_endpoint_url");
+                
 
-                if ($endpoint) {
+                if (isset($settings["xapi_endpoint_url"]) && isset($settings["xapi_endpoint_username"]) && isset($settings["xapi_endpoint_password"])) {
+                    $endpoint = $settings["xapi_endpoint_url"];
+                    $username = $settings["xapi_endpoint_username"];
+                    $password = $settings["xapi_endpoint_password"];
+
                     $xapi = new Xapi($endpoint, $username, $password);
+                } else if ($old_endpoint) {
+                    $old_username = get_option("ti_xapi_username");
+                    $old_password = get_option("ti_xapi_password");
+
+                    $xapi = new Xapi($old_endpoint, $old_username, $old_password);
                 } else {
                     $xapi = null;
                 }
