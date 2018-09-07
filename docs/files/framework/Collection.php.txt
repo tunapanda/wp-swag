@@ -1,0 +1,59 @@
+<?php
+
+namespace Swag\Framework;
+
+/**
+ * Collection represents an array of Models
+ */
+class Collection implements \Iterator
+{
+  protected $data;
+
+  public function __construct($data)
+  {
+    if (is_array($data)) {
+      $this->data = array_map(Model::create, $data);
+    }
+  }
+
+  public static function create($data)
+  {
+    return new static($data);
+  }
+
+  public function object_at($i) {
+    return $this->data[$i];
+  }
+
+  public function to_array() {
+    return $this->data;
+  }
+
+  public function rewind()
+  {
+    reset($this->data);
+  }
+
+  public function current()
+  {
+    return current($this->data);
+  }
+
+  public function key()
+  {
+    return key($this->data);
+  }
+
+  public function next()
+  {
+    return next($this->data);
+  }
+
+  public function valid()
+  {
+    $key = key($this->data);
+    $var = ($key !== null && $key !== false);
+    return $var;
+  }
+}
+

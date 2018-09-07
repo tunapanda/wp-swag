@@ -1,0 +1,25 @@
+{
+    "name": "tunapanda/wp-swag",
+    "description": "Swag is a gamified open source elearning platform meant for delivering educational content especially in areas without internet connection. It allow users to create and share their content within the platform without the need for internet.",
+    "type": "wordpress-plugin",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Jake Lee Kennedy",
+            "email": "jake@tunapanda.org"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Swag\\App\\": "app/",
+            "Swag\\Framework\\": "framework/"
+        }
+    },
+    "require": {
+        "php": ">=7",
+        "guzzlehttp/guzzle": "^6.3"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^7"
+    }
+}

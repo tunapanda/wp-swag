@@ -1,5 +1,2 @@
-tests/wordpress
-tests/wordpress-tests-lib
-site/
-attic/
-vendor/
+vendor
+node_modules

@@ -1,0 +1,9 @@
+<?php
+
+namespace Swag\App\Models;
+
+interface Swagifact
+{
+
+}
+

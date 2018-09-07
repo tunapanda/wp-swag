@@ -1,0 +1,163 @@
+<?php
+
+namespace Swag\App\Models;
+
+use \Swag\Framework\Exceptions\InvalidPostTypeException;
+use \Swag\App\Collections\Swagifacts;
+use \Swag\App\Services\CurrentUser;
+
+/**
+ * Decorates Swagpath posts with swag features
+ *
+ * @since 1.0.0
+ * @see WP_Post
+ */
+class Swagpath extends WPPost
+{
+  /**
+   * constructor only accepts WP_Post object
+   *
+   * @param \WP_Post $post
+   * @throws Exception if the provided WP_Post does not have a post_type swagpath
+   */
+  public function __construct(\WP_Post $post)
+  {
+    if ($post->post_type !== 'swagpath') {
+      throw new InvalidPostTypeException("WP_Post post_type must be 'swagpath'");
+    }
+
+    $this->xapi_object = [
+      "objectType" => "Activity",
+      "id" => get_permalink($post),
+      "definition" => [
+        "name" => [
+          "en-GB" => $post->post_title,
+        ],
+        "description" => [
+          "en-GB" => $post->post_excerpt,
+        ],
+        "type" => "http://tunapanda.org/swag/swagpath",
+        "extensions" => [
+          "http://tunapanda.org/swag/swagpath/id" => $post->ID,
+        ],
+      ],
+    ];
+
+    return parent::__construct($post);
+  }
+
+  /**
+   * initialize via wordpress post ID
+   *
+   * @param Integer $id
+   * @return Swagpath
+   */
+  public static function create_by_id($id): Swagpath
+  {
+    return new static(get_post($id));
+  }
+
+  /**
+   * get the Swagpath permalink
+   *
+   * @return String The permalink
+   */
+  public function get_permalink(): string
+  {
+    return get_permalink($this->post);
+  }
+
+  /**
+   * gets swagifacts for swagpath
+   *
+   * @return Swagifacts
+   */
+  public function get_swagifacts(): Swagifacts {
+    $field = get_field_object('swagifacts', $this->post->ID);
+
+    if ($field) {
+      $ids = $field['value'];
+
+      $results = Swagifacts::create_from_ids($ids, $this);
+
+      return $results;
+    }
+    return [];
+  }
+
+  /**
+   * Has the user completed this swagpath, defaults to the currently logged in user
+   *
+   * @param SwagUser $user
+   * @return boolean
+   */
+  public function is_completed($user = null) {
+    global $wpdb;
+
+    $user = $user ?? CurrentUser::Get();
+
+    $result = $wpdb->get_row("SELECT `status` FROM {$wpdb->prefix}swagpath_status WHERE `user_id` = {$user->ID} AND `swagpath_id` = {$this->ID} AND `status` = 'completed'", ARRAY_A);
+
+    if (!$result) {
+      $all_completed = array_reduce($this->get_swagifacts()->to_array(), function($prev, $swagifact) {
+        return $prev && $swagifact->is_completed();
+      }, true);
+
+      if($all_completed) {
+        $this->completed();
+        return true;
+      }
+    }
+
+    return (bool) $result;
+  }
+
+    /**
+   * this swagpath has been attempted by the specified user, updates the database, defaults to the currently logged in user
+   *
+   * @param SwagUser $user
+   * @return boolean
+   */
+  public function attempted($user = null) {
+    global $wpdb;
+
+    $user = $user ?? CurrentUser::Get();
+
+    // $result = $wpdb->insert("{$wpdb->prefix}swagpath_progress", array(
+    //   'user_id' => $user->id,
+    //   'swagpath_id' => $this->id,
+    //   'event' => 'attempted'
+    // ));
+
+    $result = $wpdb->query("INSERT INTO {$wpdb->prefix}swagpath_status (`user_id`, `swagpath_id`, `status`) VALUES ({$user->ID}, {$this->ID}, 'attempted') ON DUPLICATE KEY UPDATE `status` = 'attempted'");
+
+    do_action("swag_swagpath_attempted", $user, $this);
+
+    return (bool) $result;
+  }
+
+  /**
+   * this swagpath has been completed by the specified user, updates the database, defaults to the currently logged in user
+   *
+   * @param SwagUser $user
+   * @return boolean
+   */
+  public function completed($user = null) {
+    global $wpdb;
+
+    $user = $user ?? CurrentUser::Get();
+
+    // $result = $wpdb->insert("{$wpdb->prefix}swagpath_progress", array(
+    //   'user_id' => $user->ID,
+    //   'swagpath_id' => $this->ID,
+    //   'event' => 'completed'
+    // ));
+
+    $result = $wpdb->query("INSERT INTO {$wpdb->prefix}swagpath_status (`user_id`, `swagpath_id`, `status`) VALUES ({$user->ID}, {$this->ID}, 'completed') ON DUPLICATE KEY UPDATE `status` = 'completed'");
+
+    do_action("swag_swagpath_completed", $user, $this);
+
+    return (bool) $result;
+  }
+}
+

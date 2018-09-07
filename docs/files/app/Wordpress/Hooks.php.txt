@@ -1,0 +1,121 @@
+<?php
+
+namespace Swag\App\Wordpress;
+
+$project_root = dirname(dirname(__FILE__));
+
+add_action('init', function() {
+  register_post_type("swagpath", [
+    "labels" => [
+      "name" => "Swagpaths",
+      "singular_name" => "Swagpath",
+      "not_found" => "No swagpaths found.",
+      "add_new_item" => "Add new swagpath",
+      "edit_item" => "Edit Swagpath",
+    ],
+    "description" => "A swagpath is a course in the system. It is named this way because it takes the user from one swag to another, i.e. the path from one swag to another. Each swagpath can have a number of required swag, i.e. the prerequisites for the swagpath. It can also have a number of provided swag, which are the badges that the user will earn upon completing the swagpath.",
+    "public" => true,
+    "hierarchical" => false,
+    "show_in_nav_menus" => false,
+    "show_in_rest" => true,
+    "supports" => ["title", "excerpt", "comments"],
+    "taxonomies" => ["swagtrack"],
+    "has_archive" => true
+  ]);
+  
+  register_taxonomy("swagtrack", "swagpath", [
+    "labels" => [
+      "name" => "Swagtracks",
+      "singular_name" => "Swagtrack",
+    ],
+    "description" => "Collections of swagpaths that are related.",
+    "public" => true,
+    "hierarchical" => true,
+    "show_in_rest" => true
+  ]);
+});
+
+/**
+ * Create table to track progress
+ */
+register_activation_hook( $project_root . 'plugin.php', function() {
+  global $wpdb;
+
+  $charset_collate = $wpdb->get_charset_collate();
+
+  $swagpath_table = $wpdb->prefix . "swagpath_status";
+  $swagifact_table = $wpdb->prefix . "swagifact_status";
+
+  $sql = "CREATE TABLE $swagpath_table (
+    `id` mediumint(9) NOT NULL AUTO_INCREMENT,
+    `swagpath_id` mediumint(9) NOT NULL,
+    `user_id` mediumint(9) NOT NULL,
+    `timestamp` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `status` text DEFAULT 'attempted',
+    PRIMARY KEY (id)
+    UNIQUE KEY (`swagpath_id`)
+  ) $charset_collate;";
+
+  $sql .= "CREATE TABLE $swagifact_table (
+    `id` mediumint(9) NOT NULL AUTO_INCREMENT,
+    `swagpath_id` mediumint(9) NOT NULL,
+    `user_id` mediumint(9) NOT NULL,
+    `timestamp` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `status` text DEFAULT 'attempted',
+    PRIMARY KEY (id)
+    UNIQUE KEY (`swagifact_id`)
+  ) $charset_collate;";
+
+  require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+  dbDelta( $sql );
+});
+
+add_action('wp_enqueue_scripts', function () use ($project_root) {
+  global $post;
+
+  wp_enqueue_script('dist/main.js', plugins_url('dist/main.js', $project_root), ['jquery'], null, true);
+
+  wp_localize_script('dist/main.js', 'api_settings', [
+    "ajax_url" => '/wp-json/swag/v1/swagifact/progress',
+    "swagpath_id" => $post->ID,
+    "swagifact_slug" => get_query_var('swagifact'),
+    "nonce" => wp_create_nonce( 'wp_rest' )
+  ]);
+});
+
+add_filter('acf/settings/path', function ($path) use ($project_root) {
+  return plugins_url('/acf/', $project_root);
+});
+
+add_filter('acf/settings/dir', function ($dir) use ($project_root) {
+  return plugins_url('/acf/', $project_root);
+});
+
+// add_action('acf/include_field_types', function() {
+//   class Swag_acf_field_swagifacts extends \Swag\App\Utils\Swagifact_Custom_Field {};
+  
+//   new Swag_acf_field_swagifacts;
+// });
+
+add_filter('acf/load_field/name=swagifacts', function( $field ) {
+  global $wpdb;
+
+  $field['choices'] = [];
+
+  $results = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}h5p_contents", ARRAY_A);
+
+  foreach($results as $h5p) {
+    $field['choices'][$h5p['id']] = $h5p['title'];
+  }
+
+  return $field;
+});
+
+// add_filter('acf/update_value/name=swagifacts', function( $field ) {
+//   delete_transient( 'swagifacts_' . $field['key'] );
+//   return $field;
+// });
+
+function get_swagifact() {
+
+}
